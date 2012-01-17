@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load page_tags %}
+
+{% block html_head %}
+{{block.super}}
+<script src="{{STATIC_URL}}libs/bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="{{STATIC_URL}}libs/bootstrap/js/bootstrap-modal.js"></script>
+<link rel="stylesheet/less" type="text/css" href="{{STATIC_URL}}libs/bootstrap/lib/bootstrap.less">
+
+<!--<link rel="stylesheet" media="all" type="text/css" href="{{STATIC_URL}}libs/yui/build/container/assets/skins/sam/container.css">
+<link rel="stylesheet" media="all" type="text/css" href="{{STATIC_URL}}libs/yui/build/calendar/assets/skins/sam/calendar.css">
+<link rel="stylesheet" media="all" type="text/css" href="{{STATIC_URL}}css/yui.calendar.widget.css">
+<script type="text/javascript" src="{{STATIC_URL}}libs/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}libs/yui/build/element/element-min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}libs/yui/build/container/container-min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}libs/yui/build/calendar/calendar-min.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/yui.calendar.widget.js"></script>-->
+
+<!--<script type="text/javascript" src="{{STATIC_URL}}libs/jquery.form.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}libs/progressbar/jquery.progressbar.js"></script>-->
+
+
+<link rel="stylesheet/less" type="text/css" href="{{STATIC_URL}}css/styles.less">
+
+<script type="text/javascript" src="{{STATIC_URL}}js/scripts.js"></script>
+
+{% endblock %}
+
+{% block body %}
+<div id="body-header">
+    <div class="title">
+        <div class="subtitle">สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.)</div>
+        <div class="name"><a href="/">Strategy Management Systems</a></div>
+    </div>
+    <div class="right_panel">
+        <div class="account">
+            <span class="username">{{user.get_profile.firstname}} {{user.get_profile.lastname}} {% if user.is_superuser %}(ผู้ดูแลระบบ){% endif %}</span>
+            <a href="{% url view_my_profile %}">ตั้งค่าผู้ใช้</a> | <a href="/accounts/logout/">ออกจากระบบ</a> |
+        </div>
+        <div class="navigation">
+            {% display_header_navigation user %}
+        </div>
+    </div>
+</div>
+
+<div id="body-title">{% block body_title %}{% endblock %}</div>
+<div id="body-tabs">{% block body_tabs %}{% endblock %}</div>
+
+{% comment %}{% display_messages messages %}{% endcomment %}
+
+
+<div id="body-content" class="container-fluid container-body">
+  <div class="content-full">
+    <div class="content-inner">
+      {% block body_content %}{% endblock %}
+          
+          <!--<ul class="tabs">
+            <li class="active"><a href="#">โครงสร้างองค์กร</a></li>
+            <li><a href="#">ผู้ใช้ระบบ</a></li>
+          </ul>-->
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}

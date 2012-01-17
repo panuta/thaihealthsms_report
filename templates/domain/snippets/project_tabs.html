@@ -1,0 +1,5 @@
+<ul>
+  <li><a{% if active_menu == 'report' %} class="active"{% endif %} href="{% url view_project_report project.ref_no %}">รายงาน</a></li>
+  <li><a{% if active_menu == 'budget' %} class="active"{% endif %} href="{% url view_project_budget project.ref_no %}">แผนการเงิน</a></li>
+  <li><a{% if active_menu == 'activity' %} class="active"{% endif %} href="{% url view_project_activities project.ref_no %}">ปฏิทินกิจกรรม</a></li>
+</ul>

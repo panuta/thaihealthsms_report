@@ -1,0 +1,25 @@
+{% extends 'base_authenticated.html' %}
+{% load page_tags %}
+
+{% block body_title %}
+<div class="supertitle"><a href="{% url view_master_plan project.master_plan.ref_no %}">แผน {{project.master_plan.ref_no}} - {{project.master_plan.name}}</a></div>
+<div class="title"><h1>โครงการ ({{project.ref_no}}) {{project.name}}</h1></div>
+<div class="subtitle"><span class="project_date">ระยะเวลาโครงการ <em>{{project.start_date|format_abbr_date}}</em> ถึง <em>{{project.end_date|format_abbr_date}}</em></span> <span class="project_manager">ผู้ดูแลโครงการ <em>{{project.manager_name|default:'ไม่มีข้อมูล'}}</em></span></div>
+
+{% endblock %}
+
+{% block body_content %}
+
+<div class="project_page">
+
+  <ul class="breadcrumb">
+    <li><a href="{% url view_project_report project.ref_no %}">หน้าโครงการ</a> <span class="divider">/</span></li>
+    <li class="active">แก้ไขโครงการ</li>
+  </ul>
+
+
+  
+
+    
+</div>
+{% endblock %}

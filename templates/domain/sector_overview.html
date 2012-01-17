@@ -1,0 +1,15 @@
+{% extends 'base_authenticated.html' %}
+
+
+{% block body_title %}<h1>สำนัก {{sector.ref_no}} {{sector.name}}</h1>{% endblock %}
+
+{% block body_content %}
+<div class="sector_page">
+    <h2>แผนหลัก</h2>
+    <ul class="master_plans">
+        {% for master_plan in master_plans %}
+        <li><a href="{% url view_master_plan master_plan.ref_no %}">แผนหลัก {{master_plan.ref_no}} {{master_plan.name}}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

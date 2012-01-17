@@ -1,0 +1,804 @@
+@import "../libs/bootstrap/lib/variables.less";
+
+@publication-published: #d8e0bd;
+
+@publication-unfinished: #ffcccc;
+@publication-unfinished-bg: #f0e1da;
+
+@publication-scheduled: #abced5;
+@publication-scheduled-bg: #deecee;
+
+@publication-unpublished: #CCC;
+@publication-unpublished-bg: #F3F3F3;
+
+@success-light-background: #c9edc5;
+
+.content_link() {
+    &:link, &:active, &:visited {
+        text-decoration:underline;
+        color:@linkColor;
+    }
+
+    &:hover {
+        background-color:@linkColor;
+        color:#FFF;
+        text-shadow:none;
+    }
+}
+
+.danger_link() {
+    color:#C30;
+    text-decoration:underline;
+
+    &:hover {
+        background-color:#C30;
+        color:#FFF;
+    }
+}
+
+/* *************** Base Template *************** */
+
+body {
+    background:url(/static/images/bg.png);
+}
+
+.clear {
+    clear:both;
+}
+
+#body-header {
+    height:55px;
+    padding:5px 10px;
+    border-bottom:1px solid #AAA;
+    background:url('../images/header/logo_small.png') #3f7d5e 10px 3px no-repeat;
+
+    .title {
+        float:left;
+
+        .name {
+            padding-left:135px;
+            font-size:153.9%;
+            font-weight:bold;
+            color:#FFF;
+        }
+
+        .subtitle {
+            padding:5px 0px 5px 135px;
+            font-size:108%;
+            color:#DDD;
+        }
+
+        a {
+            color:#FFF;
+            text-decoration:none;
+
+            &:hover {
+                color:#FFF;
+                background:underline;
+            }
+        }
+    }
+
+    .right_panel {
+        text-align:right;
+
+        .account {
+            font-size:108%;
+            margin-bottom:15px;
+            color:#FFF;
+
+            a {
+                color:#CFF;
+                text-decoration:underline;
+            }
+
+            .username {
+                margin-right:10px;
+            }
+        }
+        
+        .navigation {
+            font-size:108%;
+            margin-bottom:5px;
+            color:#FFF;
+
+            a {
+                color:#FFF;
+                text-decoration:underline;
+                padding:2px 10px 2px 30px;
+                margin:0px 5px 0px 10px;
+
+                &.home {
+                    background:url('../images/header/nav_home.png') transparent 10px center no-repeat;
+                }
+
+                &.org {
+                    background:url('../images/header/nav_org.png') transparent 7px center no-repeat;
+                }
+
+                &:hover {
+                    background-color:#369;
+                }
+            }
+        }
+    }
+}
+
+#body-title {
+    margin:10px 15px;
+
+    .title {
+        padding-top:10px;
+
+        h1 {
+            font-size:1.5em;
+            line-height:1;
+            display:inline;
+        }
+
+        .edit_project {
+            margin-left:15px;
+        }
+    }
+
+    .supertitle {
+        color:#555;
+
+        a {
+            color:#555;
+            text-decoration:underline;
+            font-size:1.1em;
+
+            &:hover {
+                color:#FFF;
+                background-color:@linkColor;
+            }
+        }
+    }
+
+    .subtitle {
+        margin-top:10px;
+        color:#555;
+        font-size:1.2em;
+
+        .project_date {
+
+            em {
+                font-weight:bold;
+                font-style:normal;
+            }
+        }
+
+        .project_manager {
+            margin-left:30px;
+
+            em {
+                
+                font-style:normal;
+                font-weight:bold;
+            }
+        }
+    }
+}
+
+#body-tabs {
+    background-color:#555;
+    padding:0px 15px;
+    margin:15px 0px;
+
+    li {
+        display:inline;
+
+        a {
+            display:inline-block;
+            color:#FFF;
+            padding:10px 20px 8px;
+            border-bottom:3px solid #555;
+
+            &.active {
+                background-color:#666;
+                border-bottom:3px solid #ff9933;
+            }
+        }
+
+        
+    }
+}
+
+.container-body {
+    padding:0px 10px;
+
+    .content-full {
+        padding:1px;
+        border:1px solid #EEE;
+        background-color:#DDD;
+
+        .content-inner {
+            border:1px solid #BBB;
+            padding:15px;
+            background-color:#FFF;
+
+            h2 {
+                font-size:1.6em;
+                margin-bottom:20px;
+                padding-bottom:10px;
+                color:#C60;
+                border-bottom:3px double #BBB;
+                font-weight:normal;
+                line-height:1;
+
+                .subtitle {
+                    font-size:0.8em;
+                    color:#555;
+                    margin-top:10px;
+                }
+            }
+        }
+    }
+}
+
+.pills {
+    margin:0px;
+}
+
+.page_actions {
+    margin-bottom:20px;
+
+    a.primary {
+        color:#FFF !important;
+    }
+}
+
+
+
+
+
+
+
+/* *************** UI *************** */
+
+.delete_panel {
+    border:1px dashed #CCC;
+    padding:15px 15px 15px 45px;
+    background:url(/static/images/icons/danger_icon.png) 15px 50% no-repeat;
+
+    a.danger:link, a.danger:active, a.danger:visited {
+        text-decoration:underline;
+        color:#666;
+    }
+
+    a.danger:hover {
+        background-color:#C30;
+        color:#FFF;
+        text-shadow:none;
+    }
+}
+
+.pagination_bar {
+    margin:30px 0px;
+    text-align:center;
+
+    .goto {
+        width:76px;
+        height:26px;
+        background:url(/static/images/pagination/nav.png) no-repeat;
+        text-align:center;
+        display:inline-block;
+        line-height:26px;
+        font-size:0.9em;
+        cursor:default;
+    }
+
+    .prev {
+        margin-right:10px;
+    }
+
+    .next {
+        margin-left:10px;
+    }
+    
+    .page {
+        width:36px;
+        height:26px;
+        background:url(/static/images/pagination/page.png) center top no-repeat;
+        text-align:center;
+        display:inline-block;
+        line-height:26px;
+        margin:0px 3px;
+        cursor:default;
+    }
+
+    .current {
+        background-position:center bottom;
+        font-weight:bold;
+        color:#FFF;
+    }
+
+    a {
+        &:link, &:visited, &:active {
+            text-decoration:none;
+            color:@linkColor;
+        }
+
+        &.page:hover {
+            background-position:center bottom;
+            color:#FFF;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        &.goto:hover {
+            background-position:center bottom;
+            color:#FFF;
+            font-weight:bold;
+            cursor:pointer;
+        }
+    }
+}
+
+/* *************** Buttons *************** */
+
+.upload_publication_button span {
+    background:url(/static/images/buttons/button_upload_white.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+.publish_button span {
+    background:url(/static/images/buttons/button_publish_white.png) 0px 50% no-repeat;
+    padding-left:18px;
+}
+
+.unpublish_button span {
+    background:url(/static/images/buttons/button_unpublish_black.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+.select_files_button {
+    width:160px;
+    text-align:center;
+
+    span {
+        background:url(/static/images/buttons/button_select_files.png) 0px 50% no-repeat;
+        padding-left:24px;
+    }
+}
+
+a.create_magazine span {
+    background:url(/static/images/buttons/button_magazine_white.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+a.action-schedule span {
+    background:url(/static/images/buttons/button_scheduled_black_small.png) 0px 50% no-repeat;
+    padding-left:18px;
+}
+
+a.edit_publication_button span {
+    background:url(/static/images/buttons/button_edit_black.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+button.upload_magazine_button span, button.upload_book_button span , button.upload_file_button span {
+    background:url(/static/images/buttons/button_upload_white.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+a.download_publication_button span {
+    background:url(/static/images/buttons/button_download_black.png) 0px 50% no-repeat;
+    padding-left:24px;
+}
+
+/* *************** Messages *************** */
+
+.alert-message.block-message {
+    padding:5px 20px;
+
+    p {
+        font-size:1.1em;
+    }
+}
+
+.alert-message.block-message.success p {
+    background:url(/static/images/messages/success.png) 0px 50% no-repeat;
+    padding:10px 35px;
+    vertical-align:middle;
+}
+
+/* *************** Form *************** */
+
+input, textarea {
+    color:#444;
+}
+
+select {
+    color:#444;
+}
+
+.help-block {
+    color:#888;
+}
+
+form, .form-stacked {
+    margin:0;
+    padding:0;
+
+    .clearfix {
+        margin-bottom:20px;
+    }
+
+    label {
+        color:#11717a;
+        font-weight:normal;
+        font-size:1.1em;
+
+        span {
+            color:#888;
+        }
+    }
+
+    .fixed-value {
+        font-size:1.1em;
+        line-height:21px;
+    }
+
+    .help-block {
+        margin-top:5px;
+    }
+}
+
+form {
+    label {
+        padding-top:3px;
+    }
+}
+
+ul.errorlist {
+    margin-top:5px;
+
+    li {
+        color:#c30;
+    }
+}
+
+.top_error {
+    ul.errorlist {
+        margin-bottom:10px;
+    }
+}
+
+.form_data {
+    margin-bottom:20px;
+    li {
+        font-size:1.1em;
+        color:#444;
+        margin-bottom:10px;
+
+        span {
+            font-weight:bold;
+        }
+    }
+
+}
+
+form .note {
+    color:#444;
+    margin:0px 0px 20px;
+    background-color:#FFC;
+    padding:20px 15px 10px;
+
+    p {
+        margin-bottom:10px;
+        font-size:1.1em;
+    }
+}
+
+/* Input Lists */
+
+form .row-inputs {
+    li {
+        margin-bottom:10px;
+        line-height:25px;
+    }
+
+    label {
+        color:#444;
+        float:none;
+    }
+
+    input[type='radio'], input[type='checkbox'] {
+        margin-right:6px;
+    }
+
+    .errorlist {
+        margin-bottom:20px;
+    }
+}
+
+form .checkbox-inputs {
+    li {
+        margin-bottom:10px;
+    }
+
+    label {
+        line-height:23px;
+        color:#444;
+        float:none;
+
+        input {
+            margin-right:5px;
+        }
+
+        span {
+            color:#666;
+            font-style:italic;
+        }
+    }
+}
+
+
+
+
+form .checkbox-input {
+
+    label {
+        margin-left:5px;
+        line-height:23px;
+        color:#444;
+        float:none;
+    }
+}
+
+form .table-inputs {
+    th {
+        padding-top:30px;
+    }
+
+    tr.active {
+        background-color:#FFC;
+    }
+
+    label {
+        color:#444;
+        float:none;
+        font-size:1em;
+    }
+
+    input[type='radio'], input[type='checkbox'] {
+        margin-right:6px;
+    }
+}
+
+form .inputs-list {
+    li {
+        margin-bottom:10px;
+        margin-top:3px;
+    }
+
+    label {
+        margin-left:5px;
+        color:#444;
+        display:inline;
+    }
+
+    input[type='radio'], input[type='checkbox'] {
+        float:none;
+        margin-left:0px;
+        margin-right:8px;
+    }
+
+    .errorlist {
+        margin-bottom:20px;
+    }
+}
+
+form .form_actions {
+    margin:30px 0px 40px 150px;
+
+    button {
+        margin-right:15px;
+    }
+}
+
+form .left_form_actions {
+    margin:0px 0px 30px 0px;
+}
+
+/* *************** Custom Styles *************** */
+
+ul {margin:0px;padding:0px;}
+li {list-style:none;}
+a.btn:visited {color:#333333;}
+
+.no_row {
+    text-align:center;
+    font-size:1.1em;
+    background-color:#F5F5F5;
+    padding:10px 0px;
+}
+
+table td.row_actions {
+    a {
+        .content_link;
+    }
+
+    .not_available {
+        font-style:italic;
+        color:#666;
+    }
+}
+
+.modal {
+    h3 em {
+        color:#369;
+        font-style:normal;
+    }
+
+    .modal-message {
+        padding:10px 15px;
+        background-color:#C30;
+        color:#FFF;
+        border-bottom:1px solid #EEE;
+    }
+}
+
+
+
+/*
+ *
+ * PAGE
+ *
+ */
+
+.organization_page {
+    ul {
+        margin:0px 0px 25px;
+
+        li {
+            list-style:disc;
+            margin:5px 0px 10px 25px;
+
+            a {
+                font-size:1.1em;
+                .content_link;
+            }
+        }
+    }
+}
+
+.sector_page {
+    .master_plans {
+        li {
+            list-style:disc;
+            margin:5px 0px 10px 25px;
+
+            a {
+                font-size:1.1em;
+                .content_link;
+            }
+        }
+    }
+
+    .projects {
+        li {
+            list-style:disc;
+            margin:5px 0px 20px 25px;
+            color:#555;
+
+            a {
+                font-size:1.1em;
+                .content_link;
+            }
+
+            .project_name {
+                margin-bottom:7px;
+            }
+            
+
+            .ref_no {
+                font-size:1.1em;
+                margin-right:20px;
+            }
+        }
+    }
+}
+
+.project_page {
+    .reports {
+        margin-top:10px;
+
+        h3 {
+            font-size:1.2em;
+            font-weight:bold;
+            color:#C60;
+            line-height:1;
+            margin-bottom:15px;
+        }
+
+        li.report {
+            margin-bottom:30px;
+        }
+
+        .more {
+            margin-top:10px;
+
+            a {
+                color:#666;
+                text-decoration:underline;
+
+                &:hover {
+                    color:#FFF;
+                    background-color:@linkColor;
+                }
+            }
+        }
+
+        ul.submissions {
+            margin-left:20px;
+            font-size:1.1em;
+
+            a {
+                .content_link;
+                
+            }
+
+            li {
+                list-style:disc;
+                margin-bottom:10px;
+            }
+        }
+    }
+}
+
+.report_page {
+    .report_content {
+        border:1px dashed #CCC;
+        padding:15px;
+
+        a {
+            margin-right:15px;
+        }
+    }
+
+    .report_text {
+        .add_report_text {
+            border:1px dashed #CCC;
+            padding:15px;
+        }
+
+        .none {
+            color:#777;
+            margin-bottom:15px;
+        }
+    }
+
+    .report_attachment {
+        margin:20px 0px;
+
+        h3 {
+            margin-bottom:5px;
+
+            span {
+                color:#666;
+                font-size:0.9em;
+            }
+        }
+
+        li {
+            background-color:#d6e9f7;
+            padding:10px;
+            margin-bottom:15px;
+            font-size:1.1em;
+            color:#555;
+
+            .filename {
+
+                font-weight:bold;
+                margin-bottom:7px;
+
+                a {
+                    .content_link;
+                }
+            }
+        }
+    }
+}

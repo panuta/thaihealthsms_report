@@ -1,0 +1,108 @@
+@import "../libs/bootstrap/lib/variables.less";
+
+.content_link() {
+    a:link, a:active, a:visited {
+        text-decoration:underline;
+        color:@linkColor;
+    }
+
+    a:hover {
+        background-color:@linkColor !important;
+        color:#FFF !important;
+        text-shadow:none;
+    }
+}
+
+body {
+    background:url(/static/images/bg.png);
+}
+
+form label, .form-stacked 
+
+form, .form-stacked {
+    .clearfix {
+        margin-bottom:15px;
+    }
+
+    label {
+        color:#11717a;
+        font-weight:normal;
+        font-size:1.1em;
+        margin-bottom:5px;
+    }
+
+    .input input {
+        width:350px;
+    }
+
+    .form_actions {
+        margin:20px 0px;
+
+        button {
+            margin-right:15px;
+        }
+
+        .content_link;
+    }
+}
+
+.logo {
+    font-size:2.5em;
+    font-weight:bold;
+    color:#777;
+    text-align:center;
+    margin:50px 0px 0px;
+    padding-top:110px;
+
+    vertical-align:bottom;
+    line-height:70px;
+
+    background:url('../images/thaihealth.png') center top no-repeat;
+
+    a:link, a:visited, a:active {
+        color:#555;
+        text-decoration:none;
+    }
+
+    a:hover {
+        text-decoration:underline;
+    }
+}
+
+h1 {
+    font-size:1.7em;
+    
+    padding-bottom:10px;
+    border-bottom:1px solid #999;
+    text-align:center;
+}
+
+p {
+    line-height:28px;
+    font-size:1.1em;
+    text-align:center;
+}
+
+.center {
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.single-content {
+    margin:20px 0px 0px;
+    
+    padding:1px;
+    border:1px solid #EEE;
+    background-color:#DDD;
+
+    .content-inner {
+        border:1px solid #BBB;
+        padding:15px;
+        background-color:#FFF;
+    }
+
+    p {
+        .content_link;
+    }
+}
+
