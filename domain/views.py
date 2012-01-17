@@ -56,10 +56,10 @@ def view_project_budget(request, project_ref_no):
     return render(request, 'domain/project_budget.html', {'project': project, })
 
 @login_required
-def view_project_activities(request, project_ref_no):
+def view_project_activity(request, project_ref_no):
     project = get_object_or_404(Project, ref_no=project_ref_no)
 
-    return render(request, 'domain/project_budget.html', {'project': project, })
+    return render(request, 'domain/project_activity.html', {'project': project, })
 
 @login_required
 def edit_project(request, project_ref_no):

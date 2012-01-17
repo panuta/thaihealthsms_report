@@ -63,7 +63,7 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
-    'thaihealthsms.backends.EmailAuthenticationBackend',
+    'thaihealthsms_report.backends.EmailAuthenticationBackend',
     #'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -78,7 +78,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'thaihealthsms.middleware.AJAXSimpleExceptionResponse',
+    'thaihealthsms_report.middleware.AJAXSimpleExceptionResponse',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -87,7 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'thaihealthsms.urls'
+ROOT_URLCONF = 'thaihealthsms_report.urls'
 
 TEMPLATE_DIRS = (
     os.path.join(base_path, 'templates'),
@@ -112,10 +112,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'thaihealthsms.accounts',
-    'thaihealthsms.common',
-    'thaihealthsms.domain',
-    'thaihealthsms.report',
+    'thaihealthsms_report.accounts',
+    'thaihealthsms_report.common',
+    'thaihealthsms_report.domain',
+    'thaihealthsms_report.report',
 
 )
 

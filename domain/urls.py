@@ -9,7 +9,7 @@ urlpatterns = patterns('domain.views',
 
     url(r'^project/(?P<project_ref_no>\w+)/report/$', 'view_project_report', name='view_project_report'),
     url(r'^project/(?P<project_ref_no>\w+)/budget/$', 'view_project_budget', name='view_project_budget'),
-    url(r'^project/(?P<project_ref_no>\w+)/activities/$', 'view_project_activities', name='view_project_activities'),
+    url(r'^project/(?P<project_ref_no>\w+)/activity/$', 'view_project_activity', name='view_project_activity'),
 
     url(r'^project/(?P<project_ref_no>\w+)/edit/$', 'edit_project', name='edit_project'),
 )
