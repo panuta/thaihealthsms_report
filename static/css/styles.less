@@ -835,8 +835,7 @@ table td.row_actions {
     }
 
     .report_actions {
-        border:1px dashed #CCC;
-        padding:15px;
+        margin-bottom:20px;
 
         a {
             margin-right:15px;
@@ -849,20 +848,30 @@ table td.row_actions {
     }
 
     .report_text {
-        .add_report_text {
-            border:1px dashed #CCC;
-            padding:15px;
+        p {
+            font-size:1.1em;
         }
 
-        .none {
-            color:#777;
-            margin-bottom:15px;
+        ol {
+            li {
+                list-style:decimal;
+                color:#333;
+                font-size:1.1em;
+            }
+        }
+
+        ul {
+            li {
+                list-style:disc;
+                color:#333;
+                font-size:1.1em;
+            }
         }
     }
 
     .report_text_editor {
         margin-bottom:20px;
-        
+
         .button_panel {
             margin-top:15px;
 
@@ -892,6 +901,7 @@ table td.row_actions {
             color:#555;
             padding:10px 20px;
             background-color:#d6e9f7;
+            margin-bottom:15px;
             
             border-radius: 3px;
             -moz-border-radius: 3px;
@@ -899,11 +909,10 @@ table td.row_actions {
             border: 1px solid #BBB;
 
             .filename {
-
-                font-weight:bold;
                 margin-bottom:7px;
 
                 a {
+                    font-size:1.2em;
                     .content_link;
                 }
             }

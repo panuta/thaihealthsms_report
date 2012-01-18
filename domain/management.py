@@ -35,7 +35,6 @@ def after_syncdb(sender, **kwargs):
     for admin in admins:
         try:
             admin_user = User.objects.get(username=admin[0])
-            some_admin = admin_user.get_profile()
             
         except User.DoesNotExist:
             #random_password = User.objects.make_random_password()
@@ -51,7 +50,9 @@ def after_syncdb(sender, **kwargs):
             
             send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [admin[1]])
             
-            some_admin, created = UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0], lastname='')
+            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0], lastname='')
+        
+        some_admin = admin_user
     
     # Sector ##################
     sector1, created = Sector.objects.get_or_create(ref_no=1, name='สำนักสนับสนุนการสร้างสุขภาวะและลดปัจจัยเสี่ยงหลัก')

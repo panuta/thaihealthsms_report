@@ -112,6 +112,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'thaihealthsms_report.private_files',
+
     'thaihealthsms_report.accounts',
     'thaihealthsms_report.common',
     'thaihealthsms_report.domain',
@@ -136,6 +138,10 @@ LOGGING = {
         },
     }
 }
+
+# PRIVATE FILES SETTINGS #
+
+FILE_PROTECTION_METHOD = 'basic'
 
 # THAIHEALTHSMS SETTINGS #
 

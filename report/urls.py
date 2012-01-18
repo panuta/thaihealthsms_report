@@ -6,6 +6,8 @@ urlpatterns = patterns('report.views',
     url(r'^project/(?P<project_id>\d+)/report/(?P<report_id>\d+)/(?P<schedule_date>\w+)/submit-text/$', 'submit_project_report_text', name='submit_project_report_text'),
     url(r'^project/(?P<project_id>\d+)/report/(?P<report_id>\d+)/(?P<schedule_date>\w+)/submit-attachment/$', 'submit_project_report_attachment', name='submit_project_report_attachment'),
 
+    url(r'^report/attachment/download/(?P<uid>[a-zA-Z0-9\-]+)/$', 'download_report_attachment', name='download_report_attachment'),
+
     
 
 )

@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.db import models
 
 class UserProfile(models.Model):
@@ -6,6 +6,9 @@ class UserProfile(models.Model):
     firstname = models.CharField(max_length=300)
     lastname = models.CharField(max_length=300)
     random_password = models.CharField(max_length=30, null=True)
+
+    def get_fullname(self):
+        return '%s %s' % (self.firstname, self.lastname)
 
 class UserSector(models.Model):
     user = models.ForeignKey(User)

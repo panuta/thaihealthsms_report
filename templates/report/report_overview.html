@@ -13,27 +13,44 @@ var initializedTextarea = false;
 
 $(document).ready(function() {
   $('.edit_report_button').on('click', function(e) {
-    console.log('click');
     if(initializedTextarea == false) {
       var config = {
-          toolbar:[['Bold', 'Italic', 'Underline', '-', 'NumberedList', 'BulletedList'],],
-          language:'th'
+        toolbar:[['Bold', 'Italic', 'Underline', '-', 'NumberedList', 'BulletedList'],],
+        language:'th'
       };
       $('.report_text_editor textarea').ckeditor(config);
 
       CKEDITOR.on( 'instanceReady', function( ev ) {
-          ev.editor.dataProcessor.writer.setRules( 'p', {
-              indent : false,
-              breakBeforeOpen : true,
-              breakAfterOpen : false,
-              breakBeforeClose : false,
-              breakAfterClose : true
-          });
+        ev.editor.dataProcessor.writer.setRules( 'p', {
+          indent : false,
+          breakBeforeOpen : true,
+          breakAfterOpen : false,
+          breakBeforeClose : false,
+          breakAfterClose : true
+        });
+      });
+
+      $('.report_text_editor button[type="button"]').on('click', function(e) {
+        $('.report_text_editor').hide();
+        $('.report_text').show();
+        $('.report_actions').show();
       });
     }
 
+    $('.report_text_editor').show();
+    $('.report_text').hide();
+    $('.report_actions').hide();
 
     return false;
+  });
+
+  $('.attach_report_button').on('click', function(e) {
+    $('#report_attachment_form input[type="file"]').click();
+    return false;
+  });
+
+  $('#report_attachment_form input[type="file"]').on('change', function(e) {
+      $('#report_attachment_form').submit();
   });
 
 });
@@ -64,17 +81,17 @@ $(document).ready(function() {
 
   <div class="report_actions">
     {% if not report.submitted_on %}{% if report.report_text or report.attachments %}<a href="#" class="primary submit btn">ส่งรายงาน</a>{% endif %}{% endif %}
-    <a href="#" class="btn edit_report_button">เขียนเนื้อหารายงาน</a>
+    <a href="#" class="btn edit_report_button">{% if not submission.report_text %}เขียนเนื้อหารายงาน{% else %}แก้ไขเนื้อหารายงาน{% endif %}</a>
     <a href="#" class="btn attach_report_button">แนบไฟล์รายงาน</a>
   </div>
 
   {% if submission.report_text %}
   <div class="report_text">
-    {{submission.report_text}}
+    {{submission.report_text|safe}}
   </div>
   {% endif %}
 
-  <div class="report_text_editor">
+  <div class="report_text_editor" style="display:none;">
     <form method="post" action="{% url submit_project_report_text project.id report.id submission.schedule_date|dateid %}">
       {% csrf_token %}
       <textarea name="report_text">{{submission.report_text|safe}}</textarea>
@@ -88,13 +105,19 @@ $(document).ready(function() {
     <ul>
       {% for attachment in submission.attachments %}
       <li>
-        <div class="filename"><a href="#">Filename</a></div>
-        <div class="metadata">Submitted on 12345 by Panu</div>
+        <div class="filename"><a href="{% url download_report_attachment attachment.uid %}">{{attachment.file_name}}.{{attachment.file_ext}}</a></div>
+        <div class="metadata">อัพโหลดเมื่อวันที่ {{attachment.uploaded|format_abbr_datetime}} โดย {{attachment.uploaded_by.get_profile.get_fullname}}</div>
       </li>
       {% endfor %}
     </ul>
   </div>
   {% endif %}
+
+  <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.id report.id submission.schedule_date|dateid %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{attachment_form.errors}}
+    <input type="file" name="report_attachment" id="id_report_attachment" style="opacity:0;text-indent:-9999px;"/>
+  </form>
 
 </div>
 {% endblock %}

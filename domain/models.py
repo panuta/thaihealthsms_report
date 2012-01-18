@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 class Sector(models.Model):
@@ -25,7 +26,7 @@ class Project(models.Model):
     project_type = models.IntegerField(default=0) # Not use yet
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('accounts.UserProfile')
+    created_by = models.ForeignKey(User)
 
     class Meta:
         ordering = ['ref_no']
@@ -35,7 +36,7 @@ class Project(models.Model):
 class ImportGMS(models.Model):
     started = models.DateTimeField(auto_now_add=True)
     finished = models.DateTimeField()
-    imported_by = models.ForeignKey('accounts.UserProfile')
+    imported_by = models.ForeignKey(User)
     created_projects = models.IntegerField(default=0)
     updated_projects = models.IntegerField(default=0)
     notfound_projects = models.IntegerField(default=0)
