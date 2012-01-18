@@ -20,6 +20,52 @@ def view_organization(request):
     sectors = Sector.objects.all().order_by('ref_no')
     return render(request, 'domain/organization.html', {'sectors':sectors, 'master_plans':master_plans})
 
+## ADMINISTRATION ##
+
+@login_required
+def view_manage_users(request):
+    return render(request, 'domain/admin/manage_users.html', {'active_user_menu':'sector'})
+
+@login_required
+def view_manage_users_project(request):
+    return render(request, 'domain/admin/manage_users.html', {'active_user_menu':'project'})
+
+@login_required
+def view_manage_users_add(request):
+
+    if request.method == 'POST':
+        form = AddUserForm(request.POST)
+        if form.is_valid():
+            pass
+    
+    else:
+        form = AddUserForm()
+
+    return render(request, 'domain/admin/manage_users_add.html', {'form':form})
+
+@login_required
+def view_manage_users_import(request):
+
+    if request.method == 'POST':
+        form = ImportUserForm(request.POST)
+        if form.is_valid():
+            pass
+    
+    else:
+        form = ImportUserForm()
+    
+    return render(request, 'domain/admin/manage_users_import.html', {'form':form})
+
+@login_required
+def view_manage_import(request):
+    return render(request, 'domain/admin/manage_import.html', {})
+
+@login_required
+def view_manage_import_details(request):
+    return render(request, 'domain/admin/manage_import_details.html', {})
+
+## SECTOR PAGE ##
+
 @login_required
 def view_sector(request, sector_ref_no):
     sector = get_object_or_404(Sector, ref_no=sector_ref_no)
@@ -37,6 +83,8 @@ def view_master_plan(request, master_plan_ref_no):
     current_projects = Project.objects.filter(master_plan=master_plan, start_date__lte=today, end_date__gte=today).order_by('ref_no')
     
     return render(request, 'domain/master_plan_overview.html', {'master_plan': master_plan, 'current_projects':current_projects})
+
+## PROJECT ##
 
 @login_required
 def view_project_report(request, project_ref_no):

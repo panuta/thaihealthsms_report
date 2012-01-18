@@ -1,0 +1,23 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}ดึงข้อมูลจาก GMS{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'domain/admin/snippets/admin_tabs.html' with active_menu='import' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+    <div class="page_actions"><a href="#" class="primary btn">เริ่มต้นดึงข้อมูล</a></div>
+
+    <div class="last_import">
+        <h2>ผลลัพธ์การดึงข้อมูลครั้งล่าสุด</h2>
+        <ul>
+            <li>สร้างโครงการ 10 โครงการ</li>
+        </ul>
+        <div class="view_details"><a href="{% url view_manage_import_details %}">ดูผลลัพธ์อย่างละเอียด</a></div>
+    </div>
+
+
+</div>
+{% endblock %}

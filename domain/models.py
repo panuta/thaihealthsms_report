@@ -29,3 +29,21 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['ref_no']
+
+## IMPORT FROM GMS ##
+
+class ImportGMS(models.Model):
+    started = models.DateTimeField(auto_now_add=True)
+    finished = models.DateTimeField()
+    imported_by = models.ForeignKey('accounts.UserProfile')
+    created_projects = models.IntegerField(default=0)
+    updated_projects = models.IntegerField(default=0)
+    notfound_projects = models.IntegerField(default=0)
+    created_budgets = models.IntegerField(default=0)
+
+class ImportGMSProjects(models.Model):
+    job = models.ForeignKey(ImportGMS)
+    project_ref_no = models.CharField(max_length=100)
+    is_found = models.BooleanField()
+    is_created = models.BooleanField()
+    created = models.DateTimeField(auto_now_add=True)

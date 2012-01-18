@@ -35,8 +35,8 @@ def format_abbr_date(datetime):
 def display_header_navigation(user):
     html = u'<a href="%s" class="home">หน้า Dashboard</a> |' % reverse('view_user_dashboard')
     
-    # if user.is_superuser:
-    #     html = html + '<a href="%s"><img src="%s/images/base/nav_admin.png" class="icon"/> จัดการระบบ</a> |' % (reverse('view_administration'), settings.STATIC_URL)
+    if user.is_staff:
+        html = html + u'<a href="%s" class="admin">จัดการระบบ</a> |' % reverse('view_manage_users')
     
     html = html + u'<a href="%s" class="org">ผังองค์กร</a> |' % reverse('view_organization')
     

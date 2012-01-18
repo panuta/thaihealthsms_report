@@ -1,6 +1,46 @@
 {% extends 'base_authenticated.html' %}
 {% load page_tags %}
 
+{% block head_title %}{{block.super}}รายงาน {{report.name}} งวดวันที่ {{submission.schedule_date|format_abbr_date}}{% endblock %}
+
+{% block html_head %}
+{{block.super}}
+<script type="text/javascript" src="{{STATIC_URL}}libs/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}libs//ckeditor/adapters/jquery.js"></script>
+
+<script>
+var initializedTextarea = false;
+
+$(document).ready(function() {
+  $('.edit_report_button').on('click', function(e) {
+    console.log('click');
+    if(initializedTextarea == false) {
+      var config = {
+          toolbar:[['Bold', 'Italic', 'Underline', '-', 'NumberedList', 'BulletedList'],],
+          language:'th'
+      };
+      $('.report_text_editor textarea').ckeditor(config);
+
+      CKEDITOR.on( 'instanceReady', function( ev ) {
+          ev.editor.dataProcessor.writer.setRules( 'p', {
+              indent : false,
+              breakBeforeOpen : true,
+              breakAfterOpen : false,
+              breakBeforeClose : false,
+              breakAfterClose : true
+          });
+      });
+    }
+
+
+    return false;
+  });
+
+});
+</script>
+
+{% endblock %}
+
 {% block body_title %}
 <div class="supertitle"><a href="{% url view_master_plan project.master_plan.ref_no %}">แผน {{project.master_plan.ref_no}} - {{project.master_plan.name}}</a></div>
 <div class="title"><h1>โครงการ ({{project.ref_no}}) {{project.name}}</h1> <a href="{% url edit_project project.ref_no %}" class="btn edit_project"><img src="{{STATIC_URL}}images/header/icon_edit.png" /></a></div>
@@ -18,10 +58,14 @@
 
   <h2>{{report.name}}<div class="subtitle">งวดวันที่ {{submission.schedule_date|format_abbr_date}}</div></h2>
 
-  <div class="page_actions"><a href="#" class="primary btn">ส่งรายงาน</a></div>
+  {% if report.submitted_on %}
+  <div class="report_submitted">รายงานถูกส่งแล้วเมื่อวันที่ 14 ก.พ. 2555 เวลา 12:00 น.</div>
+  {% endif %}
 
-  <div class="report_content">
-    <a href="#" class="btn">เขียนเนื้อหารายงาน</a><a href="#" class="btn">แนบไฟล์รายงาน</a>
+  <div class="report_actions">
+    {% if not report.submitted_on %}{% if report.report_text or report.attachments %}<a href="#" class="primary submit btn">ส่งรายงาน</a>{% endif %}{% endif %}
+    <a href="#" class="btn edit_report_button">เขียนเนื้อหารายงาน</a>
+    <a href="#" class="btn attach_report_button">แนบไฟล์รายงาน</a>
   </div>
 
   {% if submission.report_text %}
@@ -30,17 +74,27 @@
   </div>
   {% endif %}
 
-  {% comment %}{% if submission.attachments %}{% endcomment %}
+  <div class="report_text_editor">
+    <form method="post" action="{% url submit_project_report_text project.id report.id submission.schedule_date|dateid %}">
+      {% csrf_token %}
+      <textarea name="report_text">{{submission.report_text|safe}}</textarea>
+      <div class="button_panel"><button type="submit" class="primary btn">จัดเก็บ</button><button type="button" class="btn">ยกเลิก</button></div>
+    </form>
+  </div>
+
+  {% if submission.attachments %}
   <div class="report_attachment">
     <h3>ไฟล์แนบ</h3>
     <ul>
+      {% for attachment in submission.attachments %}
       <li>
         <div class="filename"><a href="#">Filename</a></div>
         <div class="metadata">Submitted on 12345 by Panu</div>
       </li>
+      {% endfor %}
     </ul>
   </div>
-  {% comment %}{% endif %}{% endcomment %}
+  {% endif %}
 
 </div>
 {% endblock %}
