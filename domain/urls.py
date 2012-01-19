@@ -16,7 +16,10 @@ urlpatterns = patterns('domain.views',
     url(r'^manage/import/details/$', 'view_manage_import_details', name='view_manage_import_details'),
 
     url(r'^sector/(?P<sector_ref_no>\d+)/$', 'view_sector', name='view_sector'),
+
     url(r'^master_plan/(?P<master_plan_ref_no>\d+)/$', 'view_master_plan', name='view_master_plan'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/projects/$', 'view_master_plan_projects', name='view_master_plan_projects'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/projects/(?P<year>\d+)/$', 'view_master_plan_projects_in_year', name='view_master_plan_projects_in_year'),
 
     url(r'^project/(?P<project_ref_no>\w+)/report/$', 'view_project_report', name='view_project_report'),
     url(r'^project/(?P<project_ref_no>\w+)/budget/$', 'view_project_budget', name='view_project_budget'),

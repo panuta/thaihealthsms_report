@@ -4,10 +4,12 @@ from django.db import models
 class Sector(models.Model):
     ref_no = models.IntegerField()
     name = models.CharField(max_length=500)
+    master_plans = models.ManyToManyField('MasterPlan', through='SectorMasterPlan')
 
 class MasterPlan(models.Model):
     ref_no = models.IntegerField()
     name = models.CharField(max_length=500)
+    sectors = models.ManyToManyField('Sector', through='SectorMasterPlan')
 
 class SectorMasterPlan(models.Model):
     sector = models.ForeignKey(Sector)

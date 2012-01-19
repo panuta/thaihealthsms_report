@@ -58,6 +58,12 @@ def view_manage_users_import(request):
 
 @login_required
 def view_manage_import(request):
+
+    if request.method == 'POST':
+        import gms
+        gms.import_gms(request.user)
+        return redirect('view_manage_import')
+
     return render(request, 'domain/admin/manage_import.html', {})
 
 @login_required
@@ -77,12 +83,33 @@ def view_sector(request, sector_ref_no):
 @login_required
 def view_master_plan(request, master_plan_ref_no):
     master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
+    sectors = master_plan.sectors.all()
 
     today = datetime.date.today()
-
     current_projects = Project.objects.filter(master_plan=master_plan, start_date__lte=today, end_date__gte=today).order_by('ref_no')
     
-    return render(request, 'domain/master_plan_overview.html', {'master_plan': master_plan, 'current_projects':current_projects})
+    return render(request, 'domain/master_plan_overview.html', {'master_plan': master_plan, 'sectors':sectors, 'current_projects':current_projects})
+
+@login_required
+def view_master_plan_projects(request, master_plan_ref_no):
+    year = datetime.date.today().year
+    return _master_plan_projects_in_year(request, master_plan_ref_no, year)
+
+@login_required
+def view_master_plan_projects_in_year(request, master_plan_ref_no, year):
+    year = int(year) - 543
+    return _master_plan_projects_in_year(request, master_plan_ref_no, year)
+
+def _master_plan_projects_in_year(request, master_plan_ref_no, year):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
+    sectors = master_plan.sectors.all()
+
+    projects = Project.objects.filter(master_plan=master_plan, start_date__year=year).order_by('ref_no')
+
+    this_year = datetime.date.today().year
+    years = range(this_year, this_year-10, -1)
+    return render(request, 'domain/master_plan_projects.html', {'master_plan': master_plan, 'sectors':sectors, 'projects':projects, 'showing_year':year, 'all_years':years})
+
 
 ## PROJECT ##
 
