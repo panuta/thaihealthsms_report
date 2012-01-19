@@ -1,0 +1,43 @@
+{% extends 'base_authenticated.html' %}
+{% load page_tags %}
+
+{% block body_title %}{% include 'domain/snippets/section_header.html' %}{% endblock %}
+{% block body_tabs %}{% include 'domain/snippets/section_tabs.html' with active_menu='report' %}{% endblock %}
+
+{% block body_content %}
+<div class="section_page">
+  <div class="page_actions"><a href="#" class="btn">สร้างหัวข้อรายงาน</a></div>
+
+  <table>
+    <colgroup>
+      <col width="" />
+      <col width="300" />
+      <col width="230" />
+      <col width="80" />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>รายงาน</th>
+        <th>กำหนดส่ง</th>
+        <th>จำนวนโครงการที่ต้องส่ง</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Report Name</td>
+        <td>ทุกวันที่ 15 ของทุกเดือน</td>
+        <td>14</td>
+        <td><a href="#" class="btn">แก้ไข</a></td>
+      </tr>
+      <tr>
+        <td>Report Name</td>
+        <td>ทุกวันที่ 15 ของทุกเดือน</td>
+        <td>14</td>
+        <td><a href="#" class="btn">แก้ไข</a></td>
+      </tr>
+    </tbody>
+  </table>
+    
+</div>
+{% endblock %}

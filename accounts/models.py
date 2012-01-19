@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
 
 class UserProfile(models.Model):
@@ -6,15 +6,16 @@ class UserProfile(models.Model):
     firstname = models.CharField(max_length=300)
     lastname = models.CharField(max_length=300)
     random_password = models.CharField(max_length=30, null=True)
+    primary_role = models.ForeignKey(Group)
 
     def get_fullname(self):
         return '%s %s' % (self.firstname, self.lastname)
 
-class UserSector(models.Model):
+class UserSection(models.Model):
     user = models.ForeignKey(User)
-    sector = models.ForeignKey('domain.Sector')
+    section = models.ForeignKey('domain.Section')
 
-class ProjectResponsibility(models.Model): # for sector cordinator
+class ProjectResponsibility(models.Model): # for section cordinator
     user = models.ForeignKey(User)
     project = models.ForeignKey('domain.Project')
 

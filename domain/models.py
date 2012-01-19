@@ -1,24 +1,22 @@
 from django.contrib.auth.models import User
 from django.db import models
 
-class Sector(models.Model):
-    ref_no = models.IntegerField()
+class Section(models.Model):
+    ref_no = models.CharField(max_length=10)
+    prefix = models.CharField(max_length=50)
     name = models.CharField(max_length=500)
-    master_plans = models.ManyToManyField('MasterPlan', through='SectorMasterPlan')
+    long_abbr_name = models.CharField(max_length=100)
+    short_abbr_name = models.CharField(max_length=100)
+    order_number = models.IntegerField(default=0)
 
-class MasterPlan(models.Model):
-    ref_no = models.IntegerField()
-    name = models.CharField(max_length=500)
-    sectors = models.ManyToManyField('Sector', through='SectorMasterPlan')
-
-class SectorMasterPlan(models.Model):
-    sector = models.ForeignKey(Sector)
-    master_plan = models.ForeignKey(MasterPlan)
+    def __unicode__(self):
+        return '%s - %s' % (self.short_abbr_name, self.name)
 
 class Project(models.Model):
-    master_plan = models.ForeignKey(MasterPlan)
+    section = models.ForeignKey(Section)
     ref_no = models.CharField(max_length=100, unique=True)
     contract_no = models.CharField(max_length=100, null=True, unique=True)
+    prefix = models.CharField(max_length=50, blank=True)
     name = models.CharField(max_length=1000)
     abbr_name = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
@@ -26,7 +24,7 @@ class Project(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     project_type = models.IntegerField(default=0) # Not use yet
-    status = models.IntegerField(default=0)
+    status = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
 

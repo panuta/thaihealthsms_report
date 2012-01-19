@@ -13,10 +13,27 @@ from private_files.views import get_file as private_files_get_file
 
 from common.utilities import convert_dateid_to_date, format_dateid, split_filename
 
-from domain.models import Project
+from domain.models import Section, Project
 
 from forms import *
 from models import *
+
+@login_required
+def view_section_reports(request, section_ref_no):
+    section = get_object_or_404(Section, ref_no=section_ref_no)
+    
+    return render(request, 'report/section_reports.html', {'section': section, })
+
+@login_required
+def view_project_report(request, project_ref_no):
+    project = get_object_or_404(Project, ref_no=project_ref_no)
+
+    reports = Report.objects.filter(section=project.section).order_by('name')
+
+    for report in reports:
+        report.recent = report.get_submissions(project, 5)
+
+    return render(request, 'domain/project_report.html', {'project': project, 'reports':reports})
 
 @login_required
 def view_report(request, project_id, report_id, schedule_date):

@@ -1,18 +1,5 @@
 @import "../libs/bootstrap/lib/variables.less";
 
-@publication-published: #d8e0bd;
-
-@publication-unfinished: #ffcccc;
-@publication-unfinished-bg: #f0e1da;
-
-@publication-scheduled: #abced5;
-@publication-scheduled-bg: #deecee;
-
-@publication-unpublished: #CCC;
-@publication-unpublished-bg: #F3F3F3;
-
-@success-light-background: #c9edc5;
-
 .content_link() {
     &:link, &:active, &:visited {
         text-decoration:underline;
@@ -40,6 +27,11 @@
 
 body {
     background:url(/static/images/bg.png);
+}
+
+ul {
+    margin:0px;
+    padding:0px;
 }
 
 .clear {
@@ -167,21 +159,12 @@ body {
         color:#555;
         font-size:1.2em;
 
-        .project_date {
+        span {
+            margin-right:30px;
 
             em {
                 font-weight:bold;
                 font-style:normal;
-            }
-        }
-
-        .project_manager {
-            margin-left:30px;
-
-            em {
-                
-                font-style:normal;
-                font-weight:bold;
             }
         }
     }
@@ -207,6 +190,10 @@ body {
             border-bottom:3px solid #ff9933;
         }
     }
+}
+
+#body-messages {
+    padding:0px 10px;
 }
 
 .container-body {
@@ -253,149 +240,6 @@ body {
 
 .page_actions {
     margin-bottom:20px;
-
-    a.primary {
-        color:#FFF !important;
-    }
-}
-
-
-
-
-
-
-
-/* *************** UI *************** */
-
-.delete_panel {
-    border:1px dashed #CCC;
-    padding:15px 15px 15px 45px;
-    background:url(/static/images/icons/danger_icon.png) 15px 50% no-repeat;
-
-    a.danger:link, a.danger:active, a.danger:visited {
-        text-decoration:underline;
-        color:#666;
-    }
-
-    a.danger:hover {
-        background-color:#C30;
-        color:#FFF;
-        text-shadow:none;
-    }
-}
-
-.pagination_bar {
-    margin:30px 0px;
-    text-align:center;
-
-    .goto {
-        width:76px;
-        height:26px;
-        background:url(/static/images/pagination/nav.png) no-repeat;
-        text-align:center;
-        display:inline-block;
-        line-height:26px;
-        font-size:0.9em;
-        cursor:default;
-    }
-
-    .prev {
-        margin-right:10px;
-    }
-
-    .next {
-        margin-left:10px;
-    }
-    
-    .page {
-        width:36px;
-        height:26px;
-        background:url(/static/images/pagination/page.png) center top no-repeat;
-        text-align:center;
-        display:inline-block;
-        line-height:26px;
-        margin:0px 3px;
-        cursor:default;
-    }
-
-    .current {
-        background-position:center bottom;
-        font-weight:bold;
-        color:#FFF;
-    }
-
-    a {
-        &:link, &:visited, &:active {
-            text-decoration:none;
-            color:@linkColor;
-        }
-
-        &.page:hover {
-            background-position:center bottom;
-            color:#FFF;
-            font-weight:bold;
-            cursor:pointer;
-        }
-
-        &.goto:hover {
-            background-position:center bottom;
-            color:#FFF;
-            font-weight:bold;
-            cursor:pointer;
-        }
-    }
-}
-
-/* *************** Buttons *************** */
-
-.upload_publication_button span {
-    background:url(/static/images/buttons/button_upload_white.png) 0px 50% no-repeat;
-    padding-left:24px;
-}
-
-.publish_button span {
-    background:url(/static/images/buttons/button_publish_white.png) 0px 50% no-repeat;
-    padding-left:18px;
-}
-
-.unpublish_button span {
-    background:url(/static/images/buttons/button_unpublish_black.png) 0px 50% no-repeat;
-    padding-left:24px;
-}
-
-.select_files_button {
-    width:160px;
-    text-align:center;
-
-    span {
-        background:url(/static/images/buttons/button_select_files.png) 0px 50% no-repeat;
-        padding-left:24px;
-    }
-}
-
-a.create_magazine span {
-    background:url(/static/images/buttons/button_magazine_white.png) 0px 50% no-repeat;
-    padding-left:24px;
-}
-
-a.action-schedule span {
-    background:url(/static/images/buttons/button_scheduled_black_small.png) 0px 50% no-repeat;
-    padding-left:18px;
-}
-
-a.edit_publication_button span {
-    background:url(/static/images/buttons/button_edit_black.png) 0px 50% no-repeat;
-    padding-left:24px;
-}
-
-button.upload_magazine_button span, button.upload_book_button span , button.upload_file_button span {
-    background:url(/static/images/buttons/button_upload_white.png) 0px 50% no-repeat;
-    padding-left:24px;
-}
-
-a.download_publication_button span {
-    background:url(/static/images/buttons/button_download_black.png) 0px 50% no-repeat;
-    padding-left:24px;
 }
 
 /* *************** Messages *************** */
@@ -410,6 +254,18 @@ a.download_publication_button span {
 
 .alert-message.block-message.success p {
     background:url(/static/images/messages/success.png) 0px 50% no-repeat;
+    padding:10px 35px;
+    vertical-align:middle;
+}
+
+.alert-message.block-message.warning p {
+    background:url(/static/images/messages/warning.png) 0px 50% no-repeat;
+    padding:10px 35px;
+    vertical-align:middle;
+}
+
+.alert-message.block-message.error p {
+    background:url(/static/images/messages/error.png) 0px 50% no-repeat;
     padding:10px 35px;
     vertical-align:middle;
 }
@@ -453,6 +309,10 @@ form, .form-stacked {
 
     .help-block {
         margin-top:5px;
+    }
+
+    li {
+        list-style:none;
     }
 }
 
@@ -508,6 +368,7 @@ form .row-inputs {
     li {
         margin-bottom:10px;
         line-height:25px;
+        list-style:none;
     }
 
     label {
@@ -523,30 +384,6 @@ form .row-inputs {
         margin-bottom:20px;
     }
 }
-
-form .checkbox-inputs {
-    li {
-        margin-bottom:10px;
-    }
-
-    label {
-        line-height:23px;
-        color:#444;
-        float:none;
-
-        input {
-            margin-right:5px;
-        }
-
-        span {
-            color:#666;
-            font-style:italic;
-        }
-    }
-}
-
-
-
 
 form .checkbox-input {
 
@@ -555,49 +392,6 @@ form .checkbox-input {
         line-height:23px;
         color:#444;
         float:none;
-    }
-}
-
-form .table-inputs {
-    th {
-        padding-top:30px;
-    }
-
-    tr.active {
-        background-color:#FFC;
-    }
-
-    label {
-        color:#444;
-        float:none;
-        font-size:1em;
-    }
-
-    input[type='radio'], input[type='checkbox'] {
-        margin-right:6px;
-    }
-}
-
-form .inputs-list {
-    li {
-        margin-bottom:10px;
-        margin-top:3px;
-    }
-
-    label {
-        margin-left:5px;
-        color:#444;
-        display:inline;
-    }
-
-    input[type='radio'], input[type='checkbox'] {
-        float:none;
-        margin-left:0px;
-        margin-right:8px;
-    }
-
-    .errorlist {
-        margin-bottom:20px;
     }
 }
 
@@ -613,51 +407,7 @@ form .left_form_actions {
     margin:0px 0px 30px 0px;
 }
 
-/* *************** Custom Styles *************** */
-
-ul {margin:0px;padding:0px;}
-li {list-style:none;}
-a.btn:visited {color:#333333;}
-
-.no_row {
-    text-align:center;
-    font-size:1.1em;
-    background-color:#F5F5F5;
-    padding:10px 0px;
-}
-
-table td.row_actions {
-    a {
-        .content_link;
-    }
-
-    .not_available {
-        font-style:italic;
-        color:#666;
-    }
-}
-
-.modal {
-    h3 em {
-        color:#369;
-        font-style:normal;
-    }
-
-    .modal-message {
-        padding:10px 15px;
-        background-color:#C30;
-        color:#FFF;
-        border-bottom:1px solid #EEE;
-    }
-}
-
-
-
-/*
- *
- * PAGE
- *
- */
+/* *************** Pages *************** */
 
 .organization_page {
     ul {
@@ -676,23 +426,31 @@ table td.row_actions {
 }
 
 .admin_page {
-    .user_roles {
+    .no_users {
+        color:#666;
+        font-size:1.2em;
+        margin-bottom:20px;
+    }
+
+    .added_user {
+        background-color:#FFC;
+        padding:15px 20px;
+        border:2px solid #CCC;
+        margin-bottom:25px;
+
         li {
-            margin-left:20px;
-            list-style:disc;
             margin-bottom:15px;
+            list-style:none;
+            color:#444;
+            font-size:1.2em;
 
-            a {
-                font-size:1.2em;
-                .content_link;
-            }
-
-            .details {
-                margin-top:7px;
-                font-size:1.1em;
+            em {
+                font-style:normal;
+                font-weight:bold;
             }
         }
     }
+
     .user_import_guide {
         h3 {
             margin-bottom:10px;
@@ -728,7 +486,7 @@ table td.row_actions {
 
 }
 
-.sector_page {
+.section_page {
     .master_plans {
         li {
             list-style:disc;
@@ -742,22 +500,23 @@ table td.row_actions {
     }
 
     .projects {
+        margin-top:10px;
         li {
             list-style:disc;
-            margin:5px 0px 30px 25px;
+            margin:5px 0px 25px 25px;
             color:#888;
 
             .project_name {
-                margin-bottom:12px;
+                margin-bottom:10px;
 
                 a {
-                    font-size:1.2em;
+                    font-size:1.1em;
                     .content_link;
                 }
             }
             
             .details {
-                font-size:1.2em;
+                font-size:1.1em;
                 margin-right:20px;
 
                 em {
@@ -775,7 +534,7 @@ table td.row_actions {
     }
 }
 
-.project_report_page {
+.project_page {
     .reports {
         margin-top:10px;
 
@@ -820,10 +579,25 @@ table td.row_actions {
             }
         }
     }
-}
 
-.project_budget_page {
-    
+    .budgets {
+        th {
+            text-align:center;
+            font-size:1.1em;
+        }
+
+        tr.claimed {
+            background-color:#e2f9d7;
+        }
+
+        td {
+            font-size:1.1em;
+
+            &.c {
+                text-align:center;
+            }
+        }
+    }
 }
 
 .project_activity_page {

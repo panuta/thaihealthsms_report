@@ -5,43 +5,131 @@ import datetime
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User, Group
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from report.models import Report
+from common.utilities import make_random_user_password
+
+from accounts.models import UserProfile, UserSection, ProjectManager
 
 from forms import *
 from models import *
 
 @login_required
 def view_organization(request):
-    master_plans = MasterPlan.objects.all().order_by('ref_no')
-    sectors = Sector.objects.all().order_by('ref_no')
-    return render(request, 'domain/organization.html', {'sectors':sectors, 'master_plans':master_plans})
+    sections = Section.objects.all().order_by('order_number')
+    return render(request, 'domain/organization.html', {'sections':sections})
 
 ## ADMINISTRATION ##
 
 @login_required
 def view_manage_users(request):
-    return render(request, 'domain/admin/manage_users.html', {'active_user_menu':'sector'})
+    user_profiles = UserProfile.objects.filter(primary_role__in=(Group.objects.get(name='section_manager'), Group.objects.get(name='section_assistant'))).order_by('firstname', 'lastname')
+    
+    for user_profile in user_profiles:
+        user_profile.user_sections = UserSection.objects.filter(user=user_profile.user)
+    
+    print user_profiles
+
+    return render(request, 'domain/admin/manage_users_section.html', {'active_user_menu':'section', 'user_profiles':user_profiles})
 
 @login_required
 def view_manage_users_project(request):
-    return render(request, 'domain/admin/manage_users.html', {'active_user_menu':'project'})
+    project_managers = ProjectManager.objects.all().distinct('user')
+    return render(request, 'domain/admin/manage_users_project.html', {'active_user_menu':'project', 'project_managers':project_managers})
+
+@login_required
+def view_manage_users_password(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    return render(request, 'domain/admin/manage_users_password.html', {'this_user':user})
 
 @login_required
 def view_manage_users_add(request):
-
     if request.method == 'POST':
         form = AddUserForm(request.POST)
         if form.is_valid():
-            pass
+            email = form.cleaned_data['email']
+            firstname = form.cleaned_data['firstname']
+            lastname = form.cleaned_data['lastname']
+            primary_role = form.cleaned_data['primary_role']
+
+            random_password = make_random_user_password()
+            user = User.objects.create_user(email, email, random_password)
+            user.is_active = False
+            user.save()
+            
+            user_profile = UserProfile.objects.create(
+                user=user,
+                firstname=firstname,
+                lastname=lastname,
+                random_password=random_password,
+                primary_role=Group.objects.get(name=primary_role)
+            )
+
+            return redirect('view_manage_users_add_responsibility', user_id=user.id)
     
     else:
         form = AddUserForm()
 
     return render(request, 'domain/admin/manage_users_add.html', {'form':form})
+
+@login_required
+def view_manage_users_add_responsibility(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    primary_role = user.get_profile().primary_role
+
+    if primary_role in (Group.objects.get(name='section_manager'), Group.objects.get(name='section_assistant')):
+        return _add_section_user_responsibility(request, user)
+    elif primary_role == Group.objects.get(name='project_manager'):
+        return _add_project_manager_responsibility(request, user)
+    else:
+        raise Http404
+
+def _add_section_user_responsibility(request, user):
+    if request.method == 'POST':
+        form = AddSectionUserResponsibilityForm(request.POST)
+        if form.is_valid():
+            sections = form.cleaned_data['sections']
+
+            for section in sections:
+                UserSection.objects.create(user=user, section=section)
+
+            user.is_active = True
+            user.save()
+
+            messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
+            return redirect('view_manage_users_password', user_id=user.id)
+    
+    else:
+        form = AddSectionUserResponsibilityForm()
+
+    return render(request, 'domain/admin/manage_users_add_section_user.html', {'form':form, 'this_user':user})
+
+def _add_project_manager_responsibility(request, user):
+    if request.method == 'POST':
+        form = AddProjectManagerResponsibilityForm(request.POST)
+        if form.is_valid():
+            project_ref_no = form.cleaned_data['project_ref_no']
+            project = get_object_or_404(Project, ref_no=project_ref_no)
+            
+            project_manager, created = ProjectManager.objects.get_or_create(user=user, project=project)
+
+            if created:
+                messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
+            else:
+                messages.warning(request, u'ผู้ใช้เป็นผู้จัดการโครงการนี้อยู่แล้ว')
+
+            if 'submit_continue_button' in request.POST:
+                return redirect('view_manage_users_add_responsibility', user_id=user.id)
+            else:
+                return redirect('view_manage_users_password', user_id=user.id)
+    
+    else:
+        form = AddProjectManagerResponsibilityForm()
+
+    return render(request, 'domain/admin/manage_users_add_project_manager.html', {'form':form, 'this_user':user})
 
 @login_required
 def view_manage_users_import(request):
@@ -70,65 +158,36 @@ def view_manage_import(request):
 def view_manage_import_details(request):
     return render(request, 'domain/admin/manage_import_details.html', {})
 
-## SECTOR PAGE ##
+## SECTION PAGE ##
 
 @login_required
-def view_sector(request, sector_ref_no):
-    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
-    sector_master_plans = SectorMasterPlan.objects.filter(sector=sector).order_by('master_plan__ref_no')
-    master_plans = [sector_master_plan.master_plan for sector_master_plan in sector_master_plans]
+def view_section(request, section_ref_no):
+    section = get_object_or_404(Section, ref_no=section_ref_no)
     
-    return render(request, 'domain/sector_overview.html', {'sector':sector, 'master_plans':master_plans})
-
-@login_required
-def view_master_plan(request, master_plan_ref_no):
-    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
-    sectors = master_plan.sectors.all()
-
     today = datetime.date.today()
-    current_projects = Project.objects.filter(master_plan=master_plan, start_date__lte=today, end_date__gte=today).order_by('ref_no')
+    current_projects = Project.objects.filter(section=section, start_date__lte=today, end_date__gte=today).order_by('ref_no')
     
-    return render(request, 'domain/master_plan_overview.html', {'master_plan': master_plan, 'sectors':sectors, 'current_projects':current_projects})
+    return render(request, 'domain/section_overview.html', {'section':section, 'current_projects':current_projects})
 
 @login_required
-def view_master_plan_projects(request, master_plan_ref_no):
+def view_section_projects(request, section_ref_no):
     year = datetime.date.today().year
-    return _master_plan_projects_in_year(request, master_plan_ref_no, year)
+    return _section_projects_in_year(request, section_ref_no, year)
 
 @login_required
-def view_master_plan_projects_in_year(request, master_plan_ref_no, year):
+def view_section_projects_in_year(request, section_ref_no, year):
     year = int(year) - 543
-    return _master_plan_projects_in_year(request, master_plan_ref_no, year)
+    return _section_projects_in_year(request, section_ref_no, year)
 
-def _master_plan_projects_in_year(request, master_plan_ref_no, year):
-    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
-    sectors = master_plan.sectors.all()
-
-    projects = Project.objects.filter(master_plan=master_plan, start_date__year=year).order_by('ref_no')
+def _section_projects_in_year(request, section_ref_no, year):
+    section = get_object_or_404(Section, ref_no=section_ref_no)
+    projects = Project.objects.filter(section=section, start_date__year=year).order_by('ref_no')
 
     this_year = datetime.date.today().year
     years = range(this_year, this_year-10, -1)
-    return render(request, 'domain/master_plan_projects.html', {'master_plan': master_plan, 'sectors':sectors, 'projects':projects, 'showing_year':year, 'all_years':years})
-
+    return render(request, 'domain/section_projects.html', {'section': section, 'projects':projects, 'showing_year':year, 'all_years':years})
 
 ## PROJECT ##
-
-@login_required
-def view_project_report(request, project_ref_no):
-    project = get_object_or_404(Project, ref_no=project_ref_no)
-
-    reports = Report.objects.filter(master_plan=project.master_plan).order_by('name')
-
-    for report in reports:
-        report.recent = report.get_submissions(project, 5)
-
-    return render(request, 'domain/project_report.html', {'project': project, 'reports':reports})
-
-@login_required
-def view_project_budget(request, project_ref_no):
-    project = get_object_or_404(Project, ref_no=project_ref_no)
-
-    return render(request, 'domain/project_budget.html', {'project': project, })
 
 @login_required
 def view_project_activity(request, project_ref_no):

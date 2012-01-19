@@ -46,7 +46,13 @@
 <div id="body-title">{% block body_title %}{% endblock %}</div>
 <div id="body-tabs">{% block body_tabs %}{% endblock %}</div>
 
-{% comment %}{% display_messages messages %}{% endcomment %}
+{% if messages %}
+  <div id="body-messages">
+    {% for message in messages %}
+    <div class="alert-message block-message {% if message.tags %}{{message.tags}}{% endif %}"><p>{{message}}</p></div>
+    {% endfor %}
+  </div>
+{% endif %}
 
 
 <div id="body-content" class="container-fluid container-body">

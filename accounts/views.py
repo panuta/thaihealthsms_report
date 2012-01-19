@@ -19,8 +19,34 @@ def auth_login(request):
 @login_required
 def view_user_dashboard(request):
     
+    # Section Manager
+    if request.user.get_profile().primary_role == Group.objects.get(name='section_manager'):
+        sections = UserSection.objects.filter(user=request.user)
+
+        if len(sections) == 1:
+            return redirect('view_section', section_ref_no=sections[0].ref_no)
+        else:
+            return render(request, 'dashboard/dashboard_section_manager.html', {})
     
-    return render(request, 'accounts/user_dashboard.html', {})
+    # Section Assistant
+    if request.user.get_profile().primary_role == Group.objects.get(name='section_manager'):
+        sections = UserSection.objects.filter(user=request.user)
+
+        if len(sections) == 1:
+            return redirect('view_section', section_ref_no=sections[0].ref_no)
+        else:
+            return render(request, 'dashboard/dashboard_section_assistant.html', {})
+    
+    # Project Manager
+    if request.user.get_profile().primary_role == Group.objects.get(name='project_manager'):
+        projects = ProjectManager.objects.filter(user=request.user)
+
+        if len(projects) == 1:
+            return redirect('view_project_report', project_ref_no=projects[0].ref_no)
+        else:
+            return render(request, 'dashboard/dashboard_project_manager.html', {})
+    
+    raise Http404
 
 @login_required
 def view_my_profile(request):

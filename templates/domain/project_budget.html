@@ -7,7 +7,41 @@
 {% block body_tabs %}{% include 'domain/snippets/project_tabs.html' with active_menu='budget' %}{% endblock %}
 
 {% block body_content %}
-<div class="project_budget_page">
+<div class="project_page">
   
+  <table class="budgets">
+    <colgroup>
+      <col width="60"/>
+      <col width="220"/>
+      <col width="140"/>
+      <col width="200"/>
+      <col width="200"/>
+      <col />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>งวดที่</th>
+        <th>ช่วงเวลา</th>
+        <th>วันกำหนดส่ง</th>
+        <th>เงินอนุมัติ</th>
+        <th>เงินเบิกจ่าย</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for schedule in budget_schedules %}
+      <tr{% if schedule.claimed_on %} class="claimed"{% endif %}>
+        <td class="c">{{schedule.cycle}}</td>
+        <td class="c">{{schedule.start_date|format_abbr_date}} - {{schedule.end_date|format_abbr_date}}</td>
+        <td class="c">{{schedule.due_date|format_abbr_date}}</td>
+        <td class="c">{{schedule.grant_budget}} บาท</td>
+        <td class="c">{{schedule.claim_budget}} บาท</td>
+        <td>{% if schedule.claimed_on %}เบิกเมื่อวันที่ {{schedule.claimed_on|format_abbr_date}}{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
 </div>
 {% endblock %}

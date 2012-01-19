@@ -43,3 +43,9 @@ def split_filename(filename):
 
 def convert_dateid_to_date(dateid):
     return date(int(dateid[4:8]), int(dateid[2:4]), int(dateid[0:2]))
+
+allow_password_chars = '0123456789'
+random_password_length = 6
+def make_random_user_password():
+    from random import choice
+    return ''.join([choice(allow_password_chars) for i in range(random_password_length)])

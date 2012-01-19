@@ -1,0 +1,49 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}จัดการผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'domain/admin/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+    <div class="page_actions"><a href="{% url view_manage_users_add %}" class="btn">เพิ่มผู้ใช้ระบบ</a></div>
+
+    {% include 'domain/admin/snippets/admin_users_tabs.html' %}
+
+    {% if user_profiles %}
+    <table class="zebra-striped">
+      <colgroup>
+        <col width=""/>
+        <col width="150px"/>
+        <col width="300px"/>
+        <col width="80px"/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>ชื่อ</th>
+          <th>สำนัก</th>
+          <th>ประเภทผู้ใช้</th>
+          <th>สถานะ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user_profile in user_profiles %}
+        <tr>
+          <td>{{user_profile.get_fullname}}</td>
+          <td>สำนัก 7</td>
+          <td>บางตำแหน่ง</td>
+          <td><a href="#" class="small btn">แก้ไข</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="no_users">ไม่มีรายชื่อผู้ใช้ในกลุ่มนี้</div>
+    {% endif %}
+
+</div>
+{% endblock %}

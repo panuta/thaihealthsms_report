@@ -26,6 +26,12 @@ def after_syncdb(sender, **kwargs):
     
     # Site Information ###############
     Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_ADDRESS)
+
+    # Group ##################
+    admin_group, created = Group.objects.get_or_create(name='administrator')
+    section_mgn_group, created = Group.objects.get_or_create(name='section_manager')
+    section_assist_group, created = Group.objects.get_or_create(name='section_assistant')
+    pm_group, created = Group.objects.get_or_create(name='project_manager')
     
     # Administrator ##################
     admins = settings.ADMINS
@@ -34,76 +40,55 @@ def after_syncdb(sender, **kwargs):
     
     for admin in admins:
         try:
-            admin_user = User.objects.get(username=admin[0])
+            admin_user = User.objects.get(username=admin[1])
             
         except User.DoesNotExist:
             #random_password = User.objects.make_random_password()
             random_password = '1q2w3e4r'
-            admin_user = User.objects.create_user(admin[0], admin[1], random_password)
+            admin_user = User.objects.create_user(admin[1], admin[1], random_password)
             admin_user.is_superuser = True
             admin_user.is_staff = True
             admin_user.save()
+
+            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_group)
             
-            email_render_dict = {'username':admin[0], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
+            email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
             email_subject = render_to_string('email/create_admin_subject.txt', email_render_dict)
             email_message = render_to_string('email/create_admin_message.txt', email_render_dict)
             
             send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [admin[1]])
-            
-            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0], lastname='')
         
         some_admin = admin_user
     
-    # Sector ##################
-    sector1, created = Sector.objects.get_or_create(ref_no=1, name='สำนักสนับสนุนการสร้างสุขภาวะและลดปัจจัยเสี่ยงหลัก')
-    sector2, created = Sector.objects.get_or_create(ref_no=2, name='สำนักสนับสนุนการสร้างสุขภาวะและลดปัจจัยเสี่ยงรอง')
-    sector3, created = Sector.objects.get_or_create(ref_no=3, name='สำนักสนับสนุนการสร้างสุขภาวะในพื้นที่ชุมชน')
-    sector4, created = Sector.objects.get_or_create(ref_no=4, name='สำนักสนับสนุนการเรียนรู้และสุขภาวะองค์กร')
-    sector5, created = Sector.objects.get_or_create(ref_no=5, name='สำนักรณรงค์สื่อสารสาธารณะและสังคม')
-    sector6, created = Sector.objects.get_or_create(ref_no=6, name='สำนักสนับสนุนโครงการเปิดรับทั่วไป')
-    sector7, created = Sector.objects.get_or_create(ref_no=7, name='สำนักสนับสนุนการพัฒนาระบบสุขภาพและบริการสุขภาพ')
-    sector8, created = Sector.objects.get_or_create(ref_no=8, name='สำนักพัฒนายุทธศาสตร์ แผนและสมรรถนะ')
-    sector9, created = Sector.objects.get_or_create(ref_no=9, name='สำนักพัฒนาวิชาการ')
-    
-    # Master Plan ##################
-    master_plan1, created  = MasterPlan.objects.get_or_create(ref_no=1, name="แผนควบคุมการบริโภคยาสูบ")
-    master_plan2, created  = MasterPlan.objects.get_or_create(ref_no=2, name="แผนควบคุมการบริโภคเครื่องดื่มแอลกอฮอล์")
-    master_plan3, created  = MasterPlan.objects.get_or_create(ref_no=3, name="แผนสนับสนุนการป้องกันอุบัตเหตุทางถนนและอุบัติภัย")
-    master_plan4, created  = MasterPlan.objects.get_or_create(ref_no=4, name="แผนควบคุมปัจจัยเสี่ยงทางสุขภาพ")
-    master_plan5, created  = MasterPlan.objects.get_or_create(ref_no=5, name="แผนสุขภาวะประชากรกลุ่มเฉพาะ")
-    master_plan6, created  = MasterPlan.objects.get_or_create(ref_no=6, name="แผนสุขภาวะชุมชน")
-    master_plan7, created  = MasterPlan.objects.get_or_create(ref_no=7, name="แผนสุขภาวะเด็ก เยาวชน และครอบครัว")
-    master_plan8, created  = MasterPlan.objects.get_or_create(ref_no=8, name="แผนสร้างเสริมสุขภาวะในองค์กร")
-    master_plan9, created  = MasterPlan.objects.get_or_create(ref_no=9, name="แผนส่งเสริมการออกกำลังกายและกีฬาเพื่อสุขภาพ")
-    master_plan10, created  = MasterPlan.objects.get_or_create(ref_no=10, name="แผนสื่อสารการตลาดเพื่อสังคม")
-    master_plan11, created  = MasterPlan.objects.get_or_create(ref_no=11, name="แผนสนับสนุนโครงสร้างทั่วไปและนวัตกรรม")
-    master_plan12, created  = MasterPlan.objects.get_or_create(ref_no=12, name="แผนสนับสนุนการสร้างเสริมสุขภาพผ่านระบบบริการสุขภาพ")
-    master_plan13, created  = MasterPlan.objects.get_or_create(ref_no=13, name="แผนพัฒนาระบบและกลไกสนับสนุนเพื่อการสร้างเสริมสุขภาพ")
-    
-    SectorMasterPlan.objects.get_or_create(sector=sector1, master_plan=master_plan1)
-    SectorMasterPlan.objects.get_or_create(sector=sector1, master_plan=master_plan2)
-    SectorMasterPlan.objects.get_or_create(sector=sector1, master_plan=master_plan3)
-    SectorMasterPlan.objects.get_or_create(sector=sector2, master_plan=master_plan4)
-    SectorMasterPlan.objects.get_or_create(sector=sector2, master_plan=master_plan5)
-    SectorMasterPlan.objects.get_or_create(sector=sector3, master_plan=master_plan6)
-    SectorMasterPlan.objects.get_or_create(sector=sector4, master_plan=master_plan7)
-    SectorMasterPlan.objects.get_or_create(sector=sector4, master_plan=master_plan8)
-    SectorMasterPlan.objects.get_or_create(sector=sector5, master_plan=master_plan9)
-    SectorMasterPlan.objects.get_or_create(sector=sector5, master_plan=master_plan10)
-    SectorMasterPlan.objects.get_or_create(sector=sector6, master_plan=master_plan11)
-    SectorMasterPlan.objects.get_or_create(sector=sector7, master_plan=master_plan12)
-    SectorMasterPlan.objects.get_or_create(sector=sector7, master_plan=master_plan13)
-    SectorMasterPlan.objects.get_or_create(sector=sector8, master_plan=master_plan13)
-    SectorMasterPlan.objects.get_or_create(sector=sector9, master_plan=master_plan13)
-    
+    # Section ##################
+    """
+    section10, created = Section.objects.get_or_create(ref_no='10', order_number=10, name='ศูนย์เรียนรู้สุขภาวะ', prefix='ฝ่าย', long_abbr_name='ศูนย์เรียนรู้', short_abbr_name='WISH Center')
+    section01, created = Section.objects.get_or_create(ref_no='01', order_number=20, name='สำนักสนับสนุนการควบคุมปัจจัยเสี่ยงหลัก', prefix='สำนัก', long_abbr_name='สำนัก 1', short_abbr_name='สำนัก 1')
+    section02, created = Section.objects.get_or_create(ref_no='02', order_number=30, name='สำนักสนับสนุนการควบคุมปัจจัยเสี่ยงทางสุขภาพ', prefix='สำนัก', long_abbr_name='สำนัก 2', short_abbr_name='สำนัก 2')
+    section03, created = Section.objects.get_or_create(ref_no='03', order_number=40, name='สำนักสนับสนุนสุขภาวะชุมชน', prefix='สำนัก', long_abbr_name='สำนัก 3', short_abbr_name='สำนัก 3')
+    section04, created = Section.objects.get_or_create(ref_no='04', order_number=50, name='สำนักสนับสนุนสุขภาวะเด็กเยาวชนและครอบครัว', prefix='สำนัก', long_abbr_name='สำนัก 4', short_abbr_name='สำนัก 4')
+    section05, created = Section.objects.get_or_create(ref_no='05', order_number=60, name='สำนักรณรงค์สื่อสารสังคมและส่งเสริมการออกกำลังกาย', prefix='สำนัก', long_abbr_name='สำนัก 5', short_abbr_name='สำนัก 5')
+    section06, created = Section.objects.get_or_create(ref_no='06', order_number=70, name='สำนักสร้างสรรค์โอกาสและนวัตกรรม', prefix='สำนัก', long_abbr_name='สำนัก 6', short_abbr_name='สำนัก 6')
+    section07, created = Section.objects.get_or_create(ref_no='07', order_number=80, name='สำนักสนับสนุนการพัฒนาระบบสุขภาพ', prefix='สำนัก', long_abbr_name='สำนัก 7', short_abbr_name='สำนัก 7')
+    section15, created = Section.objects.get_or_create(ref_no='15', order_number=90, name='สำนักสนับสนุนสุขภาวะองค์กร', prefix='สำนัก', long_abbr_name='สำนัก 8', short_abbr_name='สำนัก 8')
+    section16, created = Section.objects.get_or_create(ref_no='16', order_number=95, name='สำนักสนับสนุนสุขภาวะประชากรกลุ่มเฉพาะ', prefix='สำนัก', long_abbr_name='สำนัก 9', short_abbr_name='สำนัก 9')
+    section08, created = Section.objects.get_or_create(ref_no='08', order_number=100, name='สำนักพัฒนานโยบายและยุทธศาสตร์', prefix='สำนัก', long_abbr_name='สนย.', short_abbr_name='สนย.')
+    section09, created = Section.objects.get_or_create(ref_no='09', order_number=110, name='สำนักพัฒนาภาคีสัมพันธ์และวิเทศสัมพันธ์', prefix='สำนัก', long_abbr_name='สภส.', short_abbr_name='สภส.')
+    section00, created = Section.objects.get_or_create(ref_no='00', order_number=120, name='ฝ่ายอำนวยการ', prefix='ฝ่าย', long_abbr_name='ฝ่ายอำนวยการ', short_abbr_name='อำนวยการ')
+    section13, created = Section.objects.get_or_create(ref_no='13', order_number=130, name='ฝ่ายสื่อสารองค์กร', prefix='ฝ่าย', long_abbr_name='ฝ่ายสื่อสารองค์กร', short_abbr_name='ฝ่าย CC')
+    section12, created = Section.objects.get_or_create(ref_no='12', order_number=140, name='ฝ่ายเทคโนโลยีสารสนเทศ', prefix='ฝ่าย', long_abbr_name='ฝ่ายเทคโนโลยีสารสนเทศ', short_abbr_name='ฝ่าย IT')
+    section11, created = Section.objects.get_or_create(ref_no='11', order_number=150, name='ฝ่ายบริหารงานบุคคล', prefix='ฝ่าย', long_abbr_name='ฝ่ายบริหารงานบุคคล', short_abbr_name='ฝ่าย HR')
+    section14, created = Section.objects.get_or_create(ref_no='14', order_number=160, name='ฝ่ายบัญชีและการเงิน', prefix='ฝ่าย', long_abbr_name='ฝ่ายบัญชีและการเงิน', short_abbr_name='ฝ่ายบัญชี')
+    section17, created = Section.objects.get_or_create(ref_no='17', order_number=170, name='ฝ่ายตรวจสอบภายใน', prefix='ฝ่าย', long_abbr_name='ฝ่ายตรวจสอบภายใน', short_abbr_name='ฝ่ายตรวจสอบภายใน สสส.')
+    """
     """
     END HERE
     """
 
-    Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
-    Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
+    #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
+    #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
 
-    Report.objects.get_or_create(master_plan=master_plan12, name='Activity Report', schedule_start=date(2012,1,1), schedule_monthly_date=15, schedule_monthly_length=1, created_by=some_admin)
+    #Report.objects.get_or_create(master_plan=master_plan12, name='Activity Report', schedule_start=date(2012,1,1), schedule_monthly_date=15, schedule_monthly_length=1, created_by=some_admin)
     
     
 from django.db.models.signals import post_syncdb

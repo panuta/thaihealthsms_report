@@ -115,6 +115,7 @@ INSTALLED_APPS = (
     'thaihealthsms_report.private_files',
 
     'thaihealthsms_report.accounts',
+    'thaihealthsms_report.budget',
     'thaihealthsms_report.common',
     'thaihealthsms_report.domain',
     'thaihealthsms_report.report',

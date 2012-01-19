@@ -7,6 +7,8 @@ from django.core.urlresolvers import reverse
 
 from common import utilities
 
+from accounts.models import UserProfile
+
 # DATE TIME #################################################################
 
 @register.filter(name='dateid')
@@ -33,7 +35,11 @@ def format_abbr_date(datetime):
 
 @register.simple_tag
 def display_header_navigation(user):
-    html = u'<a href="%s" class="home">หน้า Dashboard</a> |' % reverse('view_user_dashboard')
+
+    if user.is_superuser:
+        html = ''
+    else:
+        html = u'<a href="%s" class="home">หน้า Dashboard</a> |' % reverse('view_user_dashboard')
     
     if user.is_staff:
         html = html + u'<a href="%s" class="admin">จัดการระบบ</a> |' % reverse('view_manage_users')

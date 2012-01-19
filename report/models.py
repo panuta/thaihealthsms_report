@@ -14,7 +14,7 @@ def report_media_dir(instance, filename):
     return '%s%s/%s/%s' % (settings.REPORT_ROOT, instance.submission.report.id, instance.submission.project.id, filename)
 
 class Report(models.Model):
-    master_plan = models.ForeignKey('domain.MasterPlan')
+    section = models.ForeignKey('domain.Section')
     name = models.CharField(max_length=500)
 
     schedule_start = models.DateField()

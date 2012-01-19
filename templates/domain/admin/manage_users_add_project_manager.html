@@ -1,0 +1,30 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}เพิ่มผู้ใช้ระบบ{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'domain/admin/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+  <ul class="breadcrumb">
+    <li><a href="{% url view_manage_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
+    <li class="active">เพิ่มผู้ใช้ระบบ</li>
+  </ul>
+  <h2>ใส่ข้อมูลหน่วยงาน</h2>
+
+  <form method="POST" action=".">
+    {% csrf_token %}
+    {{form.non_field_errors}}
+
+    <div class="clearfix"><label for="id_project_ref_no">รหัสโครงการ</label><div class="input">{{form.project_ref_no}}{{form.project_ref_no.errors}}</div></div>
+    
+    <div class="form_actions">
+      <button type="submit" class="btn primary" name="submit_continue_button">บันทึกข้อมูล และกลับมาหน้านี้</button>
+      <button type="submit" class="btn primary" name="submit_button">บันทึกข้อมูล</button>
+      <button type="reset" class="btn">ล้างข้อมูล</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
