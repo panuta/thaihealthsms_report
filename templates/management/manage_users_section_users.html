@@ -1,0 +1,55 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}จัดการผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+    <div class="page_actions"><a href="{% url add_managing_user %}" class="btn">เพิ่มผู้ใช้ระบบ</a></div>
+
+    {% include 'management/snippets/admin_users_tabs.html' %}
+
+    {% if user_profiles %}
+    <table class="zebra-striped">
+      <colgroup>
+        <col width=""/>
+        <col width="250px"/>
+        <col width="200px"/>
+        <col width="200px"/>
+        <col width="80px"/>
+      </colgroup>
+      <thead>
+        <tr>
+          <th>ชื่อ</th>
+          <th>สำนักที่สังกัด</th>
+          <th>ประเภทผู้ใช้</th>
+          <th>สถานะ</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user_profile in user_profiles %}
+        <tr>
+          <td>{{user_profile.get_fullname}}</td>
+          <td>
+            {% for user_section in user_profile.user_sections %}
+              {{user_section.section.short_abbr_name}}{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          </td>
+          <td>{{user_profile.primary_role.name}}</td>
+          <td>{% if user_profile.random_password %}ยังไม่เข้าใช้งาน (<a href="{% url view_managing_user_password user_profile.user.id %}">ดูรหัสผ่าน</a>){% else %}ปกติ{% endif %}</td>
+          <td><a href="{% url edit_managing_user user_profile.user.id %}" class="small btn">แก้ไข</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="no_users">ไม่มีรายชื่อผู้ใช้ในกลุ่มนี้</div>
+    {% endif %}
+
+</div>
+{% endblock %}

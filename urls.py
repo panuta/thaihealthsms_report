@@ -6,13 +6,10 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'thaihealthsms.views.home', name='home'),
-    # url(r'^thaihealthsms/', include('thaihealthsms.foo.urls')),
-
     url(r'^', include('thaihealthsms_report.accounts.urls')),
     url(r'^', include('thaihealthsms_report.budget.urls')),
     url(r'^', include('thaihealthsms_report.domain.urls')),
+    url(r'^', include('thaihealthsms_report.management.urls')),
     url(r'^', include('thaihealthsms_report.report.urls')),
 
     url(r'^admin/', include(admin.site.urls)),

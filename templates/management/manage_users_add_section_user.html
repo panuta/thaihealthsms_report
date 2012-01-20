@@ -4,22 +4,21 @@
 
 {% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
 
-{% block body_tabs %}{% include 'domain/admin/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
 
 {% block body_content %}
 <div class="admin_page">
   <ul class="breadcrumb">
-    <li><a href="{% url view_manage_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
+    <li><a href="{% url view_managing_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
     <li class="active">เพิ่มผู้ใช้ระบบ</li>
   </ul>
-
-  <h2>ใส่ข้อมูลหน่วยงาน</h2>
+  <h2>สำนักที่สังกัด</h2>
 
   <form method="POST" action=".">
     {% csrf_token %}
     {{form.non_field_errors}}
 
-    <div class="clearfix"><label for="id_sections">สำนักที่สังกัด</label><div class="input row-inputs">{{form.sections}}{{form.sections.errors}}</div></div>
+    <div class="clearfix"><label for="id_section">สำนักที่สังกัด</label><div class="input row-inputs">{{form.section}}{{form.section.errors}}</div></div>
     
     <div class="form_actions">
       <button type="submit" class="btn primary">เพิ่มผู้ใช้ระบบ</button>

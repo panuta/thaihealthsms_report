@@ -40,9 +40,8 @@ ul {
 
 #body-header {
     height:55px;
-    padding:5px 10px;
-    border-bottom:1px solid #AAA;
-    background:url('../images/header/logo_small.png') #3f7d5e 10px 3px no-repeat;
+    padding:8px 10px;
+    background:url('../images/header/logo_small.png') #3f7d5e 10px 5px no-repeat;
 
     .title {
         float:left;
@@ -82,6 +81,7 @@ ul {
             a {
                 color:#CFF;
                 text-decoration:underline;
+                margin-left:10px;
             }
 
             .username {
@@ -97,19 +97,19 @@ ul {
             a {
                 color:#FFF;
                 text-decoration:underline;
-                padding:2px 10px 2px 30px;
+                padding:3px 15px 3px 35px;
                 margin:0px 5px 0px 10px;
 
                 &.home {
-                    background:url('../images/header/nav_home.png') transparent 10px center no-repeat;
+                    background:url('../images/header/nav_home.png') #488e6b 12px center no-repeat;
                 }
 
                 &.admin {
-                    background:url('../images/header/nav_admin.png') transparent 10px center no-repeat;
+                    background:url('../images/header/nav_admin.png') #488e6b 12px center no-repeat;
                 }
 
                 &.org {
-                    background:url('../images/header/nav_org.png') transparent 7px center no-repeat;
+                    background:url('../images/header/nav_org.png') #488e6b 9px center no-repeat;
                 }
 
                 &:hover {
@@ -186,8 +186,8 @@ ul {
         }
 
         &.active {
-            background-color:#666;
-            border-bottom:3px solid #ff9933;
+            background-color:#79706d;
+            border-bottom:3px solid #eb7047;
         }
     }
 }
@@ -226,6 +226,13 @@ ul {
             }
         }
     }
+
+    .no_information {
+        color:#666;
+        font-size:1.2em;
+        margin-bottom:20px;
+        font-style:italic;
+    }
 }
 
 .pills {
@@ -240,6 +247,23 @@ ul {
 
 .page_actions {
     margin-bottom:20px;
+}
+
+.delete_panel {
+    border:1px dashed #CCC;
+    padding:15px 15px 15px 45px;
+    background:url(/static/images/danger_icon.png) 15px 50% no-repeat;
+
+    a.danger:link, a.danger:active, a.danger:visited {
+        text-decoration:underline;
+        color:#666;
+    }
+
+    a.danger:hover {
+        background-color:#C30;
+        color:#FFF;
+        text-shadow:none;
+    }
 }
 
 /* *************** Messages *************** */
@@ -409,6 +433,41 @@ form .left_form_actions {
 
 /* *************** Pages *************** */
 
+.error_page {
+    .message_panel {
+        margin:30px 0px;
+        padding-top:90px;
+
+        .title {
+            text-align:center;
+            font-size:1.4em;
+            color:#555;
+        }
+
+        .note {
+            text-align:center;
+            margin-top:15px;
+            font-size:1.1em;
+
+            a {
+                .content_link;
+            }
+        }
+    }
+
+    .403_message {
+        background:url(../images/403.png) transparent center top no-repeat;
+    }
+
+    .404_message {
+        background:url(../images/404.png) transparent center top no-repeat;
+    }
+
+    .500_message {
+        background:url(../images/500.png) transparent center top no-repeat;
+    }
+}
+
 .organization_page {
     ul {
         margin:0px 0px 25px;
@@ -426,10 +485,64 @@ form .left_form_actions {
 }
 
 .admin_page {
+    /* Organization */
+    .org {
+        margin:0px 0px 25px;
+        
+        li {
+            list-style:disc;
+            margin:5px 0px 10px 25px;
+
+            a {
+                font-size:1.1em;
+                .content_link;
+            }
+        }
+    }
+
+    /* Users */
+
+    h3.managing_project {
+        margin-bottom:10px;
+    }
+
+    .managing_project_inputs {
+        margin-bottom:25px;
+
+        .instruction {
+            background-color:#EEE;
+            padding:10px 15px;
+            font-size:1.1em;
+        }
+
+        li {
+            font-size:1em;
+            display:block;
+            padding:5px 10px;
+
+            label {
+                display:block;
+                float:none;
+                width:auto;
+                text-align:left;
+                color:#555;
+
+                input {
+                    margin-right:7px;
+                }
+            }
+        }
+    }
+    
+
+    /* Import GMS */
+
+
     .no_users {
         color:#666;
         font-size:1.2em;
         margin-bottom:20px;
+        font-style:italic;
     }
 
     .added_user {
@@ -448,6 +561,10 @@ form .left_form_actions {
                 font-style:normal;
                 font-weight:bold;
             }
+        }
+
+        .buttons {
+            margin-top:20px;
         }
     }
 
@@ -482,8 +599,69 @@ form .left_form_actions {
             }
         }
     }
+}
 
+.dashboard_page {
+    .lists {
+        li {
+            margin:0px 0px 20px 20px;
 
+            a {
+                font-size:1.2em;
+                .content_link;
+            }
+        }
+    }
+
+    .responsible_projects {
+        li {
+            margin:0px 0px 20px 20px;
+
+            .project {
+                a {
+                    .content_link;
+                }
+            }
+        }
+    }
+
+    .edit_responsible_projects {
+        h3 {
+            background-color:#CCC;
+            padding:0px 10px;
+            font-weight:normal;
+            margin-bottom:10px;
+        }
+
+        ul {
+            margin-bottom:30px;
+        }
+
+        li {
+            font-size:1em;
+            display:block;
+            padding:5px 10px;
+
+            label {
+                display:block;
+                float:none;
+                width:auto;
+                text-align:left;
+                color:#555;
+
+                input {
+                    margin-right:7px;
+                }
+            }
+        }
+    }
+
+    .no_projects {
+        font-size:1.2em;
+        color:#666;
+        margin-bottom:20px;
+        font-style:italic;
+    }
 }
 
 .section_page {
@@ -531,10 +709,55 @@ form .left_form_actions {
         font-size:1.2em;
         color:#666;
         margin-bottom:20px;
+        font-style:italic;
     }
 }
 
 .project_page {
+    .working_reports {
+        li {
+            color:#444;
+            margin:0px 0px 25px 20px;
+
+            .report_name {
+                font-size:1.2em;
+                margin-bottom:10px;
+
+                a {
+                    .content_link;
+                }
+            }
+
+            .status {
+                color:#333;
+
+                span {
+                    margin-right:10px;
+                }
+
+                .due {
+                    font-size:1.1em;
+                    color:#555;
+                }
+
+                .normal_status {
+                    background-color:#DDD;
+                    padding:2px 10px;
+                }
+
+                .warning_status {
+                    background-color:#FC9;
+                    padding:2px 10px;
+                }
+
+                .critical_status {
+                    background-color:#F99;
+                    padding:2px 10px;
+                }
+            }
+        }
+    }
+
     .reports {
         margin-top:10px;
 

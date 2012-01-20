@@ -35,10 +35,12 @@
     <div class="right_panel">
         <div class="account">
             <span class="username">{{user.get_profile.firstname}} {{user.get_profile.lastname}} {% if user.is_superuser %}(ผู้ดูแลระบบ){% endif %}</span>
-            <a href="{% url view_my_profile %}">ตั้งค่าผู้ใช้</a> | <a href="/accounts/logout/">ออกจากระบบ</a> |
+            <a href="{% url view_my_profile %}">ตั้งค่าผู้ใช้</a> <a href="/accounts/logout/">ออกจากระบบ</a>
         </div>
         <div class="navigation">
-            {% display_header_navigation user %}
+          {% if not user.is_superuser %}<a href="{% url view_user_dashboard %}" class="home">หน้า Dashboard</a>{% endif %}
+          {% if user.is_staff %}<a href="{% url view_managing_organization %}" class="admin">จัดการระบบ</a>{% endif %}
+          <a href="{% url view_organization %}" class="org">ผังองค์กร</a>
         </div>
     </div>
 </div>

@@ -1,0 +1,16 @@
+{% extends 'base_authenticated.html' %}
+
+{% block body_title %}<div class="title"><h1>หน้า Dashboard</h1></div>{% endblock %}
+
+{% block body_content %}
+<div class="dashboard_page">
+    <h2>เลือกสำนัก</h2>
+    <ul class="lists">
+        {% for user_section in user_sections %}
+        <li>
+          <a href="{% url view_section user_section.section.ref_no %}">{{user_section.section.short_abbr_name}} - {{user_section.section.name}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,6 +1,8 @@
 {% extends 'base_authenticated.html' %}
 {% load page_tags %}
 
+{% block head_title %}{{block.super}}{{section.short_abbr_name}} | โครงการที่ดำเนินอยู่{% endblock %}
+
 {% block body_title %}{% include 'domain/snippets/section_header.html' %}{% endblock %}
 {% block body_tabs %}{% include 'domain/snippets/section_tabs.html' with active_menu='active_projects' %}{% endblock %}
 
@@ -9,7 +11,7 @@
   <ul class="projects">
     {% for project in current_projects %}
     <li>
-      <div class="project_name"><a href="{% url view_project_report project.ref_no %}">({{project.ref_no}}) {{project.name}}</a></div>
+      <div class="project_name"><a href="{% url view_project project.ref_no %}">({{project.ref_no}}) {{project.name}}</a></div>
       <div><span class="details">รหัสโครงการ <em>{{project.ref_no|default:'ไม่มีข้อมูล'}}</em></span> <span class="details">เลขที่สัญญา <em>{{project.contract_no|default:'ไม่มีข้อมูล'}}</em></span> <span class="details">ระยะเวลาโครงการ <em>{{project.start_date|format_date}}</em> ถึง <em>{{project.end_date|format_date}}</em></span></div>
     </li>
     {% endfor %}

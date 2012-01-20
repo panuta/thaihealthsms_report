@@ -133,6 +133,10 @@ class Report(models.Model):
             except:
                 return False
 
+class ReportAssignment(models.Model):
+    report = models.ForeignKey(Report)
+    project = models.ForeignKey('domain.Project')
+
 class ReportSubmission(models.Model):
     report = models.OneToOneField(Report)
     project = models.ForeignKey('domain.Project')

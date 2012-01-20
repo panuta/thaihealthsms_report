@@ -25,7 +25,7 @@ def view_section_reports(request, section_ref_no):
     return render(request, 'report/section_reports.html', {'section': section, })
 
 @login_required
-def view_project_report(request, project_ref_no):
+def view_project_reports(request, project_ref_no):
     project = get_object_or_404(Project, ref_no=project_ref_no)
 
     reports = Report.objects.filter(section=project.section).order_by('name')
@@ -33,7 +33,25 @@ def view_project_report(request, project_ref_no):
     for report in reports:
         report.recent = report.get_submissions(project, 5)
 
-    return render(request, 'domain/project_report.html', {'project': project, 'reports':reports})
+    return render(request, 'domain/project_reports.html', {'project': project, 'reports':reports})
+
+@login_required
+def view_project_all_reports(request, project_ref_no):
+    project = get_object_or_404(Project, ref_no=project_ref_no)
+
+    # get 10 most recent reports
+
+    # get report list
+    report_assignments = ReportAssignment.objects.filter(project=project).order_by('report__name')
+
+    return render(request, 'domain/project_reports_all.html', {'project': project, 'report_assignments':report_assignments})
+
+@login_required
+def view_project_each_reports(request, project_ref_no, report_id):
+    project = get_object_or_404(Project, ref_no=project_ref_no)
+    report = get_object_or_404(Report, ref_no=report_id)
+
+    return render(request, 'domain/project_reports_each.html', {'project': project, 'reports':reports})
 
 @login_required
 def view_report(request, project_id, report_id, schedule_date):

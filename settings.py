@@ -79,6 +79,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'thaihealthsms_report.middleware.AJAXSimpleExceptionResponse',
+    'thaihealthsms_report.http.Http403Middleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -118,6 +119,7 @@ INSTALLED_APPS = (
     'thaihealthsms_report.budget',
     'thaihealthsms_report.common',
     'thaihealthsms_report.domain',
+    'thaihealthsms_report.management',
     'thaihealthsms_report.report',
 
 )

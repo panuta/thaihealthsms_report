@@ -9,6 +9,7 @@
 {% block body_content %}
 <div class="project_page">
   
+  {% if budget_schedules %}
   <table class="budgets">
     <colgroup>
       <col width="60"/>
@@ -41,7 +42,9 @@
       {% endfor %}
     </tbody>
   </table>
-
+  {% else %}
+  <div class="no_information">ไม่มีข้อมูลแผนการเงิน</div>
+  {% endif %}
 
 </div>
 {% endblock %}

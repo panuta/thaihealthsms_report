@@ -1,0 +1,20 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}จัดการผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='organization' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+    <h2>สำนัก / ฝ่าย</h2>
+    <ul class="org">
+        {% for section in sections %}
+        <li><a href="{% url view_section section.ref_no %}">{{section.short_abbr_name}} - {{section.name}}</a></li>
+        {% endfor %}
+    </ul>
+
+
+</div>
+{% endblock %}

@@ -17,9 +17,6 @@ class EmailAuthenticationBackend(ModelBackend):
                 user = user[0]
 
                 if user.check_password(password):
-                    if user.is_superuser or user.is_staff:
-                        return user
-
-                    if user.get_profile().web_access:
-                        return user
+                    return user
+                    
         return None

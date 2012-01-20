@@ -7,6 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from common.forms import StrippedCharField
 
+from domain.models import Project
+
 class EmailAuthenticationForm(forms.Form):
     """
     Base class for authenticating users. Extend this to get a form that accepts
@@ -52,3 +54,22 @@ class EmailAuthenticationForm(forms.Form):
 
     def get_user(self):
         return self.user_cache
+
+class ProjectMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def __init__(self, *args, **kwargs):
+        kwargs['queryset'] = Project.objects.all().order_by('ref_no')
+        forms.ModelMultipleChoiceField.__init__(self, *args, **kwargs)
+
+    def label_from_instance(self, obj):
+        return u'โครงการ (%s) - %s' % (obj.ref_no, obj.name)
+
+class EditProjectResponsibility(forms.Form):
+    active_projects = ProjectMultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple())
+    other_projects = ProjectMultipleChoiceField(required=False, widget=forms.CheckboxSelectMultiple())
+
+    def __init__(self, section, *args, **kwargs):
+        self.section = section
+        forms.Form.__init__(self, *args, **kwargs)
+        
+        self.fields['active_projects'].queryset = Project.objects.filter(section=self.section, status__in=('อนุมัติ', 'รอปิดโครงการ')).order_by('ref_no')
+        self.fields['other_projects'].queryset = Project.objects.filter(section=self.section).exclude(status__in=('อนุมัติ', 'รอปิดโครงการ')).order_by('ref_no')

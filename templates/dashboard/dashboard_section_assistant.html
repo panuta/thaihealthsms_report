@@ -1,0 +1,27 @@
+{% extends 'base_authenticated.html' %}
+
+{% block body_title %}<div class="title"><h1>หน้า Dashboard</h1></div>{% endblock %}
+
+{% block body_content %}
+<div class="dashboard_page">
+  <h2>โครงการที่รับผิดชอบ</h2>
+  <div class="page_actions"><a href="{% url view_user_dashboard_projects %}" class="btn">แก้ไขโครงการที่รับผิดชอบ</a></div>
+
+  {% if responsible_projects %}
+
+  <ul class="responsible_projects">
+    {% for responsible_project in responsible_projects %}
+    <li>
+      <div class="project"><a href="{% url view_project responsible_project.project.ref_no %}">โครงการ ({{responsible_project.project.ref_no}}) {{responsible_project.project.name}}</a></div>
+      <div class="status"></div>
+      <div class="reports"></div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+  <div class="no_projects">ไม่มีโครงการที่รับผิดชอบ</div>
+  {% endif %}
+  
+</div>
+{% endblock %}

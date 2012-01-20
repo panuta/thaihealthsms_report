@@ -4,7 +4,7 @@
 from datetime import datetime, date, timedelta
 
 from django.conf import settings
-from django.contrib.auth.models import User, Group, Permission
+from django.contrib.auth.models import User, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
@@ -27,11 +27,11 @@ def after_syncdb(sender, **kwargs):
     # Site Information ###############
     Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_ADDRESS)
 
-    # Group ##################
-    admin_group, created = Group.objects.get_or_create(name='administrator')
-    section_mgn_group, created = Group.objects.get_or_create(name='section_manager')
-    section_assist_group, created = Group.objects.get_or_create(name='section_assistant')
-    pm_group, created = Group.objects.get_or_create(name='project_manager')
+    # Role ##################
+    admin_role, created = Role.objects.get_or_create(code='administrator', name='ผู้ดูแลระบบ')
+    section_mgn_role, created = Role.objects.get_or_create(code='section_manager', name='ผู้อำนวยการสำนัก')
+    section_assist_role, created = Role.objects.get_or_create(code='section_assistant', name='ผู้ประสานงานสำนัก')
+    pm_role, created = Role.objects.get_or_create(code='project_manager', name='ผู้รับผิดชอบโครงการ')
     
     # Administrator ##################
     admins = settings.ADMINS
@@ -50,7 +50,7 @@ def after_syncdb(sender, **kwargs):
             admin_user.is_staff = True
             admin_user.save()
 
-            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_group)
+            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_role)
             
             email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
             email_subject = render_to_string('email/create_admin_subject.txt', email_render_dict)

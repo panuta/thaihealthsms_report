@@ -1,0 +1,39 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}เพิ่มผู้ใช้ระบบ{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+  <ul class="breadcrumb">
+    <li><a href="{% url view_managing_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
+    <li class="active">เพิ่มผู้ใช้ระบบ</li>
+  </ul>
+  <h2>เพิ่มผู้ใช้ระบบ</h2>
+
+  <ul class="tabs">
+    <li class="active"><a href="{% url add_managing_user %}">กรอกจากแบบฟอร์ม</a></li>
+    <li><a href="{% url import_managing_users %}">ดึงจากไฟล์ CSV</a></li>
+  </ul>
+
+  <form method="POST" action=".">
+    {% csrf_token %}
+    {{form.non_field_errors}}
+
+    <div class="clearfix"><label for="id_email">อีเมล</label><div class="input">{{form.email}}{{form.email.errors}}<div class="help-block">* ใช้สำหรับการเข้าสู่ระบบ และการแจ้งเตือนต่างๆ</div></div></div>
+    <div class="clearfix"><label for="id_firstname">ชื่อ</label><div class="input">{{form.firstname}}{{form.firstname.errors}}</div></div>
+    <div class="clearfix"><label for="id_lastname">นามสกุล</label><div class="input">{{form.lastname}}{{form.lastname.errors}}</div></div>
+    <div class="clearfix"><label for="id_primary_role">ประเภทผู้ใช้</label><div class="input">{{form.primary_role}}{{form.primary_role.errors}}</div></div>
+
+    <div class="form_actions">
+      <button type="submit" class="btn primary">บันทึกและไปขั้นตอนต่อไป</button>
+      <button type="reset" class="btn">ล้างข้อมูล</button>
+    </div>
+  </form>
+
+
+</div>
+{% endblock %}

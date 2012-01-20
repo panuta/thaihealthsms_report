@@ -1,14 +1,14 @@
 TODO
-- Dashboard page
-- Permission
-- Master plan report
-- Admin - Manage users
-- add report schedule
-- edit report schedule
-- edit project
-- Master Plan - Projects page -- filter year by fiscal year
+- Project report page
+- Permission on report app
+- Import users
 
-
+2nd Iteration
+- Edit project
+- Add/Edit report schedule
+- Section reports
+- Support multiple section for section assistant
+- Delete user
 
 - Redirect to home page when authenticated and go to login page
 

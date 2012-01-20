@@ -1,0 +1,12 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}การทำงานของระบบเกิดข้อผิดพลาด{% endblock %}
+
+{% block body_content %}
+<div class="error_page">
+  <div class="message_panel 500_message">
+    <div class="title">การทำงานของระบบเกิดข้อผิดพลาด</div>
+    <div class="note"><a href="{% url view_user_dashboard %}">กลับไปหน้าแรก</a></div>
+  </div>
+</div>
+{% endblock %}

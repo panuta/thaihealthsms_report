@@ -1,5 +1,5 @@
 <ul>
   <li{% if active_menu == 'active_projects' %} class="active"{% endif %}><a href="{% url view_section section.ref_no %}">โครงการที่ดำเนินอยู่</a></li>
   <li{% if active_menu == 'all_projects' %} class="active"{% endif %}><a href="{% url view_section_projects section.ref_no %}">โครงการทั้งหมด</a></li>
-  <li{% if active_menu == 'report' %} class="active"{% endif %}><a href="{% url view_section_reports section.ref_no %}">รายงาน</a></li>
+  <!-- <li{% if active_menu == 'report' %} class="active"{% endif %}><a href="{% url view_section_reports section.ref_no %}">รายงาน</a></li> -->
 </ul>

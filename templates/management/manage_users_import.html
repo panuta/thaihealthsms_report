@@ -4,19 +4,19 @@
 
 {% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
 
-{% block body_tabs %}{% include 'domain/admin/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
 
 {% block body_content %}
 <div class="admin_page">
   <ul class="breadcrumb">
-    <li><a href="{% url view_manage_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
+    <li><a href="{% url view_managing_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
     <li class="active">เพิ่มผู้ใช้ระบบ</li>
   </ul>
   <h2>เพิ่มผู้ใช้ระบบ</h2>
 
   <ul class="tabs">
-    <li><a href="{% url view_manage_users_add %}">กรอกฟอร์มผู้ใช้</a></li>
-    <li class="active"><a href="{% url view_manage_users_import %}">ดึงจากไฟล์ CSV</a></li>
+    <li><a href="{% url add_managing_user %}">กรอกฟอร์มผู้ใช้</a></li>
+    <li class="active"><a href="{% url import_managing_users %}">ดึงจากไฟล์ CSV</a></li>
   </ul>
 
   <form method="POST" action="." enctype="multipart/form-data">
