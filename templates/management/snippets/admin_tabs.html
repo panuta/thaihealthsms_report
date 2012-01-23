@@ -1,5 +1,5 @@
 <ul>
   <li{% if active_menu == 'organization' %} class="active"{% endif %}><a href="{% url view_managing_organization %}">โครงสร้างองค์กร</a></li>
   <li{% if active_menu == 'user' %} class="active"{% endif %}><a href="{% url view_managing_users %}">จัดการผู้ใช้</a></li>
-  <li{% if active_menu == 'import' %} class="active"{% endif %}><a href="{% url import_managing_users %}">ดึงข้อมูลจาก GMS</a></li>
+  <li{% if active_menu == 'import' %} class="active"{% endif %}><a href="{% url import_from_gms %}">ดึงข้อมูลจาก GMS</a></li>
 </ul>

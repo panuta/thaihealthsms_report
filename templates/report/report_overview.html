@@ -5,12 +5,11 @@
 
 {% block html_head %}
 {{block.super}}
+{% manage user project %}
 <script type="text/javascript" src="{{STATIC_URL}}libs/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}libs//ckeditor/adapters/jquery.js"></script>
-
 <script>
 var initializedTextarea = false;
-
 $(document).ready(function() {
   $('.edit_report_button').on('click', function(e) {
     if(initializedTextarea == false) {
@@ -55,7 +54,7 @@ $(document).ready(function() {
 
 });
 </script>
-
+{% endmanage %}
 {% endblock %}
 
 {% block body_title %}{% include 'domain/snippets/project_header.html' %}{% endblock %}
@@ -64,21 +63,26 @@ $(document).ready(function() {
 {% block body_content %}
 <div class="report_page">
   <ul class="breadcrumb">
-    <li><a href="#">รายงานทั้งหมด</a> <span class="divider">/</span></li>
-    <li class="active">รายงาน {{report.name}}</li>
+    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a> <span class="divider">/</span></li>
+    <li><a href="{% url view_project_report project.ref_no report.id %}">{{report.name}}</a> <span class="divider">/</span></li>
+    <li class="active">งวดวันที่ {{submission.schedule_date|format_abbr_date}}</li>
   </ul>
 
   <h2>{{report.name}}<div class="subtitle">งวดวันที่ {{submission.schedule_date|format_abbr_date}}</div></h2>
 
-  {% if report.submitted_on %}
-  <div class="report_submitted">รายงานถูกส่งแล้วเมื่อวันที่ 14 ก.พ. 2555 เวลา 12:00 น.</div>
+  {% if submission.submitted_on %}
+  <div class="report_submitted">รายงานถูกส่งแล้วเมื่อวันที่ {{submission.submitted_on|format_datetime}}</div>
   {% endif %}
 
+  {% manage user project %}
   <div class="report_actions">
-    {% if not report.submitted_on %}{% if report.report_text or report.attachments %}<a href="#" class="primary submit btn">ส่งรายงาน</a>{% endif %}{% endif %}
+    {% if not submission.submitted_on %}{% if submission.report_text or submission.attachments %}<form method="POST" action="{% url submit_project_report project.ref_no report.id submission.schedule_date|dateid %}">{% csrf_token %}<button type="submit" class="primary submit btn">ส่งรายงาน</button></form>{% endif %}{% endif %}
     <a href="#" class="btn edit_report_button">{% if not submission.report_text %}เขียนเนื้อหารายงาน{% else %}แก้ไขเนื้อหารายงาน{% endif %}</a>
     <a href="#" class="btn attach_report_button">แนบไฟล์รายงาน</a>
   </div>
+  {% endmanage %}
+
+  {% if not submission.report_text and not submission.attachments %}<div class="no_information">ไม่มีเนื้อหารายงาน</div>{% endif %}
 
   {% if submission.report_text %}
   <div class="report_text">
@@ -87,7 +91,7 @@ $(document).ready(function() {
   {% endif %}
 
   <div class="report_text_editor" style="display:none;">
-    <form method="post" action="{% url submit_project_report_text project.id report.id submission.schedule_date|dateid %}">
+    <form method="post" action="{% url submit_project_report_text project.ref_no report.id submission.schedule_date|dateid %}">
       {% csrf_token %}
       <textarea name="report_text">{{submission.report_text|safe}}</textarea>
       <div class="button_panel"><button type="submit" class="primary btn">จัดเก็บ</button><button type="button" class="btn">ยกเลิก</button></div>
@@ -101,14 +105,14 @@ $(document).ready(function() {
       {% for attachment in submission.attachments %}
       <li>
         <div class="filename"><a href="{% url download_report_attachment attachment.uid %}">{{attachment.file_name}}.{{attachment.file_ext}}</a></div>
-        <div class="metadata">อัพโหลดเมื่อวันที่ {{attachment.uploaded|format_abbr_datetime}} โดย {{attachment.uploaded_by.get_profile.get_fullname}}</div>
+        <div class="metadata">อัพโหลดเมื่อวันที่ {{attachment.uploaded|format_abbr_datetime}} โดย {{attachment.uploaded_by.get_profile.get_fullname}}{% manage user project %} | <a href="{% url delete_report_attachment attachment.uid %}">ลบไฟล์แนบ</a>{% endmanage %}</div>
       </li>
       {% endfor %}
     </ul>
   </div>
   {% endif %}
 
-  <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.id report.id submission.schedule_date|dateid %}" enctype="multipart/form-data">
+  <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.ref_no report.id submission.schedule_date|dateid %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{attachment_form.errors}}
     <input type="file" name="report_attachment" id="id_report_attachment" style="opacity:0;text-indent:-9999px;"/>

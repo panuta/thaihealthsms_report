@@ -1,0 +1,40 @@
+{% extends 'base_authenticated.html' %}
+{% load page_tags %}
+
+{% block head_title %}{{block.super}}โครงการ {{project.ref_no}} | รายงาน{% endblock %}
+
+{% block body_title %}{% include 'domain/snippets/project_header.html' %}{% endblock %}
+{% block body_tabs %}{% include 'domain/snippets/project_tabs.html' with active_menu='report' %}{% endblock %}
+
+{% block body_content %}
+<div class="project_page">
+
+  <ul class="tabs">
+    <li class="active"><a href="{% url view_project_outstanding_reports project.ref_no %}">รายงานที่ต้องส่ง</a></li>
+    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
+  </ul>
+
+  {% if report_assignments %}
+  <div class="outstanding_reports">
+    <ul>
+      {% for assignment in report_assignments %}
+      <li class="report">
+        <h3>{{assignment.report.name}}</h3>
+        <ul>
+          {% for schedule in assignment.outstanding_schedules %}
+          <li class="submission">
+            <span class="due"><a href="{% url view_report project.ref_no assignment.report.id schedule.schedule_date|dateid %}">งวดวันที่ {{schedule.schedule_date|format_date}}</a></span>
+            {% print_schedule_outstanding schedule %}
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="view_all"><a href="{% url view_project_report project.ref_no assignment.report.id %}">ดูรายงานย้อนหลังทั้งหมด</a></div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% else %}
+  <div class="no_information">ไม่มีรายงานที่ต้องส่ง</div>
+  {% endif %}
+</div>
+{% endblock %}

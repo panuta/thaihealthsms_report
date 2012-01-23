@@ -10,41 +10,26 @@
 <div class="project_page">
 
   <ul class="tabs">
-    <li class="active"><a href="{% url view_project_reports project.ref_no %}">รายงานที่ต้องส่ง</a></li>
-    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
+    {% manage user project %}
+    <li><a href="{% url view_project_outstanding_reports project.ref_no %}">รายงานที่ต้องส่ง</a></li>
+    {% else %}
+    <li><a href="{% url view_project_recent_reports project.ref_no %}">รายงานฉบับล่าสุด</a></li>
+    {% endmanage %}
+    
+    <li class="active"><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
   </ul>
-
-  <ul class="working_reports">
-    <li>
-      <div class="report_name"><a href="#">This is a report name</a></div>
-      <div class="status"><span class="due">ฉบับวันที่ 14 ก.พ. 2555</span><span class="normal_status">ยังไม่มีเนื้อหารายงาน</span><span class="warning_status">ยังไม่มีเนื้อหารายงาน</span><span class="critical_status">ยังไม่มีเนื้อหารายงาน</span></div>
+  
+  {% if report_assignments %}
+  <ul>
+    {% for assignment in report_assignments %}
+    <li class="report">
+      <div class="report_name"><a href="{% url view_project_report project.ref_no assignment.report.id %}">{{assignment.report.name}}</a></div>
+      <div class="details">{% print_report_schedule assignment.report %}</div>
     </li>
-    <li>
-      <div class="report_name"><a href="#">This is a report name - ฉบับวันที่ 14 ก.พ. 2555</a></div>
-      <div class="status"><span class="empty_status">ยังไม่มีเนื้อหารายงาน</span></div>
-    </li>
+    {% endfor %}
   </ul>
-
-
-
-  <div class="reports">
-    <ul>
-      {% for report in reports %}
-      <li class="report">
-        <h3>{{report.name}}</h3>
-        <ul class="submissions">
-        {% for submission in report.recent %}
-          {% if submission.created %}
-            <li><a href="#">รายงานประจำวันที่ {{submission.schedule_date}}</a></li>
-          {% else %}
-            <li>รายงานประจำวันที่ {{submission.schedule_date}} - <a href="{% url view_report project.id report.id submission.schedule_date|dateid %}">เขียนรายงาน</a></li>
-          {% endif %}
-          
-        {% endfor %}
-        </ul>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
+  {% else %}
+  <div class="no_information">ไม่มีรายงาน</div>
+  {% endif %}
 </div>
 {% endblock %}

@@ -53,7 +53,11 @@ def _section_projects_in_year(request, section_ref_no, year):
 
 @login_required
 def view_project(request, project_ref_no):
-    return redirect('view_project_reports', project_ref_no=project_ref_no)
+    project = get_object_or_404(Project, ref_no=project_ref_no)
+    if request.user.get_profile().is_manage_project(project):
+        return redirect('view_project_outstanding_reports', project_ref_no=project_ref_no)
+    else:    
+        return redirect('view_project_reports', project_ref_no=project_ref_no)
 
 @login_required
 def view_project_activity(request, project_ref_no):

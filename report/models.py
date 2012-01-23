@@ -137,8 +137,21 @@ class ReportAssignment(models.Model):
     report = models.ForeignKey(Report)
     project = models.ForeignKey('domain.Project')
 
+    def get_outstanding_schedules(self):
+        # overdue, due, almostdue, nextdue
+        today = datetime.date.today()
+
+        outstanding_schedules = []
+        for schedule_date in self.report.get_schedules_until(today, and_one_beyond=True):
+            try:
+                schedule = outstanding_schedules.append(ReportSubmission.objects.get(report=self.report, project=self.project, schedule_date=schedule_date))
+            except:
+                schedule = outstanding_schedules.append(ReportSubmission(report=self.report, project=self.project, schedule_date=schedule_date))
+        
+        return outstanding_schedules
+
 class ReportSubmission(models.Model):
-    report = models.OneToOneField(Report)
+    report = models.ForeignKey(Report)
     project = models.ForeignKey('domain.Project')
     schedule_date = models.DateField()
     report_text = models.TextField(blank=True)

@@ -1,0 +1,27 @@
+{% extends 'base_authenticated.html' %}
+{% load page_tags %}
+
+{% block head_title %}{{block.super}}โครงการ {{project.ref_no}} | รายงาน{% endblock %}
+
+{% block body_title %}{% include 'domain/snippets/project_header.html' %}{% endblock %}
+{% block body_tabs %}{% include 'domain/snippets/project_tabs.html' with active_menu='report' %}{% endblock %}
+
+{% block body_content %}
+<div class="project_page">
+
+  <ul class="tabs">
+    <li class="active"><a href="{% url view_project_recent_reports project.ref_no %}">รายงานฉบับล่าสุด</a></li>
+    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
+  </ul>
+
+  {% if submissions %}
+  <ul>
+    {% for submission in submissions %}
+    <li class="submission"><span class="report"><a href="{% url view_report project.ref_no submission.report.id submission.schedule_date|dateid %}">{{submission.report.name}} - <em>งวดวันที่ {{submission.schedule_date|format_date}}</em></a></span></li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="no_information">ยังไม่มีการส่งรายงาน</div>
+  {% endif %}
+</div>
+{% endblock %}
