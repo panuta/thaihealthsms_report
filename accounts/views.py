@@ -38,23 +38,17 @@ def view_user_first_time(request):
 
             request.user.get_profile().random_password = ''
             request.user.get_profile().save()
-
-            next_url = request.POST.get('next')
-            if next_url:
-                return redirect(next_url)
-            else:
-                return redirect('view_user_dashboard')
+            return redirect('view_user_dashboard')
             
     else:
         form = SetPasswordForm(request.user)
-        next = request.GET.get('next', '')
     
-    return render(request, 'registration/first_time.html', {'form':form, 'next':next})
+    return render(request, 'registration/first_time.html', {'form':form})
 
 @login_required
 def view_user_dashboard(request):
     if request.user.get_profile().random_password:
-        return redirect('%s?next=%s' % (reverse('view_user_first_time'), request.POST.get('next')))
+        return redirect('%s' % reverse('view_user_first_time'))
 
     if request.user.is_superuser:
         return redirect('view_managing_organization')
@@ -71,7 +65,6 @@ def view_user_dashboard(request):
     # Section Assistant
     if request.user.get_profile().primary_role == Role.objects.get(code='section_assistant'):
         return redirect('view_section_assistant_unsubmitted_dashboard')
-        
     
     # Project Manager
     if request.user.get_profile().primary_role == Role.objects.get(code='project_manager'):
@@ -92,7 +85,7 @@ def view_section_assistant_unsubmitted_dashboard(request):
     due_submissions = []
     today = datetime.date.today()
 
-    for assignment in ReportAssignment.objects.filter(project__in=responsible_projects):
+    for assignment in ReportAssignment.objects.filter(project__in=responsible_projects, project__status__in=('อนุมัติ', 'รอปิดโครงการ')):
         for submission in assignment.get_outstanding_schedules():
             if submission.schedule_date < today:
                 overdue_submissions.append(submission)
@@ -106,8 +99,7 @@ def view_section_assistant_unsubmitted_dashboard(request):
 @login_required
 def view_section_assistant_submitted_dashboard(request):
     responsible_projects = ProjectResponsibility.objects.filter(user=request.user).values_list('project', flat=True)
-
-    submitted_submissions = ReportSubmission.objects.filter(project__in=responsible_projects).exclude(submitted_on=None).order_by('-submitted_on')
+    submitted_submissions = ReportSubmission.objects.filter(project__in=responsible_projects).exclude(submitted_on=None).order_by('-submitted_on')[:50]
 
     return render(request, 'dashboard/dashboard_section_assistant_submitted.html', {'submitted_submissions':submitted_submissions})
 
@@ -165,8 +157,8 @@ def view_my_profile(request):
         form = UserProfileForm(request.POST)
         if form.is_valid():
             user_profile = request.user.get_profile()
-            user_profile.first_name = form.cleaned_data['first_name']
-            user_profile.last_name = form.cleaned_data['last_name']
+            user_profile.firstname = form.cleaned_data['firstname']
+            user_profile.lastname = form.cleaned_data['lastname']
             user_profile.save()
 
             messages.success(request, u'แก้ไขข้อมูลส่วนตัวเรียบร้อย')
@@ -178,10 +170,6 @@ def view_my_profile(request):
 
 @login_required
 def view_my_account(request):
-    return render(request, 'accounts/my_account.html', {})
-
-@login_required
-def change_my_account_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -191,5 +179,5 @@ def change_my_account_password(request):
 
     else:
         form = PasswordChangeForm(user=request.user)
-    
-    return render(request, 'accounts/my_account_change_password.html', {'form':form})
+
+    return render(request, 'accounts/my_account.html', {'form':form})

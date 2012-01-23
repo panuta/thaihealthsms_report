@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 import os
+import re
 
 from datetime import date
 
@@ -59,3 +60,11 @@ random_password_length = 6
 def make_random_user_password():
     from random import choice
     return ''.join([choice(allow_password_chars) for i in range(random_password_length)])
+
+email_re = re.compile(
+    r"(^[-!#$%&'*+/=?^_`{}|~0-9A-Z]+(\.[-!#$%&'*+/=?^_`{}|~0-9A-Z]+)*"  # dot-atom
+    r'|^"([\001-\010\013\014\016-\037!#-\[\]-\177]|\\[\001-\011\013\014\016-\177])*"' # quoted-string
+    r')@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}$', re.IGNORECASE)  # domain
+
+def is_email(email):
+    return email_re.search(email)

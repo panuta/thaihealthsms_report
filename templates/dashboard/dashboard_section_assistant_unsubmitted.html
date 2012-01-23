@@ -1,13 +1,13 @@
 {% extends 'base_authenticated.html' %}
 {% load page_tags %}
 
-{% block body_title %}<div class="title"><h1>หน้า Dashboard</h1></div>{% endblock %}
+{% block head_title %}{{block.super}}หน้าแรกผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การติดตามรายงาน</h1></div>{% endblock %}
 
 {% block body_content %}
 <div class="dashboard_page">
   <div class="page_actions"><a href="{% url edit_section_assistant_responsible_projects %}" class="btn">แก้ไขโครงการที่รับผิดชอบ</a></div>
-
-  <h2>การติดตามรายงาน</h2>
 
   <ul class="tabs">
     <li class="active"><a href="{% url view_section_assistant_unsubmitted_dashboard %}">รายงานที่ยังไม่ได้ส่ง</a></li>

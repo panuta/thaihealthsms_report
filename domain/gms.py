@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 
 HOST = 'http://61.90.139.134/gms/api/'
 APIKEY = 'WY0sSJA693sZsHRxT7oTwdzVM83mK0XQcffTYPPes1YUklgH6X5oxQ0xjv8WneG'
@@ -80,6 +81,11 @@ def import_gms(imported_by):
             project.end_date = convert_to_date(raw_project['DateFinish'])
             project.status = raw_project['ProjectStatusName']
             project.save()
+        
+        # assign report for a project that is still active by checking from status text
+        if project.is_active():
+            for report in Report.objects.filter(section=section):
+                ReportAssignment.objects.get_or_crete(report=report, project=project)
     
     # Retrieve budget data
 

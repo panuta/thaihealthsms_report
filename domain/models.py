@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -30,6 +32,9 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['ref_no']
+    
+    def is_active(self):
+        return self.status in ('อนุมัติ', 'รอปิดโครงการ')
 
 ## IMPORT FROM GMS ##
 

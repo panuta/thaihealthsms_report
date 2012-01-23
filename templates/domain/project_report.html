@@ -15,12 +15,12 @@
 
   <h2>{{report.name}}</h2>
 
-  {% if schedules %}
+  {% if submissions %}
   <ul>
-    {% for schedule in schedules %}
+    {% for submission in submissions %}
     <li class="submission">
-      <span class="due"><a href="{% url view_report project.ref_no report.id schedule.schedule_date|dateid %}">งวดวันที่ {{schedule.schedule_date|format_date}}</a></span>
-      {% print_schedule_outstanding schedule %}
+      <span class="due"><a href="{% url view_report project.ref_no report.id submission.schedule_date|dateid %}">งวดวันที่ {{submission.schedule_date|format_date}}</a></span>
+      {% print_schedule_outstanding submission %}
     </li>
     {% endfor %}
   </ul>

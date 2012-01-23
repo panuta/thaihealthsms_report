@@ -27,7 +27,7 @@ def view_section(request, section_ref_no):
     section = get_object_or_404(Section, ref_no=section_ref_no)
     
     today = datetime.date.today()
-    current_projects = Project.objects.filter(section=section, start_date__lte=today, end_date__gte=today).order_by('-ref_no')
+    current_projects = Project.objects.filter(section=section, status__in=('อนุมัติ', 'รอปิดโครงการ')).order_by('-ref_no')
     
     return render(request, 'domain/section_overview.html', {'section':section, 'current_projects':current_projects})
 

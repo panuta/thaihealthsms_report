@@ -40,7 +40,7 @@
     }
 
     &.submitted_status {
-        background-color:#9fdfbf;
+        background-color:#b2e5cc;
         padding:2px 10px;
     }
 }
@@ -556,6 +556,17 @@ form .left_form_actions {
             }
         }
     }
+
+    .import_users_result_table {
+        td.user {
+            font-weight:bold;
+        }
+
+        tr.error {
+            background-color:#ffcccc;
+            color:#C30;
+        }
+    }
     
 
     /* Import GMS */
@@ -908,10 +919,24 @@ form .left_form_actions {
 }
 
 .report_page {
+    h2 {
+        .submitted {
+            background-color:#b2e5cc;
+            padding:4px 10px;
+            font-size:0.85em;
+            margin:12px 0px 3px 0px;
+            color:#333f;
+
+            em {
+                font-weight:bold;
+                font-style:normal;
+            }
+        }
+    }
     .report_submitted {
-        background-color:#e2f9d7;
+        background-color:#9fdfbf;
         padding:15px 10px;
-        color:#444;
+        color:#222;
         font-size:1.2em;
         margin-bottom:20px;
     }

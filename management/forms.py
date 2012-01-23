@@ -31,6 +31,16 @@ class AddProjectManagerResponsibilityForm(forms.Form):
 class ImportUserForm(forms.Form):
     user_csv = forms.FileField()
 
+    """
+    def clean_user_csv(self):
+        user_csv = self.cleaned_data['user_csv']
+
+        if not user_csv.name in ('project_manager.csv', 'section_assistant.csv', 'section_manager.csv'):
+            raise forms.ValidationError('ชื่อไฟล์ไม่ถูกต้อง ต้องตั้งชื่อไฟล์เป็นชื่อ "project_manager.csv" หรือ "section_assistant.csv" หรือ "section_manager.csv" เท่านั้น')
+
+        return user_csv
+    """
+
 class EditSectionUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
     firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))

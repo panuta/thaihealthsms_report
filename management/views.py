@@ -285,9 +285,14 @@ def import_managing_users(request):
     if not request.user.is_staff: raise Http403
 
     if request.method == 'POST':
-        form = ImportUserForm(request.POST)
+        form = ImportUserForm(request.POST, request.FILES)
         if form.is_valid():
-            pass
+            user_csv = form.cleaned_data['user_csv']
+
+            from management.users_import import import_users
+            import_result = import_users(user_csv)
+            
+            return render(request, 'management/manage_users_import.html', {'import_result':import_result})
     
     else:
         form = ImportUserForm()

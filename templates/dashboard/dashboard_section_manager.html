@@ -1,6 +1,8 @@
 {% extends 'base_authenticated.html' %}
 
-{% block body_title %}<div class="title"><h1>หน้า Dashboard</h1></div>{% endblock %}
+{% block head_title %}{{block.super}}หน้าแรกผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>สำนักที่ดูแล</h1></div>{% endblock %}
 
 {% block body_content %}
 <div class="dashboard_page">

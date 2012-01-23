@@ -52,12 +52,19 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # EMAIL_USE_TLS = True
 # EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'application.testbed@gmail.com'
+# EMAIL_HOST_USER = 'application.testbed@gmail.com'
 # EMAIL_HOST_PASSWORD = 'opendream'
 # EMAIL_PORT = 587
-# EMAIL_SUBJECT_PREFIX = '[SMS] '
+EMAIL_SUBJECT_PREFIX = '[SMS] '
 
-SYSTEM_NOREPLY_EMAIL = EMAIL_HOST_USER
+# MailGun Email Service
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_HOST_USER = 'postmaster@thaihealthsms.mailgun.org'
+EMAIL_HOST_PASSWORD = '0nvpm5iis068'
+EMAIL_PORT = 587
+
+SYSTEM_NOREPLY_EMAIL = 'noreply@thaihealthsms.mailgun.org'
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 LOGIN_REDIRECT_URL = '/'
@@ -147,6 +154,7 @@ LOGGING = {
 FILE_PROTECTION_METHOD = 'basic'
 
 # THAIHEALTHSMS SETTINGS #
+
 
 REPORT_ROOT = MEDIA_ROOT + 'report/'
 WARNING_AT_DAYS_BEFORE_DUE = 3

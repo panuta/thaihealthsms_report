@@ -38,7 +38,7 @@
             <a href="{% url view_my_profile %}">ตั้งค่าผู้ใช้</a> <a href="/accounts/logout/">ออกจากระบบ</a>
         </div>
         <div class="navigation">
-          {% if not user.is_superuser %}<a href="{% url view_user_dashboard %}" class="home">หน้า Dashboard</a>{% endif %}
+          {% if not user.is_superuser %}<a href="{% url view_user_dashboard %}" class="home">หน้าแรกผู้ใช้</a>{% endif %}
           {% if user.is_staff %}<a href="{% url view_managing_organization %}" class="admin">จัดการระบบ</a>{% endif %}
           <a href="{% url view_organization %}" class="org">ผังองค์กร</a>
         </div>
@@ -61,12 +61,6 @@
   <div class="content-full">
     <div class="content-inner">
       {% block body_content %}{% endblock %}
-          
-          <!--<ul class="tabs">
-            <li class="active"><a href="#">โครงสร้างองค์กร</a></li>
-            <li><a href="#">ผู้ใช้ระบบ</a></li>
-          </ul>-->
-      
     </div>
   </div>
 </div>

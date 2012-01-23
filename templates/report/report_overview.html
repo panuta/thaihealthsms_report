@@ -68,11 +68,7 @@ $(document).ready(function() {
     <li class="active">งวดวันที่ {{submission.schedule_date|format_abbr_date}}</li>
   </ul>
 
-  <h2>{{report.name}}<div class="subtitle">งวดวันที่ {{submission.schedule_date|format_abbr_date}}</div></h2>
-
-  {% if submission.submitted_on %}
-  <div class="report_submitted">รายงานถูกส่งแล้วเมื่อวันที่ {{submission.submitted_on|format_datetime}}</div>
-  {% endif %}
+  <h2>{{report.name}}<div class="subtitle">งวดวันที่ {{submission.schedule_date|format_abbr_date}}{% if submission.submitted_on %}<div class="submitted">รายงานถูกส่งแล้วเมื่อวันที่ <em>{{submission.submitted_on|format_datetime}}</em></div>{% endif %}</div></h2>
 
   {% manage user project %}
   <div class="report_actions">

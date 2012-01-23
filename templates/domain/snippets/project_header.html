@@ -1,5 +1,5 @@
 {% load page_tags %}
 <div class="supertitle"><a href="{% url view_section project.section.ref_no %}">{{project.section.short_abbr_name}} - {{project.section.name}}</a></div>
-<div class="title"><h1>โครงการ ({{project.ref_no}}) {{project.name}}</h1> <a href="{% url edit_project project.ref_no %}" class="btn edit_project"><img src="{{STATIC_URL}}images/header/icon_edit.png" /></a></div>
+<div class="title"><h1>โครงการ ({{project.ref_no}}) {{project.name}}</h1><!-- <a href="{% url edit_project project.ref_no %}" class="btn edit_project"><img src="{{STATIC_URL}}images/header/icon_edit.png" /></a>--></div>
 <div class="subtitle"><span>สถานะโครงการ <em>{{project.status}}</em></span><span>เลขที่สัญญา <em>{{project.contract_no}}</em></span><span>ระยะเวลาโครงการ <em>{{project.start_date|format_abbr_date}}</em> ถึง <em>{{project.end_date|format_abbr_date}}</em></span></div>
 <div class="subtitle"><span>ผู้ดูแลโครงการ <em>{{project.manager_name|default:'ไม่มีข้อมูล'}}</em></span></div>

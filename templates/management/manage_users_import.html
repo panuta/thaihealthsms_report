@@ -19,6 +19,8 @@
     <li class="active"><a href="{% url import_managing_users %}">ดึงจากไฟล์ CSV</a></li>
   </ul>
 
+  {% if not import_result %}
+
   <form method="POST" action="." enctype="multipart/form-data">
     {% csrf_token %}
     {{form.non_field_errors}}
@@ -35,12 +37,55 @@
   </form>
 
   <div class="user_import_guide">
-    <h3>วิธีการสร้างไฟล์ CSV</h3>
-
-    <ol>
-      <li>สร้างไฟล์ Excel ที่มีข้อมูลผู้ใช้ดังรูป</li>
-    </ol>
-
+    <h3>ดาวน์โหลดไฟล์สำหรับกรอกข้อมูล (ไฟล์ CSV)</h3>
+    <div class="page_actions"><a href="{{STATIC_URL}}misc/import_users.csv" class="btn">ดาวน์โหลดไฟล์</a></div>
   </div>
+
+  {% else %}
+  <div class="page_actions"><a href="{% url view_managing_users %}" class="btn">กลับไปหน้าจัดการผู้ใช้</a></div>
+  <h3>ผลลัพธ์การดึงไฟล์ CSV</h3>
+
+  <table class="import_users_result_table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>อีเมล / ชื่อผู้ใช้</th>
+        <th>กลุ่มผู้ใช้</th>
+        <th>ผลลัพธ์</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for result in import_result %}
+
+      {% if result.status == 'firstname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลชื่อผู้ใช้</td></tr>{% endif %}
+      {% if result.status == 'lastname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลนามสกุลผู้ใช้</td></tr>{% endif %}
+      {% if result.status == 'section-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลสำนักที่ผู้ใช้สังกัด</td></tr>{% endif %}
+      {% if result.status == 'section-invalid' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>รหัสสำนักไม่ถูกต้อง</td></tr>{% endif %}
+      {% if result.status == 'duplicated' %}<tr><td>{{forloop.counter}}</td><td class="user">{{result.user.email}} ({{result.user.get_profile.get_fullname}})</td><td>{{result.user.get_profile.primary_role.name}}</td><td>มีชื่อผู้ใช้นี้อยู่ในระบบแล้ว</td></tr>{% endif %}
+
+      {% if result.status == 'success' or result.status == 'success-duplicated' %}
+
+        <tr>
+          <td>{{forloop.counter}}</td>
+          <td class="user">{{result.user.email}} ({{result.user.get_profile.get_fullname}})</td>
+          <td>{{result.user.get_profile.primary_role.name}}</td>
+          <td>{% if result.status == 'success' %}สร้างผู้ใช้เรียบร้อย{% else %}มีชื่อผู้ใช้นี้อยู่ในระบบแล้ว{% endif %}</td>
+        </tr>
+
+        {% if result.project_result %}
+          {% for project_result in result.project_result %}
+            {% if project_result.status == 'project-invalid' %}<tr class="error"><td></td><td colspan="3">รหัสโครงการ {{project_result.project_ref_no_str}} ไม่ถูกต้อง</td></tr>{% endif %}
+            {% if project_result.status == 'duplicated' %}<tr><td></td><td colspan="3">ผู้ใช้รับผิดชอบโครงการ <span title="{{project_result.project.name}}">{{project_result.project.ref_no}}</span> อยู่แล้ว</td></tr>{% endif %}
+            {% if project_result.status == 'success' %}<tr><td></td><td colspan="3">เพิ่มโครงการ <span title="{{project_result.project.name}}">{{project_result.project.ref_no}}</span> เป็นโครงการที่รับผิดชอบเรียบร้อย</td></tr>{% endif %}
+          {% endfor %}
+        {% endif %}
+
+      {% endif %}
+
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endif %}  
 </div>
 {% endblock %}

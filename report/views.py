@@ -35,11 +35,13 @@ def view_project_outstanding_reports(request, project_ref_no): # DONE
 
     if request.user.get_profile().is_manage_project(project):
         report_assignments = []
-        for report_assignment in ReportAssignment.objects.filter(project=project):
-            report_assignment.outstanding_schedules = report_assignment.get_outstanding_schedules()
-            
-            if report_assignment.outstanding_schedules:
-                report_assignments.append(report_assignment)
+
+        if project.is_active():
+            for report_assignment in ReportAssignment.objects.filter(project=project):
+                report_assignment.outstanding_schedules = report_assignment.get_outstanding_schedules()
+                
+                if report_assignment.outstanding_schedules:
+                    report_assignments.append(report_assignment)
 
         return render(request, 'domain/project_reports_outstanding.html', {'project': project, 'report_assignments':report_assignments})
     
@@ -63,28 +65,36 @@ def view_project_report(request, project_ref_no, report_id):
     project = get_object_or_404(Project, ref_no=project_ref_no)
     report = get_object_or_404(Report, pk=report_id)
 
-    schedules = []
-    schedule_dates = report.get_schedules_until(and_one_beyond=True)
-    for schedule_date in schedule_dates:
-        try:
-            submission = ReportSubmission.objects.get(report=report, project=project, schedule_date=schedule_date)
-        except:
-            submission = ReportSubmission(report=report, project=project, schedule_date=schedule_date)
-        
-        if not request.user.get_profile().is_manage_project(project):
-            if submission.submitted_on:
-                schedules.append(submission)
+    submissions = []
 
+    if project.is_active():
+        schedule_dates = report.get_schedules_until(and_one_beyond=True)
+        for schedule_date in schedule_dates:
+            try:
+                submission = ReportSubmission.objects.get(report=report, project=project, schedule_date=schedule_date)
+            except:
+                submission = ReportSubmission(report=report, project=project, schedule_date=schedule_date)
+            
+            if not request.user.get_profile().is_manage_project(project):
+                if submission.submitted_on:
+                    submissions.append(submission)
+
+            else:
+                submissions.append(submission)
+
+        for submission in ReportSubmission.objects.filter(project=project, report=report).exclude(submitted_on=None):
+            if not submission.schedule_date in schedule_dates:
+                submissions.append(submission)
+
+        submissions.sort(key=lambda item:item.schedule_date, reverse=True)
+    
+    else:
+        if request.user.get_profile().is_manage_project(project, role='pm'):
+            submissions = ReportSubmission.objects.filter(project=project, report=report).order_by('-schedule_date')
         else:
-            schedules.append(submission)
+            submissions = ReportSubmission.objects.filter(project=project, report=report).exclude(submitted_on=None).order_by('-schedule_date')
 
-    for submission in ReportSubmission.objects.filter(project=project, report=report).exclude(submitted_on=None):
-        if not submission.schedule_date in schedule_dates:
-            schedules.append(submission)
-
-    schedules.sort(key=lambda item:item.schedule_date, reverse=True)
-
-    return render(request, 'domain/project_report.html', {'project': project, 'report':report, 'schedules':schedules})
+    return render(request, 'domain/project_report.html', {'project': project, 'report':report, 'submissions':submissions})
 
 @login_required
 def view_report(request, project_ref_no, report_id, schedule_date):
@@ -107,6 +117,9 @@ def view_report(request, project_ref_no, report_id, schedule_date):
         submission = ReportSubmission(project=project, report=report, schedule_date=schedule_date)
         submission.attachments = []
     
+    if not project.is_active() and not submission.submitted_on and not request.user.get_profile().is_manage_project(project, role='pm'):
+        raise Http404
+
     if not submission.submitted_on and not request.user.get_profile().is_manage_project(project):
         raise Http404
     
