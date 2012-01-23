@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+import datetime
 
 from django.conf import settings
 from django.contrib import messages
@@ -13,21 +14,23 @@ from django.shortcuts import get_object_or_404, redirect, render
 from common.shortcuts import response_json_success, response_json_error
 
 from domain.models import Section
+from report.models import ReportAssignment, ReportSubmission
 
 from forms import *
 from models import *
 
 def auth_login(request):
+    if request.user.is_authenticated():
+        return redirect('view_user_dashboard')
+    
     from django.contrib.auth.views import login
-    response = login(request, authentication_form=EmailAuthenticationForm)
-
-    if request.user.is_authenticated() and request.user.get_profile().random_password:
-        return redirect('%s?next=%s' % (reverse('view_user_first_time'), request.POST.get('next')))
-    else:
-        return response
+    return login(request, authentication_form=EmailAuthenticationForm)
 
 @login_required
 def view_user_first_time(request):
+    if not request.user.get_profile().random_password:
+        return redirect('view_user_dashboard')
+
     if request.method == 'POST':
         form = SetPasswordForm(request.user, request.POST)
         if form.is_valid():
@@ -44,12 +47,15 @@ def view_user_first_time(request):
             
     else:
         form = SetPasswordForm(request.user)
-        next = request.GET.get('next')
+        next = request.GET.get('next', '')
     
     return render(request, 'registration/first_time.html', {'form':form, 'next':next})
 
 @login_required
 def view_user_dashboard(request):
+    if request.user.get_profile().random_password:
+        return redirect('%s?next=%s' % (reverse('view_user_first_time'), request.POST.get('next')))
+
     if request.user.is_superuser:
         return redirect('view_managing_organization')
     
@@ -64,10 +70,8 @@ def view_user_dashboard(request):
     
     # Section Assistant
     if request.user.get_profile().primary_role == Role.objects.get(code='section_assistant'):
-        section = UserSection.objects.filter(user=request.user)[0].section
-        responsible_projects = ProjectResponsibility.objects.filter(user=request.user, project__section=section)
-
-        return render(request, 'dashboard/dashboard_section_assistant.html', {'responsible_projects':responsible_projects})
+        return redirect('view_section_assistant_unsubmitted_dashboard')
+        
     
     # Project Manager
     if request.user.get_profile().primary_role == Role.objects.get(code='project_manager'):
@@ -80,8 +84,35 @@ def view_user_dashboard(request):
     
     raise Http404
 
+def view_section_assistant_unsubmitted_dashboard(request):
+    responsible_projects = ProjectResponsibility.objects.filter(user=request.user).values_list('project', flat=True)
+
+    # overdue + due
+    overdue_submissions = []
+    due_submissions = []
+    today = datetime.date.today()
+
+    for assignment in ReportAssignment.objects.filter(project__in=responsible_projects):
+        for submission in assignment.get_outstanding_schedules():
+            if submission.schedule_date < today:
+                overdue_submissions.append(submission)
+            elif submission.schedule_date == today:
+                due_submissions.append(submission)
+    
+    overdue_submissions.sort(key=lambda item:item.schedule_date, reverse=True)
+
+    return render(request, 'dashboard/dashboard_section_assistant_unsubmitted.html', {'overdue_submissions':overdue_submissions, 'due_submissions':due_submissions})
+
 @login_required
-def view_user_dashboard_projects(request):
+def view_section_assistant_submitted_dashboard(request):
+    responsible_projects = ProjectResponsibility.objects.filter(user=request.user).values_list('project', flat=True)
+
+    submitted_submissions = ReportSubmission.objects.filter(project__in=responsible_projects).exclude(submitted_on=None).order_by('-submitted_on')
+
+    return render(request, 'dashboard/dashboard_section_assistant_submitted.html', {'submitted_submissions':submitted_submissions})
+
+@login_required
+def edit_section_assistant_responsible_projects(request):
     if not request.user.get_profile().primary_role == Role.objects.get(code='section_assistant'):
         raise Http404
 

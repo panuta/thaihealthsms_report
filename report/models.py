@@ -11,7 +11,10 @@ from django.contrib.auth.models import User
 from django.db import models
 
 def report_media_dir(instance, filename):
-    return '%s%s/%s/%s' % (settings.REPORT_ROOT, instance.submission.report.id, instance.submission.project.id, filename)
+    if instance.file_ext:
+        return '%s%s/%s/%s.%s' % (settings.REPORT_ROOT, instance.submission.report.id, instance.submission.project.id, instance.uid, instance.file_ext)
+    else:
+        return '%s%s/%s/%s' % (settings.REPORT_ROOT, instance.submission.report.id, instance.submission.project.id, instance.uid)
 
 class Report(models.Model):
     section = models.ForeignKey('domain.Section')
@@ -59,50 +62,6 @@ class Report(models.Model):
                 result.insert(0, next_schedule)
         
         return result
-    
-    """
-    def get_next_schedule(self, from_date=datetime.date.today()):
-        if self.schedule_monthly_date == 0:
-            first_day, schedule_date = calendar.monthrange(from_date.year, from_date.month)
-        else:
-            schedule_date = self.schedule_monthly_date
-
-        if from_date.day >= schedule_date:
-            schedule_month = from_date.month + 1
-
-            if schedule_month > 12:
-                schedule_month = 1
-                schedule_year = from_date.year + 1
-            else:
-                schedule_year = from_date.year
-        
-        else:
-            schedule_month = from_date.month
-            schedule_year = from_date.year
-        
-        return datetime.date(schedule_year, schedule_month, schedule_date)
-
-    def get_previous_schedule(self, from_date=datetime.date.today()):
-        if self.schedule_monthly_date == 0:
-            first_day, schedule_date = calendar.monthrange(from_date.year, from_date.month)
-        else:
-            schedule_date = self.schedule_monthly_date
-
-        if from_date.day <= schedule_date:
-            schedule_month = from_date.month - 1
-
-            if schedule_month == 0:
-                schedule_month = 12
-                schedule_year = from_date.year - 1
-            else:
-                schedule_year = from_date.year
-
-        else:
-            schedule_month = from_date.month
-            schedule_year = from_date.year
-        
-        return datetime.date(schedule_year, schedule_month, schedule_date)
-    """
 
     def get_submissions(self, project, depth=0):
         result = []
@@ -144,9 +103,12 @@ class ReportAssignment(models.Model):
         outstanding_schedules = []
         for schedule_date in self.report.get_schedules_until(today, and_one_beyond=True):
             try:
-                schedule = outstanding_schedules.append(ReportSubmission.objects.get(report=self.report, project=self.project, schedule_date=schedule_date))
+                submission = ReportSubmission.objects.get(report=self.report, project=self.project, schedule_date=schedule_date)
             except:
-                schedule = outstanding_schedules.append(ReportSubmission(report=self.report, project=self.project, schedule_date=schedule_date))
+                submission = ReportSubmission(report=self.report, project=self.project, schedule_date=schedule_date)
+
+            if not submission.submitted_on:
+                outstanding_schedules.append(submission)
         
         return outstanding_schedules
 

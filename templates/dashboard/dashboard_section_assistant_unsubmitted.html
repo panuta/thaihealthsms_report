@@ -1,0 +1,54 @@
+{% extends 'base_authenticated.html' %}
+{% load page_tags %}
+
+{% block body_title %}<div class="title"><h1>หน้า Dashboard</h1></div>{% endblock %}
+
+{% block body_content %}
+<div class="dashboard_page">
+  <div class="page_actions"><a href="{% url edit_section_assistant_responsible_projects %}" class="btn">แก้ไขโครงการที่รับผิดชอบ</a></div>
+
+  <h2>การติดตามรายงาน</h2>
+
+  <ul class="tabs">
+    <li class="active"><a href="{% url view_section_assistant_unsubmitted_dashboard %}">รายงานที่ยังไม่ได้ส่ง</a></li>
+    <li><a href="{% url view_section_assistant_submitted_dashboard %}">รายงานที่ส่งแล้ว</a></li>
+  </ul>
+
+  <div class="report_followup">
+    {% if overdue_submissions %}
+      <h3 class="overdue">รายงานที่เลยกำหนดส่งแล้ว ({{overdue_submissions|length}} รายงาน)</h3>
+      <ul>
+        {% for submission in overdue_submissions %}
+        <li>
+          <div>
+            <span class="due"><a href="{% url view_report submission.project.ref_no submission.report.id submission.schedule_date|dateid %}">{{submission.report.name}} - งวดวันที่ {{submission.schedule_date|format_date}}</a></span>
+            {% print_schedule_outstanding submission %}
+          </div>
+          <div class="project"><a href="{% url view_project submission.project.ref_no %}">โครงการ ({{submission.project.ref_no}}) {{submission.project.name}}</a></div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if due_submissions %}
+      <h3 class="due">รายงานที่ถึงกำหนดส่ง ({{due_submissions|length}} รายงาน)</h3>
+      <ul>
+        {% for submission in due_submissions %}
+        <li>
+          <div>
+            <span class="due"><a href="{% url view_report submission.project.ref_no submission.report.id submission.schedule_date|dateid %}">{{submission.report.name}} - งวดวันที่ {{submission.schedule_date|format_date}}</a></span>
+            {% print_schedule_outstanding submission %}
+          </div>
+          <div class="project"><a href="{% url view_project submission.project.ref_no %}">โครงการ ({{submission.project.ref_no}}) {{submission.project.name}}</a></div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% if not overdue_submissions and not due_submissions %}
+      <div class="no_information">ไม่มีรายงานที่ยังไม่ได้ส่ง</div>
+    {% endif %}
+  </div>
+  
+</div>
+{% endblock %}

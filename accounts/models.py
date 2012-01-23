@@ -24,8 +24,14 @@ class UserProfile(models.Model):
     def is_in_section(self, section):
         return UserSection.objects.filter(user=self.user, section=section).exists()
     
-    def is_manage_project(self, project):
-        return ProjectManager.objects.filter(user=self.user, project=project).exists()
+    def is_manage_project(self, project, role=None):
+        if role == 'pm':
+            return ProjectManager.objects.filter(user=self.user, project=project).exists()
+        
+        elif role == 'assistant':
+            return ProjectResponsibility.objects.filter(user=self.user, project=project).exists()
+
+        return ProjectManager.objects.filter(user=self.user, project=project).exists() or ProjectResponsibility.objects.filter(user=self.user, project=project).exists()
 
 class UserSection(models.Model):
     user = models.ForeignKey(User)

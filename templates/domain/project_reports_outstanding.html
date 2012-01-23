@@ -8,11 +8,7 @@
 
 {% block body_content %}
 <div class="project_page">
-
-  <ul class="tabs">
-    <li class="active"><a href="{% url view_project_outstanding_reports project.ref_no %}">รายงานที่ต้องส่ง</a></li>
-    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
-  </ul>
+  {% include 'domain/snippets/project_report_tabs.html' with active_menu='outstanding' %}
 
   {% if report_assignments %}
   <div class="outstanding_reports">
@@ -34,7 +30,7 @@
     </ul>
   </div>
   {% else %}
-  <div class="no_information">ไม่มีรายงานที่ต้องส่ง</div>
+  <div class="no_information">ไม่มีรายงานที่ยังค้างส่ง</div>
   {% endif %}
 </div>
 {% endblock %}

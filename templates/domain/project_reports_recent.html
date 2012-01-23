@@ -8,11 +8,7 @@
 
 {% block body_content %}
 <div class="project_page">
-
-  <ul class="tabs">
-    <li class="active"><a href="{% url view_project_recent_reports project.ref_no %}">รายงานฉบับล่าสุด</a></li>
-    <li><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
-  </ul>
+  {% include 'domain/snippets/project_report_tabs.html' with active_menu='recent' %}
 
   {% if submissions %}
   <ul>

@@ -1,0 +1,6 @@
+{% load page_tags %}
+<ul class="tabs">
+  {% manage user project %}<li{% if active_menu == 'outstanding' %} class="active"{% endif %}><a href="{% url view_project_outstanding_reports project.ref_no %}">รายงานที่ยังไม่ได้ส่ง</a></li>{% endmanage %}
+  <li{% if active_menu == 'recent' %} class="active"{% endif %}><a href="{% url view_project_recent_reports project.ref_no %}">รายงานล่าสุด</a></li>
+  <li{% if active_menu == 'all' %} class="active"{% endif %}><a href="{% url view_project_all_reports project.ref_no %}">รายงานทั้งหมด</a></li>
+</ul>

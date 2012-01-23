@@ -44,17 +44,19 @@ def weeksince(date):
 # PERMISSION #################################################################
 
 class ManageNode(template.Node):
-    def __init__(self, nodelist_true, nodelist_false, user, project):
+    def __init__(self, nodelist_true, nodelist_false, user, project, role):
         self.nodelist_true = nodelist_true
         self.nodelist_false = nodelist_false
         self.user = template.Variable(user)
         self.project = template.Variable(project)
+        self.role = role.strip(' \"\'')
     
     def render(self, context):
         user = self.user.resolve(context)
         project = self.project.resolve(context)
+        role = self.role
 
-        if user.get_profile().is_manage_project(project):
+        if user.get_profile().is_manage_project(project, role):
             output = self.nodelist_true.render(context)
             return output
         else:
@@ -64,9 +66,13 @@ class ManageNode(template.Node):
 @register.tag(name="manage")
 def do_manage(parser, token):
     try:
-        tag_name, user, project = token.split_contents()
+        tag_name, user, project, role = token.split_contents()
     except ValueError:
-        raise template.TemplateSyntaxError, "manage tag raise ValueError"
+        try:
+            tag_name, user, project = token.split_contents()
+            role = ''
+        except ValueError:
+            raise template.TemplateSyntaxError, "manage tag raise ValueError"
     
     nodelist_true = parser.parse(('else', 'endmanage'))
     token = parser.next_token()
@@ -76,7 +82,7 @@ def do_manage(parser, token):
     else:
         nodelist_false = NodeList()
     
-    return ManageNode(nodelist_true, nodelist_false, user, project)
+    return ManageNode(nodelist_true, nodelist_false, user, project, role)
     
 # REPORT #################################################################
 
@@ -98,7 +104,7 @@ def print_schedule_outstanding(schedule):
                 return u'<span class="normal_status">จะถึงวันกำหนดส่งในอีก <em>%s</em></span>' % weeksince(schedule.schedule_date)
     
     else:
-        return u'<span class="submitted_status">ส่งแล้วเมื่อวันที่ <em>%s</em></span>' % utilities.format_full_datetime(schedule.submitted_on)
+        return u'<span class="submitted_status">ส่งเมื่อวันที่ <em>%s</em></span>' % utilities.format_full_datetime(schedule.submitted_on)
 
 @register.simple_tag
 def print_report_schedule(report):
