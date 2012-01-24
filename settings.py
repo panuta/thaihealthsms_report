@@ -48,8 +48,8 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # EMAIL_USE_TLS = True
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -58,12 +58,13 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = '[SMS] '
 
-# MailGun Email Service
+""" MailGun Email Service
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_HOST_USER = 'postmaster@thaihealthsms.mailgun.org'
 EMAIL_HOST_PASSWORD = '0nvpm5iis068'
 EMAIL_PORT = 587
+"""
 
 """ SENDGRID EMAIL SERVICE
 EMAIL_HOST = 'smtp.sendgrid.net'
