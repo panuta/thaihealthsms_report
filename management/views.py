@@ -316,7 +316,7 @@ def import_from_gms(request):
 
     if request.method == 'POST':
         import gms_import
-        gms.import_gms(request.user)
+        gms_import.import_gms(request.user)
         return redirect('import_from_gms')
 
     return render(request, 'management/manage_import.html', {})
