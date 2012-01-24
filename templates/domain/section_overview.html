@@ -8,6 +8,7 @@
 
 {% block body_content %}
 <div class="section_page">
+  {% if current_projects %}
   <ul class="projects">
     {% for project in current_projects %}
     <li>
@@ -16,5 +17,8 @@
     </li>
     {% endfor %}
   </ul>
+  {% else %}
+  <div class="no_information">ไม่มีโครงการที่ดำเนินอยู่</div>
+  {% endif %}
 </div>
 {% endblock %}

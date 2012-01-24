@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.views.generic import RedirectView
 
@@ -23,9 +22,5 @@ urlpatterns = patterns('',
     (r'^$', RedirectView.as_view(url='dashboard/')),
 )
 
-if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-   )
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()

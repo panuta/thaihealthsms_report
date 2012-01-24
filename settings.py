@@ -4,7 +4,7 @@ base_path = os.path.dirname(__file__)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-SYSTEM_NAME = 'Thai Health Strategy Management Systems'
+SYSTEM_NAME = 'Thai Health Promotion Foundation - Strategy Management Systems'
 WEBSITE_ADDRESS = 'localhost:8000'
 
 ADMINS = (
@@ -48,7 +48,8 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # EMAIL_USE_TLS = True
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -63,6 +64,14 @@ EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_HOST_USER = 'postmaster@thaihealthsms.mailgun.org'
 EMAIL_HOST_PASSWORD = '0nvpm5iis068'
 EMAIL_PORT = 587
+
+""" SENDGRID EMAIL SERVICE
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'sendgrid_username'
+EMAIL_HOST_PASSWORD = 'sendgrid_password'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+"""
 
 SYSTEM_NOREPLY_EMAIL = 'noreply@thaihealthsms.mailgun.org'
 
@@ -154,7 +163,6 @@ LOGGING = {
 FILE_PROTECTION_METHOD = 'basic'
 
 # THAIHEALTHSMS SETTINGS #
-
 
 REPORT_ROOT = MEDIA_ROOT + 'report/'
 WARNING_AT_DAYS_BEFORE_DUE = 3

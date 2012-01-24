@@ -63,6 +63,11 @@ def view_managing_user_password(request, user_id):
 
     if not user.get_profile().random_password:
         raise Http404
+    
+    if request.method == 'POST':
+        user.get_profile().send_password_email()
+        messages.success(request, u'ส่งอีเมลรหัสผ่านให้ผู้ใช้เรียบร้อย')
+        return redirect('view_managing_user_password', user_id=user_id)
 
     return render(request, 'management/manage_users_password.html', {'this_user':user})
 
@@ -124,6 +129,8 @@ def _add_section_user_responsibility(request, user):
             user.is_active = True
             user.save()
 
+            user_profile.send_password_email()
+
             messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
             return redirect('view_managing_user_password', user_id=user.id)
     
@@ -143,6 +150,8 @@ def _add_project_manager_responsibility(request, user):
 
             user.is_active = True
             user.save()
+
+            user_profile.send_password_email()
 
             if created:
                 messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')

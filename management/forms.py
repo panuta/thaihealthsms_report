@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 from django import forms
+from django.contrib.auth.models import User
 
 from common.forms import StrippedCharField
 
@@ -31,23 +32,33 @@ class AddProjectManagerResponsibilityForm(forms.Form):
 class ImportUserForm(forms.Form):
     user_csv = forms.FileField()
 
-    """
-    def clean_user_csv(self):
-        user_csv = self.cleaned_data['user_csv']
-
-        if not user_csv.name in ('project_manager.csv', 'section_assistant.csv', 'section_manager.csv'):
-            raise forms.ValidationError('ชื่อไฟล์ไม่ถูกต้อง ต้องตั้งชื่อไฟล์เป็นชื่อ "project_manager.csv" หรือ "section_assistant.csv" หรือ "section_manager.csv" เท่านั้น')
-
-        return user_csv
-    """
-
 class EditSectionUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
     firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     section = forms.ModelChoiceField(queryset=Section.objects.all(), widget=forms.RadioSelect(), empty_label=None)
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        else:
+            raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')
+
 class EditProjectUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
     firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+        else:
+            raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')

@@ -2,6 +2,7 @@ TODO
 
 
 2nd Iteration
+- Email notification
 - Project activities
 - Edit project
 - Add/Edit report schedule
@@ -9,4 +10,3 @@ TODO
 - Support multiple section for section assistant
 - Delete user
 
-- Redirect to home page when authenticated and go to login page

@@ -1,0 +1,8 @@
+สร้างบัญชีผู้ใช้สำหรับระบบ Thai Health Strategy Management Systems เรียบร้อย
+
+ชื่อผู้ใช้ (Username) : {{user_profile.user.email}}
+
+รหัสผ่าน (Password) : {{user_profile.random_password}}
+* รหัสผ่านนี้ใช้สำหรับการเข้าสู่ระบบครั้งแรกเท่านั้น
+
+ผู้ใช้สามารถเข้าสู่ระบบได้ที่หน้า http://{{settings.WEBSITE_ADDRESS}}/

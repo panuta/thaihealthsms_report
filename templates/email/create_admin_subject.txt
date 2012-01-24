@@ -1,1 +1,1 @@
-Your administrator account is created
+{{settings.EMAIL_SUBJECT_PREFIX}}Your administrator account is created
