@@ -129,7 +129,7 @@ def _add_section_user_responsibility(request, user):
             user.is_active = True
             user.save()
 
-            user_profile.send_password_email()
+            user.get_profile().send_password_email()
 
             messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
             return redirect('view_managing_user_password', user_id=user.id)
