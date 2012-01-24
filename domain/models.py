@@ -34,7 +34,7 @@ class Project(models.Model):
         ordering = ['ref_no']
     
     def is_active(self):
-        return self.status in ('อนุมัติ', 'รอปิดโครงการ')
+        return self.status in (u'อนุมัติ', u'รอปิดโครงการ')
 
 ## IMPORT FROM GMS ##
 

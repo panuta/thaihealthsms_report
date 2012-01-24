@@ -1,15 +1,4 @@
 # -*- encoding: utf-8 -*-
-
-HOST = 'http://61.90.139.134/gms/api/'
-APIKEY = 'WY0sSJA693sZsHRxT7oTwdzVM83mK0XQcffTYPPes1YUklgH6X5oxQ0xjv8WneG'
-
-PLAN_YEAR = ('55', '54', '53', '52', '51', '50')
-
-SMS_PLAN_VIEW_URL = HOST + '?view=SMS_PLAN_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
-SMS_CONTRACT_VIEW_URL = HOST + '?view=SMS_CONTRACT_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
-SMS_CONTRACT_MONEY_URL = HOST + '?view=SMS_Contract_Money&format=json&page=0&general=1&apikey=' + APIKEY
-SMS_PV_PAYMENT_VIEW_URL = HOST + '?view=SMS_PV_PAYMENT_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
-
 import datetime
 import urllib
 
@@ -17,6 +6,18 @@ from django.utils import simplejson
 
 from budget.models import *
 from domain.models import *
+from report.models import *
+
+HOST = 'http://61.90.139.134/gms/api/'
+APIKEY = 'WY0sSJA693sZsHRxT7oTwdzVM83mK0XQcffTYPPes1YUklgH6X5oxQ0xjv8WneG'
+
+this_year = datetime.date.today().year + 543
+BUDGET_PROJECT_YEARS = range(this_year, this_year-10, -1)
+
+SMS_PLAN_VIEW_URL = HOST + '?view=SMS_PLAN_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
+SMS_CONTRACT_VIEW_URL = HOST + '?view=SMS_CONTRACT_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
+SMS_CONTRACT_MONEY_URL = HOST + '?view=SMS_Contract_Money&format=json&page=0&general=1&apikey=' + APIKEY
+SMS_PV_PAYMENT_VIEW_URL = HOST + '?view=SMS_PV_PAYMENT_VIEW&format=json&page=0&general=1&apikey=' + APIKEY
 
 def convert_to_date(str):
     try:
@@ -88,14 +89,19 @@ def import_gms(imported_by):
                 ReportAssignment.objects.get_or_crete(report=report, project=project)
     
     # Retrieve budget data
-
-    import_url = urllib.urlopen(SMS_CONTRACT_MONEY_URL)
-    raw_money_list = simplejson.loads(import_url.read())
+    raw_money_list = []
+    for project_year in BUDGET_PROJECT_YEARS:
+        import_url = urllib.urlopen(SMS_CONTRACT_MONEY_URL + '&where=projectcode%20like%20%27' + str(project_year - 2500) + '%25%27')
+        raw_money_list.append('')
+        raw_money_list[-1:] = simplejson.loads(import_url.read()) # Append list to list
 
     for raw_money in raw_money_list:
         try:
             project = Project.objects.get(ref_no=raw_money['ProjectCode'])
         except Project.DoesNotExist:
+            continue
+        
+        if not raw_money['Cno'] or not raw_money['DateStart'] or not raw_money['DateEnd']:
             continue
         
         try:
@@ -126,8 +132,11 @@ def import_gms(imported_by):
         except Project.DoesNotExist:
             continue
         
+        if not raw_payment['Cno']:
+            continue
+        
         try:
-            budget_schedule = BudgetSchedule.objects.get(project=project, cycle=int(raw_money['Cno']))
+            budget_schedule = BudgetSchedule.objects.get(project=project, cycle=int(raw_payment['Cno']))
         except BudgetSchedule.DoesNotExist:
             continue
 
