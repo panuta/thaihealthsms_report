@@ -61,7 +61,6 @@ def after_syncdb(sender, **kwargs):
         some_admin = admin_user
     
     # Section ##################
-    """
     section10, created = Section.objects.get_or_create(ref_no='10', order_number=10, name='ศูนย์เรียนรู้สุขภาวะ', prefix='ฝ่าย', long_abbr_name='ศูนย์เรียนรู้', short_abbr_name='WISH Center')
     section01, created = Section.objects.get_or_create(ref_no='01', order_number=20, name='สำนักสนับสนุนการควบคุมปัจจัยเสี่ยงหลัก', prefix='สำนัก', long_abbr_name='สำนัก 1', short_abbr_name='สำนัก 1')
     section02, created = Section.objects.get_or_create(ref_no='02', order_number=30, name='สำนักสนับสนุนการควบคุมปัจจัยเสี่ยงทางสุขภาพ', prefix='สำนัก', long_abbr_name='สำนัก 2', short_abbr_name='สำนัก 2')
@@ -80,10 +79,13 @@ def after_syncdb(sender, **kwargs):
     section11, created = Section.objects.get_or_create(ref_no='11', order_number=150, name='ฝ่ายบริหารงานบุคคล', prefix='ฝ่าย', long_abbr_name='ฝ่ายบริหารงานบุคคล', short_abbr_name='ฝ่าย HR')
     section14, created = Section.objects.get_or_create(ref_no='14', order_number=160, name='ฝ่ายบัญชีและการเงิน', prefix='ฝ่าย', long_abbr_name='ฝ่ายบัญชีและการเงิน', short_abbr_name='ฝ่ายบัญชี')
     section17, created = Section.objects.get_or_create(ref_no='17', order_number=170, name='ฝ่ายตรวจสอบภายใน', prefix='ฝ่าย', long_abbr_name='ฝ่ายตรวจสอบภายใน', short_abbr_name='ฝ่ายตรวจสอบภายใน สสส.')
-    """
+    
     """
     END HERE
     """
+
+    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
+    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
 
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
