@@ -11,5 +11,7 @@ TODO
 - Add/Edit report schedule
 - Section reports
 - Support multiple section for section assistant
-- Delete user
+- Delete/deactivate user
 - report attachment protection
+- support username (email) longer than 30 chars
+- user can edit their email/username

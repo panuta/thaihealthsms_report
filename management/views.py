@@ -283,11 +283,27 @@ def ajax_remove_managing_project(request):
         return response_json_success()
 
 @login_required
-def delete_managing_user(request, user_id):
+def deactivate_managing_user(request, user_id):
     if not request.user.is_staff: raise Http403
+    user = get_object_or_404(User, id=user_id)
 
-    # TODO
-    pass
+    if not user.is_active:
+        raise Http404
+
+    if request.method == 'POST':
+        if 'submit-delete' in request.POST:
+            user.is_active = False
+            user.save()
+
+            messages.success(request, u'ปิดบัญชีผู้ใช้เรียบร้อย')
+        
+        if user.get_profile().is_section_staff():
+            return redirect('view_managing_section_users')
+
+        elif user.get_profile().is_project_manager():
+            return redirect('view_managing_project_users')
+    
+    return render(request, 'management/manage_users_deactivate_user.html', {'this_user':user})
 
 @login_required
 def import_managing_users(request):

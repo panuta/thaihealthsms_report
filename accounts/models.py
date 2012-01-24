@@ -8,12 +8,18 @@ class Role(models.Model):
     code = models.CharField(max_length=300, db_index=True, unique=True)
     name = models.CharField(max_length=300)
 
+    def __unicode__(self):
+        return self.name
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     firstname = models.CharField(max_length=300)
     lastname = models.CharField(max_length=300)
-    random_password = models.CharField(max_length=30, null=True)
+    random_password = models.CharField(max_length=30, null=True, blank=True)
     primary_role = models.ForeignKey(Role)
+
+    def __unicode__(self):
+        return '%s %s' % (self.firstname, self.lastname)
 
     def get_fullname(self):
         return '%s %s' % (self.firstname, self.lastname)

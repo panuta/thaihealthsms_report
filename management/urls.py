@@ -15,7 +15,7 @@ urlpatterns = patterns('management.views',
     url(r'^manage/users/(?P<user_id>\d+)/edit/$', 'edit_managing_user', name='edit_managing_user'),
     url(r'^ajax/remove_managing_project/$', 'ajax_remove_managing_project', name='ajax_remove_managing_project'),
 
-    url(r'^manage/users/(?P<user_id>\d+)/delete/$', 'delete_managing_user', name='delete_managing_user'),
+    url(r'^manage/users/(?P<user_id>\d+)/deactivate/$', 'deactivate_managing_user', name='deactivate_managing_user'),
     
     
     url(r'^manage/users/import/$', 'import_managing_users', name='import_managing_users'),

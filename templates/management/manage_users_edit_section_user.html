@@ -1,6 +1,6 @@
 {% extends 'base_authenticated.html' %}
 
-{% block head_title %}{{block.super}}เพิ่มผู้ใช้ระบบ{% endblock %}
+{% block head_title %}{{block.super}}แก้ไขผู้ใช้{% endblock %}
 
 {% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
 
@@ -29,6 +29,8 @@
     </div>
   </form>
 
-
+  <!--<div class="delete_panel">
+    <a href="{% url deactivate_managing_user this_user.id %}" class="danger">ปิดบัญชีผู้ใช้</a>
+  </div>-->
 </div>
 {% endblock %}

@@ -12,7 +12,7 @@ class Section(models.Model):
     order_number = models.IntegerField(default=0)
 
     def __unicode__(self):
-        return '%s - %s' % (self.short_abbr_name, self.name)
+        return self.short_abbr_name
 
 class Project(models.Model):
     section = models.ForeignKey(Section)
@@ -32,6 +32,9 @@ class Project(models.Model):
 
     class Meta:
         ordering = ['ref_no']
+    
+    def __unicode__(self):
+        return self.ref_no
     
     def is_active(self):
         return self.status in (u'อนุมัติ', u'รอปิดโครงการ')
