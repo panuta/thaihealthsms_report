@@ -108,10 +108,10 @@ $(document).ready(function() {
   </div>
   {% endif %}
 
-  <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.ref_no report.id submission.schedule_date|dateid %}" enctype="multipart/form-data">
+  <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.ref_no report.id submission.schedule_date|dateid %}" enctype="multipart/form-data" style="opacity:0;text-indent:-9999px;">
     {% csrf_token %}
     {{attachment_form.errors}}
-    <input type="file" name="report_attachment" id="id_report_attachment" style="opacity:0;text-indent:-9999px;"/>
+    <input type="file" name="report_attachment" id="id_report_attachment"/>
   </form>
 
 </div>
