@@ -315,7 +315,7 @@ def import_from_gms(request):
     if not request.user.is_staff: raise Http403
 
     if request.method == 'POST':
-        import gms
+        import gms_import
         gms.import_gms(request.user)
         return redirect('import_from_gms')
 
