@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.models import User
 
 from common.forms import StrippedCharField
+from common.utilities import split_filename
 
 from domain.models import Section, Project
 
@@ -31,6 +32,14 @@ class AddProjectManagerResponsibilityForm(forms.Form):
 
 class ImportUserForm(forms.Form):
     user_csv = forms.FileField()
+
+    def clean_user_csv(self):
+        user_csv = self.cleaned_data.get('user_csv')
+
+        if user_csv and split_filename(user_csv.name)[1].lower() != 'csv':
+            raise forms.ValidationError('ระบบอ่านได้เฉพาะไฟล์นามสกุล CSV เท่านั้น')
+        
+        return user_csv
 
 class EditSectionUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
