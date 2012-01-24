@@ -54,4 +54,3 @@ class ProjectResponsibility(models.Model): # for section cordinator
 class ProjectManager(models.Model): # for project manager
     user = models.ForeignKey(User)
     project = models.ForeignKey('domain.Project')
-

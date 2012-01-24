@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import *
+from budget.models import *
 
 class BudgetScheduleAdmin(admin.ModelAdmin):
     pass

@@ -151,7 +151,7 @@ def _add_project_manager_responsibility(request, user):
             user.is_active = True
             user.save()
 
-            user_profile.send_password_email()
+            user.get_profile().send_password_email()
 
             if created:
                 messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')

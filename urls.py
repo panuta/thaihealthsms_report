@@ -11,8 +11,6 @@ urlpatterns = patterns('',
     url(r'^', include('thaihealthsms_report.management.urls')),
     url(r'^', include('thaihealthsms_report.report.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
-
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page':'/accounts/login/'},name='auth_logout'),
     url(r'^accounts/password_reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),
     url(r'^accounts/password_reset/done/$', 'django.contrib.auth.views.password_reset_done', name='auth_password_reset_done'),
@@ -20,6 +18,8 @@ urlpatterns = patterns('',
     url(r'^accounts/reset/done/$', 'django.contrib.auth.views.password_reset_complete', name='auth_password_reset_complete'),
 
     (r'^$', RedirectView.as_view(url='dashboard/')),
+
+    url(r'^admin/', include(admin.site.urls)),
 )
 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

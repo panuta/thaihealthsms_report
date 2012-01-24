@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import *
+from domain.models import *
 
 class SectionAdmin(admin.ModelAdmin):
     pass

@@ -86,7 +86,7 @@ def import_gms(imported_by):
         # assign report for a project that is still active by checking from status text
         if project.is_active():
             for report in Report.objects.filter(section=section):
-                ReportAssignment.objects.get_or_crete(report=report, project=project)
+                ReportAssignment.objects.get_or_create(report=report, project=project)
     
     # Retrieve budget data
     raw_money_list = []
