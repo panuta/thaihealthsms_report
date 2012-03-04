@@ -3,19 +3,22 @@
 {% block head_title %}ยินดีต้อนรับเข้าสู่ระบบ{% endblock %}
 
 {% block body_single %}
-<h1>ยินดีต้อนรับเข้าสู่ระบบ</h1>
+<div class="outer-container span6 offset3">
+  <div class="inner-container">
+    <h1>ยินดีต้อนรับเข้าสู่ระบบ</h1>
+    
+    <form method="POST" action=".">
+      {% csrf_token %}
+      {{form.non_field_errors}}
 
-<form method="POST" action="." class="form-stacked">
-  {% csrf_token %}
-  {{form.non_field_errors}}
+      <div class="item"><label for="id_new_password1">เปลี่ยนรหัสผ่าน</label><div class="input">{{form.new_password1}}{{form.new_password1.errors}}</div></div>
+      <div class="item"><label for="id_new_password2">กรอกรหัสผ่านอีกครั้ง</label><div class="input">{{form.new_password2}}{{form.new_password2.errors}}</div></div>
 
-  <div class="clearfix"><label for="id_new_password1">เปลี่ยนรหัสผ่าน</label><div class="input">{{form.new_password1}}{{form.new_password1.errors}}</div></div>
-  <div class="clearfix"><label for="id_new_password2">กรอกรหัสผ่านอีกครั้ง</label><div class="input">{{form.new_password2}}{{form.new_password2.errors}}</div></div>
+      <div class="form_actions">
+        <button type="submit" class="btn btn-primary">บันทึกรหัสผ่าน และเข้าสู่ระบบ</button>
+      </div>
+    </form>
 
-  <div class="form_actions">
-    <button type="submit" class="btn primary span3">บันทึกรหัสผ่าน</button>
   </div>
-
-</form>
-
+</div>
 {% endblock %}

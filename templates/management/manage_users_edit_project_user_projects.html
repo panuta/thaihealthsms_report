@@ -1,0 +1,69 @@
+{% extends 'base_authenticated.html' %}
+
+{% block head_title %}{{block.super}}แก้ไขผู้ใช้{% endblock %}
+
+{% block body_title %}<div class="title"><h1>การจัดการระบบ</h1></div>{% endblock %}
+
+{% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
+
+{% block html_head %}
+{{block.super}}
+<script>
+$(document).ready(function() {
+    $('.managing_project_inputs input[type="checkbox"]').on('click', function(e) {
+      var input_object = $(this);
+      var user_id = '{{this_user.id}}';
+      var project_id = $(this).val();
+
+      if(!$(this).attr('checked')) {
+        $.post('{% url ajax_remove_managing_project %}', {user_id:user_id, project_id:project_id}, function(response) {
+          if(response.status == 'error') {
+            if(response.error == 'project-notfound') {alert('ไม่พบโครงการนี้ในระบบ');}
+            if(response.error == 'user-notfound') {alert('ไม่พบผู้ใช้ในระบบ');}
+            if(response.error == 'user-invalid') {alert('ประเภทผู้ใช้ไม่ถูกต้อง');}
+
+            input_object.attr('checked', !input_object.attr('checked'));
+          } else {
+            input_object.closest('li').fadeOut('fast');
+          }
+        }, 'json');
+      }
+    });
+});
+</script>
+{% endblock %}
+
+{% block body_content %}
+<div class="admin_page">
+  <ul class="breadcrumb">
+    <li><a href="{% url view_managing_project_users %}">จัดการผู้ใช้</a> <span class="divider">/</span></li>
+    <li class="active">แก้ไขผู้ใช้</li>
+  </ul>
+  <h2>แก้ไขผู้ใช้ {{this_user.get_profile.get_fullname}}</h2>
+
+  <ul class="nav nav-tabs">
+    <li><a href="{% url edit_managing_user this_user.id %}">ข้อมูลผู้ใช้</a></li>
+    <li class="active"><a href="{% url edit_managing_user_projects this_user.id %}">โครงการที่รับผิดชอบ</a></li>
+  </ul>
+
+  <form method="POST" action="." class="add_managing_project_form form-inline">
+    {% csrf_token %}
+    {{form.non_field_errors}}
+    <label for="id_firstname" class="control-label">รหัสโครงการ</label>{{form.project_ref_no}}{{form.project_ref_no.errors}}<button type="submit" class="btn btn-primary">เพิ่มโครงการที่รับผิดชอบ</button>
+  </form>
+
+  {% if managing_projects %}
+  <div class="managing_project_inputs">
+    <div class="instruction">กดเอาเครื่องหมายออกเพื่อยกเลิกโครงการที่รับผิดชอบ</div>
+    <ul>
+      {% for managing_project in managing_projects %}
+      <li>
+        <label><input type="checkbox" checked="checked" value="{{managing_project.project.id}}"/> โครงการ {{managing_project.project.ref_no}} - {{managing_project.project.name}}</label>
+      </li>
+      {% endfor %}
+    <ul>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

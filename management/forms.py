@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from common.forms import StrippedCharField
 from common.utilities import split_filename
 
+from accounts.models import UserProfile
 from domain.models import Section, Project
 
 class AddUserForm(forms.Form):
@@ -15,10 +16,10 @@ class AddUserForm(forms.Form):
     primary_role = forms.ChoiceField(choices=(('section_manager', 'ผู้อำนวยการสำนัก'), ('section_assistant', 'ผู้ประสานงานสำนัก'), ('project_manager', 'ผู้รับผิดชอบโครงการ')))
 
 class AddSectionUserResponsibilityForm(forms.Form):
-    section = forms.ModelChoiceField(queryset=Section.objects.all(), widget=forms.RadioSelect(), empty_label=None)
+    section = forms.ModelChoiceField(queryset=Section.objects.all(), empty_label=None)
 
 class AddProjectManagerResponsibilityForm(forms.Form):
-    project_ref_no = StrippedCharField(max_length=100, widget=forms.TextInput(attrs={'class':'span4'}))
+    project_ref_no = StrippedCharField(max_length=100, widget=forms.TextInput(attrs={'class':'span3'}))
 
     def clean_project_ref_no(self):
         project_ref_no = self.cleaned_data['project_ref_no']
@@ -45,7 +46,11 @@ class EditSectionUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
     firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
-    section = forms.ModelChoiceField(queryset=Section.objects.all(), widget=forms.RadioSelect(), empty_label=None)
+    section = forms.ModelChoiceField(queryset=Section.objects.all(), empty_label='')
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        forms.Form.__init__(self, *args, **kwargs)
 
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
@@ -55,13 +60,18 @@ class EditSectionUserForm(forms.Form):
         except User.DoesNotExist:
             return email
         else:
-            raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')
+            if user.id != self.user.id:
+                raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')
 
 class EditProjectUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
     firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        forms.Form.__init__(self, *args, **kwargs)
+
     def clean_email(self):
         email = self.cleaned_data.get('email', '')
 
@@ -70,4 +80,5 @@ class EditProjectUserForm(forms.Form):
         except User.DoesNotExist:
             return email
         else:
-            raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')
+            if user.id != self.user.id:
+                raise forms.ValidationError('อีเมลนี้ซ้ำกับผู้ใช้คนอื่นในระบบ')

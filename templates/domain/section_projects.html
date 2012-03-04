@@ -8,7 +8,7 @@
 
 {% block body_content %}
 <div class="section_page">
-  <ul class="tabs">
+  <ul class="nav nav-tabs">
     {% for year in all_years %}
     <li{% if showing_year == year %} class="active"{% endif %}><a href="{% url view_section_projects_in_year section.ref_no year|add:543 %}">ปี {{year|add:543}}</a></li>
     {% endfor %}

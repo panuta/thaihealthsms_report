@@ -17,6 +17,7 @@ class UserProfile(models.Model):
     lastname = models.CharField(max_length=300)
     random_password = models.CharField(max_length=30, null=True, blank=True)
     primary_role = models.ForeignKey(Role)
+    is_finished_register = models.BooleanField(default=False)
 
     def __unicode__(self):
         return '%s %s' % (self.firstname, self.lastname)

@@ -3,9 +3,6 @@
 
 {% block html_head %}
 {{block.super}}
-<script src="{{STATIC_URL}}libs/bootstrap/js/bootstrap-dropdown.js"></script>
-<script src="{{STATIC_URL}}libs/bootstrap/js/bootstrap-modal.js"></script>
-<link rel="stylesheet/less" type="text/css" href="{{STATIC_URL}}libs/bootstrap/lib/bootstrap.less">
 
 <!--<link rel="stylesheet" media="all" type="text/css" href="{{STATIC_URL}}libs/yui/build/container/assets/skins/sam/container.css">
 <link rel="stylesheet" media="all" type="text/css" href="{{STATIC_URL}}libs/yui/build/calendar/assets/skins/sam/calendar.css">
@@ -19,9 +16,7 @@
 <!--<script type="text/javascript" src="{{STATIC_URL}}libs/jquery.form.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}libs/progressbar/jquery.progressbar.js"></script>-->
 
-
 <link rel="stylesheet/less" type="text/css" href="{{STATIC_URL}}css/styles.less">
-
 <script type="text/javascript" src="{{STATIC_URL}}js/scripts.js"></script>
 
 {% endblock %}
@@ -48,14 +43,7 @@
 <div id="body-title">{% block body_title %}{% endblock %}</div>
 <div id="body-tabs">{% block body_tabs %}{% endblock %}</div>
 
-{% if messages %}
-  <div id="body-messages">
-    {% for message in messages %}
-    <div class="alert-message block-message {% if message.tags %}{{message.tags}}{% endif %}"><p>{{message}}</p></div>
-    {% endfor %}
-  </div>
-{% endif %}
-
+{% if messages %}<div id="body-messages">{% for message in messages %}<div class="alert alert-{% if message.tags %}{{message.tags}}{% endif %}"><p>{{message}}</p></div>{% endfor %}</div>{% endif %}
 
 <div id="body-content" class="container-fluid container-body">
   <div class="content-full">
@@ -64,12 +52,4 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 {% endblock %}

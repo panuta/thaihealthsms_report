@@ -16,7 +16,7 @@ class EmailAuthenticationBackend(ModelBackend):
             if user.count() > 0:
                 user = user[0]
 
-                if user.check_password(password):
+                if user.get_profile().is_finished_register and user.check_password(password):
                     return user
                     
         return None

@@ -50,7 +50,7 @@ def after_syncdb(sender, **kwargs):
             admin_user.is_staff = True
             admin_user.save()
 
-            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_role)
+            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_role, is_finished_register=True)
             
             email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
             email_subject = render_to_string('email/create_admin_subject.txt', email_render_dict)
@@ -85,7 +85,7 @@ def after_syncdb(sender, **kwargs):
     """
 
     Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
-    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
+    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
 
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)

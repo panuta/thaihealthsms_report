@@ -1,5 +1,5 @@
 {% extends 'base_authenticated.html' %}
-{% load page_tags %}
+{% load humanize page_tags %}
 
 {% block head_title %}{{block.super}}โครงการ {{project.ref_no}} | แผนการเงิน{% endblock %}
 
@@ -10,33 +10,25 @@
 <div class="project_page">
   
   {% if budget_schedules %}
-  <table class="budgets">
-    <colgroup>
-      <col width="60"/>
-      <col width="220"/>
-      <col width="140"/>
-      <col width="200"/>
-      <col width="200"/>
-      <col />
-    </colgroup>
+  <table class="budgets-table table table-bordered">
     <thead>
       <tr>
-        <th>งวดที่</th>
-        <th>ช่วงเวลา</th>
-        <th>วันกำหนดส่ง</th>
-        <th>เงินอนุมัติ</th>
-        <th>เงินเบิกจ่าย</th>
+        <th class="cycle">งวดที่</th>
+        <th class="budget_date">ช่วงเวลา</th>
+        <th class="due_date">วันกำหนดส่ง</th>
+        <th class="grant">เงินอนุมัติ</th>
+        <th class="claim">เงินเบิกจ่าย</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       {% for schedule in budget_schedules %}
       <tr{% if schedule.claimed_on %} class="claimed"{% endif %}>
-        <td class="c">{{schedule.cycle}}</td>
-        <td class="c">{{schedule.start_date|format_abbr_date}} - {{schedule.end_date|format_abbr_date}}</td>
-        <td class="c">{{schedule.due_date|format_abbr_date}}</td>
-        <td class="c">{{schedule.grant_budget}} บาท</td>
-        <td class="c">{{schedule.claim_budget}} บาท</td>
+        <td class="cycle">{{schedule.cycle}}</td>
+        <td class="budget_date">{{schedule.start_date|format_abbr_date}} - {{schedule.end_date|format_abbr_date}}</td>
+        <td class="due_date">{{schedule.due_date|format_abbr_date}}</td>
+        <td class="grant">{{schedule.grant_budget|intcomma}} บาท</td>
+        <td class="claim">{{schedule.claim_budget|intcomma}} บาท</td>
         <td>{% if schedule.claimed_on %}เบิกเมื่อวันที่ {{schedule.claimed_on|format_abbr_date}}{% endif %}</td>
       </tr>
       {% endfor %}

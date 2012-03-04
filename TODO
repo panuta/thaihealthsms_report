@@ -1,17 +1,22 @@
-TODO
+- Bug, sector assistant can edit report
+- 
 
+
+NEXT
+- support username (email) longer than 30 chars
+- user can edit their email/username
+- report attachment protection
+- Email notification
+
+TODO
 - setup settings for server config
 - performance
 	- convert LESS
 
 2nd Iteration
-- Email notification
 - Project activities
 - Edit project
 - Add/Edit report schedule
 - Section reports
 - Support multiple section for section assistant
 - Delete/deactivate user
-- report attachment protection
-- support username (email) longer than 30 chars
-- user can edit their email/username

@@ -13,19 +13,13 @@
     {% include 'management/snippets/admin_users_tabs.html' %}
 
     {% if user_profiles %}
-    <table class="zebra-striped">
-      <colgroup>
-        <col />
-        <col />
-        <col width="200px"/>
-        <col width="80px"/>
-      </colgroup>
+    <table class="users-table table table-bordered table-striped">
       <thead>
         <tr>
-          <th>ชื่อ</th>
-          <th>รหัสโครงการที่รับผิดชอบ</th>
-          <th>สถานะ</th>
-          <th></th>
+          <th class="name">ชื่อ</th>
+          <th class="projects">รหัสโครงการที่รับผิดชอบ</th>
+          <th class="status">สถานะ</th>
+          <th class="row-actions"></th>
         </tr>
       </thead>
       <tbody>
@@ -37,15 +31,15 @@
               <span title="{{user_project.project.name}}">{{user_project.project.ref_no}}</span>{% if not forloop.last %},{% endif %}
             {% endfor %}
           </td>
-          <td>{% if user_profile.random_password %}ยังไม่เข้าใช้งาน (<a href="{% url view_managing_user_password user_profile.user.id %}">ดูรหัสผ่าน</a>){% else %}ปกติ{% endif %}</td>
-          <td><a href="{% url edit_managing_user user_profile.user.id %}" class="small btn">แก้ไข</a></td>
+          <td class="status">{% if user_profile.is_finished_register %}{% if user_profile.random_password %}ยังไม่เข้าใช้งาน (<a href="{% url view_managing_user_password user_profile.user.id %}">ดูรหัสผ่าน</a>){% else %}ปกติ{% endif %}{% else %}ยังกรอกข้อมูลไม่ครบ (<a href="{% url edit_managing_user user_profile.user.id %}">กรอกข้อมูล</a>){% endif %}</td>
+          <td class="row-actions"><a href="{% url edit_managing_user user_profile.user.id %}" class="btn btn-small">แก้ไข</a></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
 
     {% else %}
-    <div class="no_users">ไม่มีรายชื่อผู้ใช้ในกลุ่มนี้</div>
+    <div class="no_information">ไม่มีรายชื่อผู้ใช้ในกลุ่มนี้</div>
     {% endif %}
 
 </div>

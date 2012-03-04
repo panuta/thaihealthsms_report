@@ -85,7 +85,6 @@ def add_managing_user(request):
 
             random_password = make_random_user_password()
             user = User.objects.create_user(email, email, random_password)
-            user.is_active = False
             user.save()
             
             user_profile = UserProfile.objects.create(
@@ -129,9 +128,12 @@ def _add_section_user_responsibility(request, user):
             user.is_active = True
             user.save()
 
+            user.get_profile().is_finished_register = True
+            user.get_profile().save()
+
             user.get_profile().send_password_email()
 
-            messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
+            messages.success(request, u'เพิ่มผู้ใช้ และส่งอีเมลรหัสผ่านให้เรียบร้อย')
             return redirect('view_managing_user_password', user_id=user.id)
     
     else:
@@ -151,10 +153,13 @@ def _add_project_manager_responsibility(request, user):
             user.is_active = True
             user.save()
 
+            user.get_profile().is_finished_register = True
+            user.get_profile().save()
+
             user.get_profile().send_password_email()
 
             if created:
-                messages.success(request, u'เพิ่มผู้ใช้เรียบร้อย')
+                messages.success(request, u'เพิ่มผู้ใช้ และส่งอีเมลรหัสผ่านให้เรียบร้อย')
             else:
                 messages.warning(request, u'ผู้ใช้เป็นผู้จัดการโครงการนี้อยู่แล้ว')
 
@@ -185,7 +190,7 @@ def edit_managing_user(request, user_id):
 
 def _edit_section_user(request, user):
     if request.method == 'POST':
-        form = EditSectionUserForm(request.POST)
+        form = EditSectionUserForm(user, request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
             firstname = form.cleaned_data['firstname']
@@ -198,6 +203,7 @@ def _edit_section_user(request, user):
 
             user.get_profile().firstname = firstname
             user.get_profile().lastname = lastname
+            user.get_profile().is_finished_register = True
             user.get_profile().save()
 
             UserSection.objects.filter(user=user).delete()
@@ -207,52 +213,67 @@ def _edit_section_user(request, user):
             return redirect('view_managing_section_users')
 
     else:
-        section = UserSection.objects.filter(user=user)[0].section
-        form = EditSectionUserForm(initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, 'section':section})
+        try:
+            section = UserSection.objects.filter(user=user)[0].section
+        except:
+            section = None
+
+        form = EditSectionUserForm(user, initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, 'section':section})
     
     return render(request, 'management/manage_users_edit_section_user.html', {'this_user':user, 'form':form})
 
 def _edit_project_user(request, user):
+    if request.method == 'POST':
+        form = EditProjectUserForm(user, request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            firstname = form.cleaned_data['firstname']
+            lastname = form.cleaned_data['lastname']
+
+            user.username = email
+            user.email = email
+            user.save()
+
+            user.get_profile().firstname = firstname
+            user.get_profile().lastname = lastname
+            user.get_profile().is_finished_register = True
+            user.get_profile().save()
+
+            messages.success(request, u'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
+            return redirect('view_managing_project_users')
+
+    else:
+        form = EditProjectUserForm(user, initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, })
+    
+    return render(request, 'management/manage_users_edit_project_user.html', {'this_user':user, 'form':form})
+
+@login_required
+def edit_managing_user_projects(request, user_id):
+    if not request.user.is_staff: raise Http403
+
+    user = get_object_or_404(User, id=user_id)
+
     managing_projects = ProjectManager.objects.filter(user=user).order_by('-project__ref_no')
 
     if request.method == 'POST':
-        if 'submit-details' in request.POST:
-            form = EditProjectUserForm(request.POST)
-            if form.is_valid():
-                email = form.cleaned_data['email']
-                firstname = form.cleaned_data['firstname']
-                lastname = form.cleaned_data['lastname']
+        form = AddProjectManagerResponsibilityForm(request.POST)
+        if form.is_valid():
+            project_ref_no = form.cleaned_data['project_ref_no']
+            project = Project.objects.get(ref_no=project_ref_no)
 
-                user.username = email
-                user.email = email
-                user.save()
+            project_manager, created = ProjectManager.objects.get_or_create(user=user, project=project)
 
-                user.get_profile().firstname = firstname
-                user.get_profile().lastname = lastname
+            if not user.get_profile().is_finished_register:
+                user.get_profile().is_finished_register = True
                 user.get_profile().save()
-
-                messages.success(request, u'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
-                return redirect('view_managing_project_users')
-
-        elif 'submit-project' in request.POST:
-            form = AddProjectManagerResponsibilityForm(request.POST)
-            if form.is_valid():
-                project_ref_no = form.cleaned_data['project_ref_no']
-                project = Project.objects.get(ref_no=project_ref_no)
-
-                project_manager, created = ProjectManager.objects.get_or_create(user=user, project=project)
-                
-                messages.success(request, u'เพิ่มโครงการที่รับผิดชอบเรียบร้อย')
-                return redirect('edit_managing_user', user_id=user.id)
-
-        else:
-            raise Http404
+            
+            messages.success(request, u'เพิ่มโครงการที่รับผิดชอบเรียบร้อย')
+            return redirect('edit_managing_user_projects', user_id=user.id)
 
     else:
-        form = EditProjectUserForm(initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, })
-        managing_project_form = AddProjectManagerResponsibilityForm()
+        form = AddProjectManagerResponsibilityForm()
     
-    return render(request, 'management/manage_users_edit_project_user.html', {'this_user':user, 'form':form, 'managing_project_form':managing_project_form, 'managing_projects':managing_projects})
+    return render(request, 'management/manage_users_edit_project_user_projects.html', {'this_user':user, 'form':form, 'managing_projects':managing_projects})
 
 @login_required
 def ajax_remove_managing_project(request):

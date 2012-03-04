@@ -14,15 +14,15 @@
   </ul>
   <h2>โครงการที่รับผิดชอบ</h2>
 
-  <form method="POST" action=".">
+  <form method="POST" action="." class="form-horizontal">
     {% csrf_token %}
     {{form.non_field_errors}}
 
-    <div class="clearfix"><label for="id_project_ref_no">รหัสโครงการ</label><div class="input">{{form.project_ref_no}}{{form.project_ref_no.errors}}</div></div>
-    
-    <div class="form_actions">
-      <button type="submit" class="btn primary" name="submit_continue_button">บันทึกข้อมูล และกลับมาหน้านี้</button>
-      <button type="submit" class="btn primary" name="submit_button">บันทึกข้อมูล</button>
+    <div class="control-group"><label for="id_project_ref_no" class="control-label">รหัสโครงการ</label><div class="controls">{{form.project_ref_no}}{{form.project_ref_no.errors}}</div></div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" name="submit_button">บันทึกข้อมูล</button>
+      <button type="submit" class="btn" name="submit_continue_button">บันทึกข้อมูล และกรอกรหัสโครงการเพิ่มเติม</button>
       <button type="reset" class="btn">ล้างข้อมูล</button>
     </div>
   </form>

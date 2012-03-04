@@ -6,36 +6,6 @@
 
 {% block body_tabs %}{% include 'management/snippets/admin_tabs.html' with active_menu='user' %}{% endblock %}
 
-{% block html_head %}
-{{block.super}}
-<link rel='stylesheet' type='text/css' href='{{STATIC_URL}}libs/fullcalendar/fullcalendar.css' />
-<script type='text/javascript' src='{{STATIC_URL}}libs/fullcalendar/fullcalendar.js'></script>
-
-<script>
-$(document).ready(function() {
-    $('.managing_project_inputs input[type="checkbox"]').on('click', function(e) {
-      var input_object = $(this);
-      var user_id = '{{this_user.id}}';
-      var project_id = $(this).val();
-
-      if(!$(this).attr('checked')) {
-        $.post('{% url ajax_remove_managing_project %}', {user_id:user_id, project_id:project_id}, function(response) {
-          if(response.status == 'error') {
-            if(response.error == 'project-notfound') {alert('ไม่พบโครงการนี้ในระบบ');}
-            if(response.error == 'user-notfound') {alert('ไม่พบผู้ใช้ในระบบ');}
-            if(response.error == 'user-invalid') {alert('ประเภทผู้ใช้ไม่ถูกต้อง');}
-
-            input_object.attr('checked', !input_object.attr('checked'));
-          } else {
-            input_object.closest('li').fadeOut('fast');
-          }
-        }, 'json');
-      }
-    });
-});
-</script>
-{% endblock %}
-
 {% block body_content %}
 <div class="admin_page">
   <ul class="breadcrumb">
@@ -44,48 +14,23 @@ $(document).ready(function() {
   </ul>
   <h2>แก้ไขผู้ใช้ {{this_user.get_profile.get_fullname}}</h2>
 
-  <form method="POST" action=".">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="{% url edit_managing_user this_user.id %}">ข้อมูลผู้ใช้</a></li>
+    <li><a href="{% url edit_managing_user_projects this_user.id %}">โครงการที่รับผิดชอบ</a></li>
+  </ul>
+
+  <form method="POST" action="." class="form-horizontal">
     {% csrf_token %}
     {{form.non_field_errors}}
 
-    <div class="clearfix"><label for="id_email">อีเมล</label><div class="input">{{form.email}}<div class="help-block">* ใช้สำหรับการเข้าสู่ระบบ และการแจ้งเตือนต่างๆ</div>{{form.email.errors}}</div></div>
-    <div class="clearfix"><label for="id_firstname">ชื่อ</label><div class="input">{{form.firstname}}{{form.firstname.errors}}</div></div>
-    <div class="clearfix"><label for="id_lastname">นามสกุล</label><div class="input">{{form.lastname}}{{form.lastname.errors}}</div></div>
-    
-    <div class="form_actions">
-      <button type="submit" class="btn primary" name="submit-details">บันทึกข้อมูล</button>
+    <div class="control-group"><label for="id_email" class="control-label">อีเมล</label><div class="controls">{{form.email}}<p class="help-block">ใช้สำหรับการเข้าสู่ระบบ และการแจ้งเตือนต่างๆ</p>{{form.email.errors}}</div></div>
+    <div class="control-group"><label for="id_firstname" class="control-label">ชื่อ</label><div class="controls">{{form.firstname}}{{form.firstname.errors}}</div></div>
+    <div class="control-group"><label for="id_lastname" class="control-label">นามสกุล</label><div class="controls">{{form.lastname}}{{form.lastname.errors}}</div></div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
       <button type="reset" class="btn">ล้างข้อมูล</button>
     </div>
   </form>
-
-  <h3 class="managing_project">โครงการที่รับผิดชอบ</h3>
-  <form method="POST" action=".">
-    {% csrf_token %}
-    {{form.non_field_errors}}
-    <div class="clearfix"><label for="id_project_ref_no">รหัสโครงการ</label><div class="input">{{managing_project_form.project_ref_no}}{{managing_project_form.project_ref_no.errors}}</div></div>
-
-    <div class="form_actions">
-      <button type="submit" class="btn primary" name="submit-project">เพิ่มโครงการที่รับผิดชอบ</button>
-      <button type="reset" class="btn">ล้างข้อมูล</button>
-    </div>
-  </form>
-
-  {% if managing_projects %}
-  <div class="managing_project_inputs">
-    <div class="instruction">* กดเอาเครื่องหมายออกเพื่อยกเลิกโครงการที่รับผิดชอบ</div>
-    <ul>
-      {% for managing_project in managing_projects %}
-      <li>
-        <label><input type="checkbox" checked="checked" value="{{managing_project.project.id}}"/> โครงการ {{managing_project.project.ref_no}} - {{managing_project.project.name}}</label>
-      </li>
-      {% endfor %}
-    <ul>
-  </div>
-  {% endif %}
-
-  <!--<div class="delete_panel">
-    <a href="{% url deactivate_managing_user this_user.id %}" class="danger">ปิดบัญชีผู้ใช้</a>
-  </div>-->
-
 </div>
 {% endblock %}

@@ -13,6 +13,8 @@ urlpatterns = patterns('management.views',
     url(r'^manage/users/(?P<user_id>\d+)/password/$', 'view_managing_user_password', name='view_managing_user_password'),
 
     url(r'^manage/users/(?P<user_id>\d+)/edit/$', 'edit_managing_user', name='edit_managing_user'),
+
+    url(r'^manage/users/(?P<user_id>\d+)/edit/projects/$', 'edit_managing_user_projects', name='edit_managing_user_projects'),
     url(r'^ajax/remove_managing_project/$', 'ajax_remove_managing_project', name='ajax_remove_managing_project'),
 
     url(r'^manage/users/(?P<user_id>\d+)/deactivate/$', 'deactivate_managing_user', name='deactivate_managing_user'),

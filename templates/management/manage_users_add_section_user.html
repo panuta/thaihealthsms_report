@@ -14,14 +14,14 @@
   </ul>
   <h2>สำนักที่สังกัด</h2>
 
-  <form method="POST" action=".">
+  <form method="POST" action="." class="form-horizontal">
     {% csrf_token %}
     {{form.non_field_errors}}
 
-    <div class="clearfix"><label for="id_section">สำนักที่สังกัด</label><div class="input row-inputs">{{form.section}}{{form.section.errors}}</div></div>
+    <div class="control-group"><label for="id_section" class="control-label">สำนักที่สังกัด</label><div class="controls">{{form.section}}{{form.section.errors}}</div></div>
     
-    <div class="form_actions">
-      <button type="submit" class="btn primary">เพิ่มผู้ใช้ระบบ</button>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">เพิ่มผู้ใช้ระบบ</button>
       <button type="reset" class="btn">ล้างข้อมูล</button>
     </div>
   </form>

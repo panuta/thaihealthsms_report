@@ -125,9 +125,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
 
     'thaihealthsms_report.private_files',
@@ -164,6 +165,8 @@ LOGGING = {
 FILE_PROTECTION_METHOD = 'basic'
 
 # THAIHEALTHSMS SETTINGS #
+
+REPORT_NOTIFIER_PID = os.path.join(base_path, 'run/report_notifier.pid')
 
 REPORT_ROOT = MEDIA_ROOT + 'report/'
 WARNING_AT_DAYS_BEFORE_DUE = 3

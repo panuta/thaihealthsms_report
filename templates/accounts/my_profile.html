@@ -19,18 +19,24 @@
 <div class="profile_page">
   <h2>แก้ไขข้อมูลส่วนตัว</h2>
 
-  <form method="POST" action=".">
+  <form method="POST" action="." class="form-horizontal">
     {% csrf_token %}
     {{form.non_field_errors}}
-    
-      <div class="clearfix"><label for="id_firstname">ชื่อ</label><div class="input">{{form.firstname}}{{form.firstname.errors}}</div></div>
-      <div class="clearfix"><label for="id_lastname">นามสกุล</label><div class="input">{{form.lastname}}{{form.lastname.errors}}</div></div>
-      
-      <div class="form_actions">
-        <button type="submit" class="btn primary">บันทึกข้อมูล</button>
-        <button type="reset" class="btn">ล้างข้อมูล</button>
-      </div>
-    
+
+    <div class="control-group"><label for="id_firstname" class="control-label">ชื่อ</label><div class="controls">{{form.firstname}}{{form.firstname.errors}}</div></div>
+    <div class="control-group"><label for="id_lastname" class="control-label">นามสกุล</label><div class="controls">{{form.lastname}}{{form.lastname.errors}}</div></div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+      <button type="reset" class="btn">ล้างข้อมูล</button>
+    </div>
+  
+  <!--
+    <div class="form_actions">
+      <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
+      <button type="reset" class="btn">ล้างข้อมูล</button>
+    </div>
+  -->
   </form>
 </div>
 {% endblock %}
