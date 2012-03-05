@@ -4,6 +4,8 @@ from django.core.mail import send_mail
 from django.db import models
 from django.template.loader import render_to_string
 
+from common.utilities import make_random_user_password, generate_md5_base64
+
 class Role(models.Model):
     code = models.CharField(max_length=300, db_index=True, unique=True)
     name = models.CharField(max_length=300)
@@ -11,19 +13,52 @@ class Role(models.Model):
     def __unicode__(self):
         return self.name
 
+class UserProfileManager(models.Manager):
+
+    def create_user(self, email, first_name, last_name, primary_role, password='', is_finished_register=False):
+        username = generate_md5_base64(email)
+
+        if not password:
+            random_password = make_random_user_password()
+            password = random_password
+        else:
+            random_password = ''
+
+        user = User.objects.create_user(username, '', password)
+
+        return UserProfile.objects.create(
+            user=user,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            random_password=random_password,
+            primary_role=primary_role,
+            is_finished_register=is_finished_register
+        )
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
-    firstname = models.CharField(max_length=300)
-    lastname = models.CharField(max_length=300)
+    email = models.CharField(max_length=254, unique=True)
+    first_name = models.CharField(max_length=300)
+    last_name = models.CharField(max_length=300)
     random_password = models.CharField(max_length=30, null=True, blank=True)
     primary_role = models.ForeignKey(Role)
     is_finished_register = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return '%s %s' % (self.firstname, self.lastname)
+        return '%s %s' % (self.first_name, self.last_name)
+
+    def save(self, *args, **kwargs):
+        """ Update username hash in User object """
+        self.user.username = generate_md5_base64(self.email)
+        self.user.save()
+
+        super(UserProfile, self).save(*args, **kwargs)
+
+    objects = UserProfileManager()
 
     def get_fullname(self):
-        return '%s %s' % (self.firstname, self.lastname)
+        return '%s %s' % (self.first_name, self.last_name)
     
     def is_section_staff(self):
         return self.primary_role.code in ('section_manager', 'section_assistant')

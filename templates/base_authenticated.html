@@ -29,7 +29,7 @@
     </div>
     <div class="right_panel">
         <div class="account">
-            <span class="username">{{user.get_profile.firstname}} {{user.get_profile.lastname}} {% if user.is_superuser %}(ผู้ดูแลระบบ){% endif %}</span>
+            <span class="username">{{user.get_profile.first_name}} {{user.get_profile.last_name}} {% if user.is_superuser %}(ผู้ดูแลระบบ){% endif %}</span>
             <a href="{% url view_my_profile %}">ตั้งค่าผู้ใช้</a> <a href="/accounts/logout/">ออกจากระบบ</a>
         </div>
         <div class="navigation">

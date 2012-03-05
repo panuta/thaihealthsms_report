@@ -41,12 +41,12 @@ def import_users(csv_file):
             email = row[0]
 
             if row[1]:
-                firstname = row[1]
+                first_name = row[1]
             else:
                 import_result.append({'status':'firstname-missing', 'email':email, 'raw':repr(row)})
             
             if row[1]:
-                lastname = row[2]
+                last_name = row[2]
             else:
                 import_result.append({'status':'lastname-missing', 'email':email, 'raw':repr(row)})
             
@@ -66,15 +66,15 @@ def import_users(csv_file):
                         import_result.append({'status':'section-invalid', 'email':email, 'raw':repr(row), 'section_str':section_str})
                 
                 try:
-                    user = User.objects.get(email=email)
-                except User.DoesNotExist:
-                    user = create_user(email, firstname, lastname, 'section_manager')
-                    UserSection.objects.create(user=user, section=section)
+                    user_profile = UserProfile.objects.get(email=email)
+                except UserProfile.DoesNotExist:
+                    user_profile = UserProfile.objects.create_user(email, first_name, last_name, Role.objects.get(code='section_manager'), True)
+                    UserSection.objects.create(user=user_profile.user, section=section)
 
-                    import_result.append({'status':'success', 'user':user, 'role':'section_manager'})
+                    import_result.append({'status':'success', 'user':user_profile.user, 'role':'section_manager'})
 
                 else:
-                    import_result.append({'status':'duplicated', 'user':user, 'role':'section_manager'})
+                    import_result.append({'status':'duplicated', 'user':user_profile.user, 'role':'section_manager'})
 
             # Section Assistant ########################################
             elif current_user_type == 2:
@@ -105,23 +105,23 @@ def import_users(csv_file):
                             projects.append(project)
                 
                 user_created = False
-                
+
                 try:
-                    user = User.objects.get(email=email)
-                except User.DoesNotExist:
-                    user = create_user(email, firstname, lastname, 'section_assistant')
-                    UserSection.objects.create(user=user, section=section)
+                    user_profile = UserProfile.objects.get(email=email)
+                except UserProfile.DoesNotExist:
+                    user_profile = UserProfile.objects.create_user(email, first_name, last_name, Role.objects.get(code='section_assistant'), True)
+                    UserSection.objects.create(user=user_profile.user, section=section)
                     user_created = True
                 
                 for project in projects:
-                    responsibility, created = ProjectResponsibility.objects.get_or_create(user=user, project=project)
+                    responsibility, created = ProjectResponsibility.objects.get_or_create(user=user_profile.user, project=project)
 
                     if not created:
                         import_result_projects.append({'status':'duplicated', 'project':project})
                     else:
                         import_result_projects.append({'status':'success', 'project':project})
                 
-                import_result.append({'status':'success' if user_created else 'success-duplicated', 'user':user, 'role':'section_assistant', 'project_result':import_result_projects})
+                import_result.append({'status':'success' if user_created else 'success-duplicated', 'user':user_profile.user, 'role':'section_assistant', 'project_result':import_result_projects})
 
             # Project Manager ########################################
             elif current_user_type == 3:
@@ -139,35 +139,21 @@ def import_users(csv_file):
                             projects.append(project)
                 
                 user_created = False
-                
+
                 try:
-                    user = User.objects.get(email=email)
-                except User.DoesNotExist:
-                    user = create_user(email, firstname, lastname, 'project_manager')
+                    user_profile = UserProfile.objects.get(email=email)
+                except UserProfile.DoesNotExist:
+                    user_profile = UserProfile.objects.create_user(email, first_name, last_name, Role.objects.get(code='section_assistant'), True)
                     user_created = True
                 
                 for project in projects:
-                    manager, created = ProjectManager.objects.get_or_create(user=user, project=project)
+                    manager, created = ProjectManager.objects.get_or_create(user=user_profile.user, project=project)
 
                     if not created:
                         import_result_projects.append({'status':'duplicated', 'project':project})
                     else:
                         import_result_projects.append({'status':'success', 'project':project})
                 
-                import_result.append({'status':'success' if user_created else 'success-duplicated', 'user':user, 'role':'project_manager', 'project_result':import_result_projects})
+                import_result.append({'status':'success' if user_created else 'success-duplicated', 'user':user_profile.user, 'role':'project_manager', 'project_result':import_result_projects})
     
     return import_result
-
-def create_user(email, firstname, lastname, role_code):
-    random_password = make_random_user_password()
-    user = User.objects.create_user(email, email, random_password)
-    
-    user_profile = UserProfile.objects.create(
-        user=user,
-        firstname=firstname,
-        lastname=lastname,
-        random_password=random_password,
-        primary_role=Role.objects.get(code=role_code)
-    )
-
-    return user

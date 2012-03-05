@@ -75,5 +75,5 @@ class EditProjectResponsibility(forms.Form):
         self.fields['other_projects'].queryset = Project.objects.filter(section=self.section).exclude(status__in=('อนุมัติ', 'รอปิดโครงการ')).order_by('ref_no')
 
 class UserProfileForm(forms.Form):
-    firstname = StrippedCharField(max_length=200, widget=forms.TextInput(attrs={'class':'span5'}))
-    lastname = StrippedCharField(max_length=200, widget=forms.TextInput(attrs={'class':'span5'}))
+    first_name = StrippedCharField(max_length=200, widget=forms.TextInput(attrs={'class':'span5'}))
+    last_name = StrippedCharField(max_length=200, widget=forms.TextInput(attrs={'class':'span5'}))

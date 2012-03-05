@@ -11,8 +11,8 @@ from domain.models import Section, Project
 
 class AddUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
-    firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
-    lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    first_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    last_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     primary_role = forms.ChoiceField(choices=(('section_manager', 'ผู้อำนวยการสำนัก'), ('section_assistant', 'ผู้ประสานงานสำนัก'), ('project_manager', 'ผู้รับผิดชอบโครงการ')))
 
 class AddSectionUserResponsibilityForm(forms.Form):
@@ -44,8 +44,8 @@ class ImportUserForm(forms.Form):
 
 class EditSectionUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
-    firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
-    lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    first_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    last_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
     section = forms.ModelChoiceField(queryset=Section.objects.all(), empty_label='')
 
     def __init__(self, user, *args, **kwargs):
@@ -65,8 +65,8 @@ class EditSectionUserForm(forms.Form):
 
 class EditProjectUserForm(forms.Form):
     email = forms.EmailField(widget=forms.TextInput(attrs={'class':'span6'}))
-    firstname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
-    lastname = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    first_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
+    last_name = StrippedCharField(max_length=300, widget=forms.TextInput(attrs={'class':'span5'}))
 
     def __init__(self, user, *args, **kwargs):
         self.user = user

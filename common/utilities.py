@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 import os
 import re
+import hashlib, base64
 
 from datetime import date
 
@@ -68,3 +69,13 @@ email_re = re.compile(
 
 def is_email(email):
     return email_re.search(email)
+
+def generate_md5_base64(str):
+    m = hashlib.md5()
+    m.update(str)
+    hash = base64.urlsafe_b64encode(m.digest())
+    hash = hash.replace('=', '')
+    hash = hash.replace('+', '-')
+    hash = hash.replace('/', '_')
+
+    return hash

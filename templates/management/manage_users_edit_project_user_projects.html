@@ -49,7 +49,7 @@ $(document).ready(function() {
   <form method="POST" action="." class="add_managing_project_form form-inline">
     {% csrf_token %}
     {{form.non_field_errors}}
-    <label for="id_firstname" class="control-label">รหัสโครงการ</label>{{form.project_ref_no}}{{form.project_ref_no.errors}}<button type="submit" class="btn btn-primary">เพิ่มโครงการที่รับผิดชอบ</button>
+    <label for="id_project_code" class="control-label">รหัสโครงการ</label>{{form.project_ref_no}}{{form.project_ref_no.errors}}<button type="submit" class="btn btn-primary">เพิ่มโครงการที่รับผิดชอบ</button>
   </form>
 
   {% if managing_projects %}

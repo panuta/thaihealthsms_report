@@ -37,7 +37,7 @@ def view_managing_users(request):
 def view_managing_section_users(request):
     if not request.user.is_staff: raise Http403
 
-    user_profiles = UserProfile.objects.filter(primary_role__code__in=('section_manager', 'section_assistant')).order_by('firstname', 'lastname')
+    user_profiles = UserProfile.objects.filter(primary_role__code__in=('section_manager', 'section_assistant')).order_by('first_name', 'last_name')
     
     for user_profile in user_profiles:
         user_profile.user_sections = UserSection.objects.filter(user=user_profile.user)
@@ -48,7 +48,7 @@ def view_managing_section_users(request):
 def view_managing_project_users(request):
     if not request.user.is_staff: raise Http403
 
-    user_profiles = UserProfile.objects.filter(primary_role__code='project_manager').order_by('firstname', 'lastname')
+    user_profiles = UserProfile.objects.filter(primary_role__code='project_manager').order_by('first_name', 'last_name')
 
     for user_profile in user_profiles:
         user_profile.projects = ProjectManager.objects.filter(user=user_profile.user)
@@ -79,23 +79,16 @@ def add_managing_user(request):
         form = AddUserForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            firstname = form.cleaned_data['firstname']
-            lastname = form.cleaned_data['lastname']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             primary_role = form.cleaned_data['primary_role']
 
-            random_password = make_random_user_password()
-            user = User.objects.create_user(email, email, random_password)
-            user.save()
-            
-            user_profile = UserProfile.objects.create(
-                user=user,
-                firstname=firstname,
-                lastname=lastname,
-                random_password=random_password,
-                primary_role=Role.objects.get(code=primary_role)
-            )
+            user_profile = UserProfile.objects.create_user(email, first_name, last_name, Role.objects.get(code=primary_role))
 
-            return redirect('add_managing_user_responsibility', user_id=user.id)
+            user_profile.user.is_active = False
+            user_profile.user.save()
+
+            return redirect('add_managing_user_responsibility', user_id=user_profile.user.id)
     
     else:
         form = AddUserForm()
@@ -193,17 +186,18 @@ def _edit_section_user(request, user):
         form = EditSectionUserForm(user, request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            firstname = form.cleaned_data['firstname']
-            lastname = form.cleaned_data['lastname']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
             section = form.cleaned_data['section']
 
-            user.username = email
-            user.email = email
-            user.save()
+            if not user.get_profile().is_finished_register:
+                user.get_profile().is_finished_register = True
 
-            user.get_profile().firstname = firstname
-            user.get_profile().lastname = lastname
-            user.get_profile().is_finished_register = True
+                user.is_active = True
+                user.save()
+            
+            user.get_profile().first_name = first_name
+            user.get_profile().last_name = last_name
             user.get_profile().save()
 
             UserSection.objects.filter(user=user).delete()
@@ -218,7 +212,7 @@ def _edit_section_user(request, user):
         except:
             section = None
 
-        form = EditSectionUserForm(user, initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, 'section':section})
+        form = EditSectionUserForm(user, initial={'email':user.get_profile().email, 'first_name':user.get_profile().first_name,  'last_name':user.get_profile().last_name, 'section':section})
     
     return render(request, 'management/manage_users_edit_section_user.html', {'this_user':user, 'form':form})
 
@@ -227,23 +221,24 @@ def _edit_project_user(request, user):
         form = EditProjectUserForm(user, request.POST)
         if form.is_valid():
             email = form.cleaned_data['email']
-            firstname = form.cleaned_data['firstname']
-            lastname = form.cleaned_data['lastname']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
 
-            user.username = email
-            user.email = email
-            user.save()
+            if not user.get_profile().is_finished_register:
+                user.get_profile().is_finished_register = True
+
+                user.is_active = True
+                user.save()
 
             user.get_profile().firstname = firstname
             user.get_profile().lastname = lastname
-            user.get_profile().is_finished_register = True
             user.get_profile().save()
 
             messages.success(request, u'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
             return redirect('view_managing_project_users')
 
     else:
-        form = EditProjectUserForm(user, initial={'email':user.email, 'firstname':user.get_profile().firstname,  'lastname':user.get_profile().lastname, })
+        form = EditProjectUserForm(user, initial={'email':user.get_profile().email, 'first_name':user.get_profile().first_name,  'last_name':user.get_profile().last_name, })
     
     return render(request, 'management/manage_users_edit_project_user.html', {'this_user':user, 'form':form})
 

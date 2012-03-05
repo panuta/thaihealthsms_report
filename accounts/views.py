@@ -157,8 +157,8 @@ def view_my_profile(request):
         form = UserProfileForm(request.POST)
         if form.is_valid():
             user_profile = request.user.get_profile()
-            user_profile.firstname = form.cleaned_data['firstname']
-            user_profile.lastname = form.cleaned_data['lastname']
+            user_profile.first_name = form.cleaned_data['first_name']
+            user_profile.last_name = form.cleaned_data['last_name']
             user_profile.save()
 
             messages.success(request, u'แก้ไขข้อมูลส่วนตัวเรียบร้อย')

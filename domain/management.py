@@ -40,25 +40,32 @@ def after_syncdb(sender, **kwargs):
     
     for admin in admins:
         try:
-            admin_user = User.objects.get(username=admin[1])
+            admin_user_profile = UserProfile.objects.get(email=admin[1])
             
-        except User.DoesNotExist:
+        except UserProfile.DoesNotExist:
             #random_password = User.objects.make_random_password()
             random_password = '1q2w3e4r'
-            admin_user = User.objects.create_user(admin[1], admin[1], random_password)
-            admin_user.is_superuser = True
-            admin_user.is_staff = True
-            admin_user.save()
-
-            UserProfile.objects.get_or_create(user=admin_user, firstname=admin[0].split(' ')[0], lastname=admin[0].split(' ')[1], primary_role=admin_role, is_finished_register=True)
             
+            admin_user_profile = UserProfile.objects.create_user(
+                email=admin[1],
+                first_name=admin[0].split(' ')[0],
+                last_name=admin[0].split(' ')[1],
+                primary_role=admin_role,
+                password=random_password,
+                is_finished_register=True
+            )
+
+            admin_user_profile.user.is_superuser = True
+            admin_user_profile.user.is_staff = True
+            admin_user_profile.user.save()
+
             email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
             email_subject = render_to_string('email/create_admin_subject.txt', email_render_dict)
             email_message = render_to_string('email/create_admin_message.txt', email_render_dict)
             
             send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [admin[1]])
         
-        some_admin = admin_user
+        some_admin = admin_user_profile.user
     
     # Section ##################
     section10, created = Section.objects.get_or_create(ref_no='10', order_number=10, name='ศูนย์เรียนรู้สุขภาวะ', prefix='ฝ่าย', long_abbr_name='ศูนย์เรียนรู้', short_abbr_name='WISH Center')
