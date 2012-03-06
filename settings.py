@@ -4,8 +4,8 @@ base_path = os.path.dirname(__file__)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-SYSTEM_NAME = 'Thai Health Promotion Foundation - Strategy Management Systems'
-WEBSITE_ADDRESS = 'localhost:8000'
+WEBSITE_NAME = 'Thai Health SMS'
+WEBSITE_DOMAIN = 'localhost:8000'
 
 ADMINS = (
     ('Panu Tangchalermkul', 'panuta@gmail.com'),
@@ -165,8 +165,6 @@ LOGGING = {
 FILE_PROTECTION_METHOD = 'basic'
 
 # THAIHEALTHSMS SETTINGS #
-
-REPORT_NOTIFIER_PID = os.path.join(base_path, 'run/report_notifier.pid')
 
 REPORT_ROOT = MEDIA_ROOT + 'report/'
 WARNING_AT_DAYS_BEFORE_DUE = 3

@@ -5,7 +5,7 @@
 
 {% block html_head %}
 {{block.super}}
-{% manage user project %}
+{% manage user project 'pm' %}
 <script type="text/javascript" src="{{STATIC_URL}}libs/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="{{STATIC_URL}}libs//ckeditor/adapters/jquery.js"></script>
 <script>
@@ -70,9 +70,9 @@ $(document).ready(function() {
 
   <h2>{{report.name}}<div class="subtitle">งวดวันที่ {{submission.schedule_date|format_abbr_date}}{% if submission.submitted_on %}<div class="submitted">รายงานถูกส่งแล้วเมื่อวันที่ <em>{{submission.submitted_on|format_datetime}}</em></div>{% endif %}</div></h2>
 
-  {% manage user project %}
+  {% manage user project 'pm' %}
   <div class="report_actions">
-    {% if not submission.submitted_on %}{% if submission.report_text or submission.attachments %}<form method="POST" action="{% url submit_project_report project.ref_no report.id submission.schedule_date|dateid %}">{% csrf_token %}<button type="submit" class="primary submit btn">ส่งรายงาน</button></form>{% endif %}{% endif %}
+    {% if not submission.submitted_on %}{% if submission.report_text or submission.attachments %}<form method="POST" action="{% url submit_project_report project.ref_no report.id submission.schedule_date|dateid %}">{% csrf_token %}<button type="submit" class="btn-primary submit btn">ส่งรายงาน</button></form>{% endif %}{% endif %}
     <a href="#" class="btn edit_report_button">{% if not submission.report_text %}เขียนเนื้อหารายงาน{% else %}แก้ไขเนื้อหารายงาน{% endif %}</a>
     <a href="#" class="btn attach_report_button">แนบไฟล์รายงาน</a>
   </div>
@@ -86,13 +86,15 @@ $(document).ready(function() {
   </div>
   {% endif %}
 
+  {% manage user project 'pm' %}
   <div class="report_text_editor" style="display:none;">
     <form method="post" action="{% url submit_project_report_text project.ref_no report.id submission.schedule_date|dateid %}">
       {% csrf_token %}
       <textarea name="report_text">{{submission.report_text|safe}}</textarea>
-      <div class="button_panel"><button type="submit" class="primary btn">จัดเก็บ</button><button type="button" class="btn">ยกเลิก</button></div>
+      <div class="button_panel"><button type="submit" class="btn-primary btn">จัดเก็บ</button><button type="button" class="btn">ยกเลิก</button></div>
     </form>
   </div>
+  {% endmanage %}
 
   {% if submission.attachments %}
   <div class="report_attachment">
@@ -108,11 +110,13 @@ $(document).ready(function() {
   </div>
   {% endif %}
 
+  {% manage user project 'pm' %}
   <form method="post" id="report_attachment_form" action="{% url submit_project_report_attachment project.ref_no report.id submission.schedule_date|dateid %}" enctype="multipart/form-data" style="opacity:0;text-indent:-9999px;">
     {% csrf_token %}
     {{attachment_form.errors}}
     <input type="file" name="report_attachment" id="id_report_attachment"/>
   </form>
+  {% endmanage %}
 
 </div>
 {% endblock %}

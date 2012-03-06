@@ -45,11 +45,11 @@ $(document).ready(function() {
   <h2>แก้ไขโครงการที่รับผิดชอบ</h2>
 
   <div class="edit_responsible_projects">
-    <h3>โครงการที่ดำเนินอยู่</h3>
+    <h3>โครงการที่ดำเนินอยู่ ({{section.short_abbr_name}})</h3>
     {{form.active_projects.errors}}
     {{form.active_projects}}
   
-    <h3>โครงการอื่นๆ</h3>
+    <h3>โครงการอื่นๆ ({{section.short_abbr_name}})</h3>
     {{form.other_projects.errors}}
     {{form.other_projects}}
   </div>

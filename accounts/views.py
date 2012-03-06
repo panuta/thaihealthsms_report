@@ -85,7 +85,7 @@ def view_section_assistant_unsubmitted_dashboard(request):
     due_submissions = []
     today = datetime.date.today()
 
-    for assignment in ReportAssignment.objects.filter(project__in=responsible_projects, project__status__in=('อนุมัติ', 'รอปิดโครงการ')):
+    for assignment in ReportAssignment.objects.filter(project__in=responsible_projects, project__status__in=('อนุมัติ', 'รอปิดโครงการ'), is_active=True):
         for submission in assignment.get_outstanding_schedules():
             if submission.schedule_date < today:
                 overdue_submissions.append(submission)
@@ -109,17 +109,17 @@ def edit_section_assistant_responsible_projects(request):
         raise Http404
 
     else:
-        user_sections = UserSection.objects.filter(user=request.user)
+        section = UserSection.objects.filter(user=request.user)[0].section
 
         if request.method == 'POST':
             form = EditProjectResponsibility(request.POST)
         else:
-            form = EditProjectResponsibility(user_sections[0].section, initial={
-                'active_projects':ProjectResponsibility.objects.filter(user=request.user, project__section=user_sections[0].section).values_list('project', flat=True),
-                'other_projects':ProjectResponsibility.objects.filter(user=request.user, project__section=user_sections[0].section).values_list('project', flat=True)
+            form = EditProjectResponsibility(section, initial={
+                'active_projects':ProjectResponsibility.objects.filter(user=request.user, project__section=section).values_list('project', flat=True),
+                'other_projects':ProjectResponsibility.objects.filter(user=request.user, project__section=section).values_list('project', flat=True)
             })
     
-    return render(request, 'dashboard/dashboard_section_assistant_projects.html', {'user_sections':user_sections, 'form':form})
+    return render(request, 'dashboard/dashboard_section_assistant_projects.html', {'section':section, 'form':form})
 
 def ajax_edit_responsible_project(request):
     if not request.user.get_profile().primary_role == Role.objects.get(code='section_assistant'):

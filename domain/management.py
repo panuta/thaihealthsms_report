@@ -25,7 +25,7 @@ def after_syncdb(sender, **kwargs):
     """
     
     # Site Information ###############
-    Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_ADDRESS)
+    Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_NAME)
 
     # Role ##################
     admin_role, created = Role.objects.get_or_create(code='administrator', name='ผู้ดูแลระบบ')

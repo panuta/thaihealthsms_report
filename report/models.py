@@ -95,6 +95,7 @@ class Report(models.Model):
 class ReportAssignment(models.Model):
     report = models.ForeignKey(Report)
     project = models.ForeignKey('domain.Project')
+    is_active = models.BooleanField(default=True)
 
     def get_outstanding_schedules(self):
         # overdue, due, almostdue, nextdue
