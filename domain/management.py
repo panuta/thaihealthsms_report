@@ -93,13 +93,30 @@ def after_syncdb(sender, **kwargs):
 
     now = datetime.datetime.now()
 
-    # Report
-    report1, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
-    report2, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
-
+    # Project
     project1, created = Project.objects.get_or_create(section=section07, ref_no='111111', contract_no='111111', name='This is project 1', status='อนุมัติ', created_by=some_admin)
     project2, created = Project.objects.get_or_create(section=section07, ref_no='222222', contract_no='222222', name='This is project 2', status='อนุมัติ', created_by=some_admin)
     project3, created = Project.objects.get_or_create(section=section07, ref_no='333333', contract_no='333333', name='This is project 3', status='อนุมัติ', created_by=some_admin)
+
+    # Project Manager
+    try:
+        user_profile1 = UserProfile.objects.get(email='pm1@email.com')
+    except UserProfile.DoesNotExist:
+        user_profile1 = UserProfile.objects.create_user('pm1@email.com', 'PM1', 'Lastname', pm_role, 'panuta', True)
+    
+    ProjectManager.objects.get_or_create(user=user_profile1.user, project=project1)
+
+    try:
+        user_profile2 = UserProfile.objects.get(email='pm2@email.com')
+    except UserProfile.DoesNotExist:
+        user_profile2 = UserProfile.objects.create_user('pm2@email.com', 'PM2', 'Lastname', pm_role, 'panuta', True)
+    
+    ProjectManager.objects.get_or_create(user=user_profile2.user, project=project2)
+    ProjectManager.objects.get_or_create(user=user_profile2.user, project=project3)
+
+    # Report
+    report1, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
+    report2, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
 
     # Assignment
     ReportAssignment.objects.get_or_create(project=project1, report=report1)
@@ -111,6 +128,8 @@ def after_syncdb(sender, **kwargs):
 
     # Submission
     ReportSubmission.objects.get_or_create(report=report1, project=project1, schedule_date=date(2012, 1, 10), submitted_on=now, created_by=some_admin)
+
+    
 
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)

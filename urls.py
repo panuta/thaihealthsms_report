@@ -5,11 +5,11 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^', include('thaihealthsms_report.accounts.urls')),
-    url(r'^', include('thaihealthsms_report.budget.urls')),
-    url(r'^', include('thaihealthsms_report.domain.urls')),
-    url(r'^', include('thaihealthsms_report.management.urls')),
-    url(r'^', include('thaihealthsms_report.report.urls')),
+    url(r'^', include('accounts.urls')),
+    url(r'^', include('budget.urls')),
+    url(r'^', include('domain.urls')),
+    url(r'^', include('management.urls')),
+    url(r'^', include('report.urls')),
 
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page':'/accounts/login/'},name='auth_logout'),
     url(r'^accounts/password_reset/$', 'django.contrib.auth.views.password_reset', name='auth_password_reset'),

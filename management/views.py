@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from thaihealthsms_report.http import Http403
+from http import Http403
 
 from common.shortcuts import response_json_success, response_json_error
 from common.utilities import make_random_user_password

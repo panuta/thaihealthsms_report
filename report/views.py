@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from thaihealthsms_report.http import Http403
+from http import Http403
 
 from private_files.views import get_file as private_files_get_file
 

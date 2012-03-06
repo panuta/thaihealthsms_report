@@ -8,16 +8,21 @@ from report.models import *
 NOTIFY_DAYS_BEFORE = (0, 2, 7)
 
 def report_notification():
+    print 'START'
     today = datetime.date.today()
     site = Site.objects.get_current()
     email_datatuple = list()
 
+    print Report.objects.all()
+
     user_notifies = {}
     for report in Report.objects.all():
-        possible_schedules = get_schedules_until(until_date=today)
+        possible_schedules = report.get_schedules_until(until_date=today)
+        print report
 
         for report_assignment in ReportAssignment.objects.filter(report=report, is_active=True):
             project = report_assignment.project
+            print report_assignment
 
             for schedule in possible_schedules:
                 try:
@@ -37,6 +42,8 @@ def report_notification():
                                 user_notifies[manager.user] = []
                             user_notifies[manager.user].append({'report':report, 'project':project, 'schedule':schedule, 'days':notify_days_before})
 
+    print user_notifies
+    
     email_datatuple = []
     for user in user_notifies.keys():
         user_projects = {}
@@ -47,15 +54,16 @@ def report_notification():
             
             user_projects[notification['project']].append(notification)
 
-        email_subject = render_to_string('email/notify_report_subject.txt', {'program': program}).strip(' \n\t')
-        email_message = render_to_string('email/notify_report_message.txt', {'site': site, 'atdue_submissions': atdue_submissions, 'beforedue_submissions': beforedue_submissions}).strip(' \n\t')
+        print user_projects
+        #email_subject = render_to_string('email/notify_report_subject.txt', {'program': program}).strip(' \n\t')
+        #email_message = render_to_string('email/notify_report_message.txt', {'site': site, 'atdue_submissions': atdue_submissions, 'beforedue_submissions': beforedue_submissions}).strip(' \n\t')
 
-        email_datatuple.append((email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [user.user.email]))
+        #email_datatuple.append((email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [user.user.email]))
         
         #for project in user_projects.keys():
         #    user_projects[project].sort()
 
-    send_mass_mail(email_datatuple, fail_silently=True)
+    #send_mass_mail(email_datatuple, fail_silently=True)
 
 
 

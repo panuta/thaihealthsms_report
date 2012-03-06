@@ -210,8 +210,9 @@ from report.notifier import report_notification
 class MyCron(BaseCron):
     def __init__(self,pid):
         BaseCron.__init__(self,pid)
-        
-        self.add_event("report_notification_job", 1, "day", round=True)
+
+        # self.add_event("report_notification_job", 1, "day", round=True)
+        self.add_event("report_notification_job", 1, "second", round=True)
         
     def report_notification_job(self):
         report_notification()

@@ -82,8 +82,8 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 LOGIN_REDIRECT_URL = '/'
 
 AUTHENTICATION_BACKENDS = (
-    'thaihealthsms_report.backends.EmailAuthenticationBackend',
-    #'django.contrib.auth.backends.ModelBackend',
+    'backends.EmailAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -97,8 +97,8 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'thaihealthsms_report.middleware.AJAXSimpleExceptionResponse',
-    'thaihealthsms_report.http.Http403Middleware',
+    'middleware.AJAXSimpleExceptionResponse',
+    'http.Http403Middleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
