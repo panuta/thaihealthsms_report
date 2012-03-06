@@ -25,7 +25,7 @@ def after_syncdb(sender, **kwargs):
     """
     
     # Site Information ###############
-    Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_NAME)
+    Site.objects.all().update(domain=settings.WEBSITE_DOMAIN, name=settings.WEBSITE_NAME)
 
     # Role ##################
     admin_role, created = Role.objects.get_or_create(code='administrator', name='ผู้ดูแลระบบ')
@@ -59,7 +59,7 @@ def after_syncdb(sender, **kwargs):
             admin_user_profile.user.is_staff = True
             admin_user_profile.user.save()
 
-            email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_ADDRESS}
+            email_render_dict = {'username':admin[1], 'password':random_password, 'settings':settings, 'site_name':settings.WEBSITE_DOMAIN}
             email_subject = render_to_string('email/create_admin_subject.txt', email_render_dict)
             email_message = render_to_string('email/create_admin_message.txt', email_render_dict)
             
@@ -91,8 +91,26 @@ def after_syncdb(sender, **kwargs):
     END HERE
     """
 
-    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
-    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
+    now = datetime.datetime.now()
+
+    # Report
+    report1, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
+    report2, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
+
+    project1, created = Project.objects.get_or_create(section=section07, ref_no='111111', contract_no='111111', name='This is project 1', status='อนุมัติ', created_by=some_admin)
+    project2, created = Project.objects.get_or_create(section=section07, ref_no='222222', contract_no='222222', name='This is project 2', status='อนุมัติ', created_by=some_admin)
+    project3, created = Project.objects.get_or_create(section=section07, ref_no='333333', contract_no='333333', name='This is project 3', status='อนุมัติ', created_by=some_admin)
+
+    # Assignment
+    ReportAssignment.objects.get_or_create(project=project1, report=report1)
+    ReportAssignment.objects.get_or_create(project=project1, report=report2)
+
+    ReportAssignment.objects.get_or_create(project=project2, report=report1)
+
+    ReportAssignment.objects.get_or_create(project=project3, report=report2)
+
+    # Submission
+    ReportSubmission.objects.get_or_create(report=report1, project=project1, schedule_date=date(2012, 1, 10), submitted_on=now, created_by=some_admin)
 
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
