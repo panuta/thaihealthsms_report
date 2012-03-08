@@ -91,6 +91,7 @@ def after_syncdb(sender, **kwargs):
     END HERE
     """
 
+    """
     now = datetime.datetime.now()
 
     # Project
@@ -139,6 +140,7 @@ def after_syncdb(sender, **kwargs):
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110012', contract_no='C10004', name='Some project somewhere in Thailand', abbr_name='some project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)
 
     #Report.objects.get_or_create(master_plan=master_plan12, name='Activity Report', schedule_start=date(2012,1,1), schedule_monthly_date=15, schedule_monthly_length=1, created_by=some_admin)
+    """
     
     
 from django.db.models.signals import post_syncdb

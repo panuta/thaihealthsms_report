@@ -10,21 +10,10 @@ WEBSITE_NAME = 'Thai Health SMS'
 WEBSITE_DOMAIN = 'localhost:8000'
 
 ADMINS = (
-    ('Panu Tangchalermkul', 'panuta@gmail.com'),
+    ('Panu Tangchalermkul', 'panu@opendream.co.th'),
 )
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'sms_report',
-        'USER': 'sms_dev',
-        'PASSWORD': 'sms_dev',
-        'HOST': '',
-        'PORT': '',
-    }
-}
 
 TIME_ZONE = 'Asia/Bangkok'
 LANGUAGE_CODE = 'th'
@@ -51,13 +40,13 @@ STATICFILES_FINDERS = (
 )
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'application.testbed@gmail.com'
-EMAIL_HOST_PASSWORD = 'opendream'
-EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = 'application.testbed@gmail.com'
+#EMAIL_HOST_PASSWORD = 'opendream'
+#EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = 'Thai Health Report - '
 
 """ MailGun Email Service
