@@ -33,9 +33,6 @@ def view_project_reports(request, project_ref_no): # DONE
 def view_project_outstanding_reports(request, project_ref_no): # DONE
     project = get_object_or_404(Project, ref_no=project_ref_no)
 
-    from notifier import report_notification
-    report_notification()
-
     if request.user.get_profile().is_manage_project(project):
         report_assignments = []
 
