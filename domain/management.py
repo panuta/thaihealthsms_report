@@ -86,6 +86,9 @@ def after_syncdb(sender, **kwargs):
     section11, created = Section.objects.get_or_create(ref_no='11', order_number=150, name='ฝ่ายบริหารงานบุคคล', prefix='ฝ่าย', long_abbr_name='ฝ่ายบริหารงานบุคคล', short_abbr_name='ฝ่าย HR')
     section14, created = Section.objects.get_or_create(ref_no='14', order_number=160, name='ฝ่ายบัญชีและการเงิน', prefix='ฝ่าย', long_abbr_name='ฝ่ายบัญชีและการเงิน', short_abbr_name='ฝ่ายบัญชี')
     section17, created = Section.objects.get_or_create(ref_no='17', order_number=170, name='ฝ่ายตรวจสอบภายใน', prefix='ฝ่าย', long_abbr_name='ฝ่ายตรวจสอบภายใน', short_abbr_name='ฝ่ายตรวจสอบภายใน สสส.')
+
+    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,3,1), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
+    Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,3,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
     
     """
     END HERE
@@ -143,6 +146,6 @@ def after_syncdb(sender, **kwargs):
     """
     
     
-from django.db.models.signals import post_syncdb
-post_syncdb.connect(after_syncdb, dispatch_uid="domain.management")
+#from django.db.models.signals import post_syncdb
+#post_syncdb.connect(after_syncdb, dispatch_uid="domain.management")
 

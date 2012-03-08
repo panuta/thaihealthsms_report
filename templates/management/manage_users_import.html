@@ -34,10 +34,11 @@
     </form>
 
   {% else %}
+
     <div class="page_actions"><a href="{% url view_managing_users %}" class="btn">กลับไปหน้าจัดการผู้ใช้</a></div>
     <h3>ผลลัพธ์การดึงไฟล์ CSV</h3>
 
-    <table class="import_users_result_table">
+    <table class="table table-bordered import_users_result_table">
       <thead>
         <tr>
           <th>#</th>
@@ -49,17 +50,18 @@
       <tbody>
         {% for result in import_result %}
 
-        {% if result.status == 'firstname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลชื่อผู้ใช้</td></tr>{% endif %}
-        {% if result.status == 'lastname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลนามสกุลผู้ใช้</td></tr>{% endif %}
-        {% if result.status == 'section-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลสำนักที่ผู้ใช้สังกัด</td></tr>{% endif %}
-        {% if result.status == 'section-invalid' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>รหัสสำนักไม่ถูกต้อง</td></tr>{% endif %}
-        {% if result.status == 'duplicated' %}<tr><td>{{forloop.counter}}</td><td class="user">{{result.user.email}} ({{result.user.get_profile.get_fullname}})</td><td>{{result.user.get_profile.primary_role.name}}</td><td>มีชื่อผู้ใช้นี้อยู่ในระบบแล้ว</td></tr>{% endif %}
+          {% if result.status == 'email-invalid' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>อีเมลไม่ถูกต้อง</td></tr>{% endif %}
+          {% if result.status == 'firstname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลชื่อผู้ใช้</td></tr>{% endif %}
+          {% if result.status == 'lastname-missing' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>ขาดข้อมูลนามสกุลผู้ใช้</td></tr>{% endif %}
+          {% if result.status == 'section-invalid' %}<tr class="error"><td>{{forloop.counter}}</td><td class="user">{{result.email}}</td><td></td><td>รหัสสำนักไม่ถูกต้อง</td></tr>{% endif %}
+          
+          {% if result.status == 'duplicated' %}<tr><td>{{forloop.counter}}</td><td class="user">{{result.user.email}} ({{result.user.get_profile.get_fullname}})</td><td>{{result.user.get_profile.primary_role.name}}</td><td>มีชื่อผู้ใช้นี้อยู่ในระบบแล้ว</td></tr>{% endif %}
 
         {% if result.status == 'success' or result.status == 'success-duplicated' %}
 
           <tr>
             <td>{{forloop.counter}}</td>
-            <td class="user">{{result.user.email}} ({{result.user.get_profile.get_fullname}})</td>
+            <td class="user">{{result.user.get_profile.email}} ({{result.user.get_profile.get_fullname}})</td>
             <td>{{result.user.get_profile.primary_role.name}}</td>
             <td>{% if result.status == 'success' %}สร้างผู้ใช้เรียบร้อย{% else %}มีชื่อผู้ใช้นี้อยู่ในระบบแล้ว{% endif %}</td>
           </tr>
