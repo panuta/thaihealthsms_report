@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 import os
-base_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), os.path.pardir) 
+base_path = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -14,6 +14,17 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'sms_report',
+        'USER': 'sms_dev',
+        'PASSWORD': 'sms_dev',
+        'HOST': '',
+        'PORT': '',
+    }
+}
 
 TIME_ZONE = 'Asia/Bangkok'
 LANGUAGE_CODE = 'th'
@@ -39,23 +50,37 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Email
 
-#EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = 'application.testbed@gmail.com'
-#EMAIL_HOST_PASSWORD = 'opendream'
-#EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = 'Thai Health Report - '
+SYSTEM_NOREPLY_EMAIL = 'noreply@thaihealthsms.mailgun.org'
 
-""" MailGun Email Service
+# Development -- Console
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Development -- Gmail
+
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'application.testbed@gmail.com'
+EMAIL_HOST_PASSWORD = 'opendream'
+EMAIL_PORT = 587
+"""
+
+# Production -- MailGun
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.mailgun.org'
 EMAIL_HOST_USER = 'postmaster@thaihealthsms.mailgun.org'
 EMAIL_HOST_PASSWORD = '0nvpm5iis068'
 EMAIL_PORT = 587
-"""
 
 """ SENDGRID EMAIL SERVICE
 EMAIL_HOST = 'smtp.sendgrid.net'
@@ -64,8 +89,6 @@ EMAIL_HOST_PASSWORD = 'sendgrid_password'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 """
-
-SYSTEM_NOREPLY_EMAIL = 'noreply@thaihealthsms.mailgun.org'
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 LOGIN_REDIRECT_URL = '/'
