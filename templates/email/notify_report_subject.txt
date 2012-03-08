@@ -1,0 +1,1 @@
+{{settings.EMAIL_SUBJECT_PREFIX}}คุณมี {% if report_overdue_count %}{{report_overdue_count}} รายงานเลยกำหนดส่ง{% endif %}{% if report_before_due_count and report_overdue_count %} และ {% endif %}{% if report_before_due_count %}{{report_before_due_count}} รายงานใกล้ถึงกำหนดส่ง{% endif %}

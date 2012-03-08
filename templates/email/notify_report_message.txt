@@ -1,0 +1,14 @@
+{% load page_tags %}
+{% for project_report in project_reports %}
+{{project_report.project.name}}
+------------------------------------------------------------------------
+{% for schedule in project_report.schedules %}- {{schedule.report.name}} ประจำวันที่ {{schedule.schedule|format_date}}
+({% if schedule.days < 0 %}เลยกำหนดส่งมาแล้ว {{schedule.days|num_abs}} วัน{% endif %}{% if schedule.days == 0 %}กำหนดส่งภายในวันนี้{% endif %}{% if schedule.days > 0 %}จะถึงวันกำหนดส่งในอีก {{schedule.days}} วัน{% endif %})
+
+{% endfor %}รายงานทั้งหมด http://{{settings.WEBSITE_DOMAIN}}{% url view_project_outstanding_reports project_report.project.ref_no %}
+{% endfor %}
+
+============================================================================================================
+ระบบ SMS -- http://{{settings.WEBSITE_DOMAIN}}/
+สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.)
+Thai Health Promotion Foundation

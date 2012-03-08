@@ -27,6 +27,9 @@ class Report(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
 
+    def __unicode__(self):
+        return self.name
+
     def get_schedules_until(self, until_date=datetime.date.today(), and_one_beyond=False):
         result = []
 
@@ -42,7 +45,7 @@ class Report(models.Model):
                 next_schedule = next_schedule.replace(day=self.schedule_monthly_date)
         
         if next_schedule > until_date:
-            return result # return empty
+            return result if not and_one_beyond else [next_schedule]
         
         result.append(next_schedule)
 
@@ -83,7 +86,14 @@ class Report(models.Model):
         else:
             return result
     
-    def is_valid_schedule(self, schedule_date):
+    def is_valid_schedule(self, schedule_date, allow_created_report=True):
+        if allow_created_report:
+            try:
+                ReportSubmission.objects.get(report=self, schedule_date=schedule_date)
+                return True
+            except ReportSubmission.DoesNotExist:
+                pass
+
         if schedule_date < self.schedule_start:
             return False
         else:
@@ -91,6 +101,8 @@ class Report(models.Model):
                 return self.get_schedules_until(schedule_date)[0] == schedule_date
             except:
                 return False
+
+        return False
 
 class ReportAssignment(models.Model):
     report = models.ForeignKey(Report)

@@ -12,6 +12,12 @@ from common import utilities
 
 from accounts.models import UserProfile
 
+# NUMBER #################################################################
+
+@register.filter(name='num_abs')
+def num_abs(num):
+    return abs(num)
+
 # DATE TIME #################################################################
 
 @register.filter(name='dateid')

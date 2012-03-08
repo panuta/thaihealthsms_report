@@ -3,6 +3,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from accounts.models import ProjectManager
+
 class Section(models.Model):
     ref_no = models.CharField(max_length=10)
     prefix = models.CharField(max_length=50)
@@ -38,6 +40,9 @@ class Project(models.Model):
     
     def is_active(self):
         return self.status in (u'อนุมัติ', u'รอปิดโครงการ')
+
+    def managers(self):
+        return ProjectManager.objects.filter(project=self, is_active=True)
 
 ## IMPORT FROM GMS ##
 

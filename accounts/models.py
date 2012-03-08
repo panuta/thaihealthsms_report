@@ -85,14 +85,17 @@ class UserProfile(models.Model):
         
         send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [self.user.email])
 
-class UserSection(models.Model):
+class UserSection(models.Model): # for section manager, section assistant
     user = models.ForeignKey(User)
     section = models.ForeignKey('domain.Section')
+    is_active = models.BooleanField(default=True)
 
-class ProjectResponsibility(models.Model): # for section cordinator
+class ProjectResponsibility(models.Model): # for section assistant
     user = models.ForeignKey(User)
     project = models.ForeignKey('domain.Project')
+    is_active = models.BooleanField(default=True)
 
 class ProjectManager(models.Model): # for project manager
     user = models.ForeignKey(User)
     project = models.ForeignKey('domain.Project')
+    is_active = models.BooleanField(default=True)

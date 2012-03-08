@@ -100,35 +100,39 @@ def after_syncdb(sender, **kwargs):
 
     # Project Manager
     try:
-        user_profile1 = UserProfile.objects.get(email='pm1@email.com')
+        user_profile1 = UserProfile.objects.get(email='panuta+pm1@gmail.com')
     except UserProfile.DoesNotExist:
-        user_profile1 = UserProfile.objects.create_user('pm1@email.com', 'PM1', 'Lastname', pm_role, 'panuta', True)
+        user_profile1 = UserProfile.objects.create_user('panuta+pm1@gmail.com', 'PM1', 'Lastname', pm_role, 'panuta', True)
     
     ProjectManager.objects.get_or_create(user=user_profile1.user, project=project1)
 
     try:
-        user_profile2 = UserProfile.objects.get(email='pm2@email.com')
+        user_profile2 = UserProfile.objects.get(email='panuta+pm2@gmail.com')
     except UserProfile.DoesNotExist:
-        user_profile2 = UserProfile.objects.create_user('pm2@email.com', 'PM2', 'Lastname', pm_role, 'panuta', True)
+        user_profile2 = UserProfile.objects.create_user('panuta+pm2@gmail.com', 'PM2', 'Lastname', pm_role, 'panuta', True)
     
     ProjectManager.objects.get_or_create(user=user_profile2.user, project=project2)
     ProjectManager.objects.get_or_create(user=user_profile2.user, project=project3)
 
     # Report
-    report1, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน', schedule_start=date(2012,1,25), schedule_monthly_length=1, schedule_monthly_date=10, created_by=some_admin)
-    report2, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,1,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
+    report1, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน 1', schedule_start=date(2012,3,1), schedule_monthly_length=1, schedule_monthly_date=1, created_by=some_admin)
+    report2, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายเดือน 2', schedule_start=date(2012,3,1), schedule_monthly_length=1, schedule_monthly_date=6, created_by=some_admin)
+    report3, created = Report.objects.get_or_create(section=section07, name='รายงานผลการดำเนินงานรายไตรมาส', schedule_start=date(2012,3,1), schedule_monthly_length=3, schedule_monthly_date=10, created_by=some_admin)
 
     # Assignment
     ReportAssignment.objects.get_or_create(project=project1, report=report1)
     ReportAssignment.objects.get_or_create(project=project1, report=report2)
+    ReportAssignment.objects.get_or_create(project=project1, report=report3)
 
     ReportAssignment.objects.get_or_create(project=project2, report=report1)
 
     ReportAssignment.objects.get_or_create(project=project3, report=report2)
+    ReportAssignment.objects.get_or_create(project=project3, report=report3)
 
     # Submission
-    ReportSubmission.objects.get_or_create(report=report1, project=project1, schedule_date=date(2012, 1, 10), submitted_on=now, created_by=some_admin)
-
+    submission, created = ReportSubmission.objects.get_or_create(report=report1, project=project1, schedule_date=date(2012, 1, 10), created_by=some_admin)
+    submission.submitted_on = now
+    submission.save()
     
 
     #Project.objects.get_or_create(master_plan=master_plan12, ref_no='P110011', contract_no='C10003', name='This is a project somewhere someday', abbr_name='this project', manager_name='Panu Tangchalermkul', start_date=date(2011,8,15), end_date=date(2012,10,8), created_by=some_admin)

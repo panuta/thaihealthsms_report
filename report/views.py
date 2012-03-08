@@ -33,6 +33,9 @@ def view_project_reports(request, project_ref_no): # DONE
 def view_project_outstanding_reports(request, project_ref_no): # DONE
     project = get_object_or_404(Project, ref_no=project_ref_no)
 
+    from notifier import report_notification
+    report_notification()
+
     if request.user.get_profile().is_manage_project(project):
         report_assignments = []
 
@@ -69,6 +72,7 @@ def view_project_report(request, project_ref_no, report_id):
 
     if project.is_active():
         schedule_dates = report.get_schedules_until(and_one_beyond=True)
+        
         for schedule_date in schedule_dates:
             try:
                 submission = ReportSubmission.objects.get(report=report, project=project, schedule_date=schedule_date)
@@ -103,6 +107,7 @@ def view_report(request, project_ref_no, report_id, schedule_date):
     schedule_date = convert_dateid_to_date(schedule_date)
 
     if not report.is_valid_schedule(schedule_date):
+        print 'invalid schedule'
         raise Http404
     
     try:
